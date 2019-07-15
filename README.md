@@ -5,23 +5,23 @@ The SailCam is an attempt to put an entirly self sufficent camera on a sail boat
 
 # Video Results
 
-All timelapse videos processed from the pictures taken from the SailCam can be found [here](https://photos.app.goo.gl/NxdoZSaHQNxRXsou5)
+All timelapse videos processed from the pictures taken by the SailCam can be found [here](https://photos.app.goo.gl/NxdoZSaHQNxRXsou5)
 
 
 # Specifications
 
-Battery Capacity: 33600 mAh
-Solar Panel Output (Per panel): 4v 400mA
-Image Capture Interval: 20 seconds
-Storage Capacity: up to 32 GB
+Battery Capacity: 33600 mAh <br>
+Solar Panel Output (Per panel): 4v 400mA <br>
+Image Capture Interval: 20 seconds <br>
+Storage Capacity: up to 32 GB <br>
 
 
 # Parts
-Camera Module: ArduCAM Mini 5MP Plus OV5642
-CPU: Arduino Mini Pro
-SD Card Module: 
-Real Time Clock: DS3231
-Power Controller: 
+Camera Module: ArduCAM Mini 5MP Plus OV5642 <br>
+CPU: Arduino Mini Pro <br>
+SD Card Module:  <br>
+Real Time Clock: DS3231 <br>
+Power Controller:  <br>
 
 
 # Hardware Build

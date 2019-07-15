@@ -11,18 +11,18 @@ All timelapse videos processed from the pictures taken by the SailCam can be fou
 # Specifications
 
 Battery Capacity: 33600 mAh <br>
-Solar Panel Output (Per panel): 4v 400mA <br>
+Solar Panel Output (Per panel): 4V 400mA <br>
 Image Capture Interval: 20 seconds <br>
 Storage Capacity: up to 32 GB <br>
 
 
 # Parts
 Camera Module: ArduCAM Mini 5MP Plus OV5642 <br>
-CPU: Arduino Mini Pro <br>
-SD Card Module:  <br>
+CPU: Arduino Mini Pro ATMega328 16MHz 3.3V <br>
+SD Card Module: LC Studio SPI SD Card Socket Reader/Writer <br>
 Real Time Clock: DS3231 <br>
 Power Controller: TP4056 <br>
-Batteries: 
+Batteries: 14500 3.7V 2800mAH Lithium Li-ion
 
 
 # Hardware Build

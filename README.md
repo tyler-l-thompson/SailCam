@@ -21,7 +21,8 @@ Camera Module: ArduCAM Mini 5MP Plus OV5642 <br>
 CPU: Arduino Mini Pro <br>
 SD Card Module:  <br>
 Real Time Clock: DS3231 <br>
-Power Controller:  <br>
+Power Controller: TP4056 <br>
+Batteries: 
 
 
 # Hardware Build

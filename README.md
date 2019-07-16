@@ -26,5 +26,11 @@ Batteries: 14500 3.7V 2800mAH Lithium Li-ion
 
 
 # Hardware Build
+Front of the main board without the SD card module attached<br>
+<img src="doc/pictures/board_front_view.jpg" width="480">
 
+Back of the main board<br>
+<img src="doc/pictures/board_back_view.jpg" width="480">
 
+Side view<br>
+<img src="doc/pictures/board_side_view.jpg" width="480">

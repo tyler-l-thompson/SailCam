@@ -37,4 +37,5 @@ Side view<br>
 
 Final Construction for the 2019 Mackinac Race<br>
 <img src="doc/pictures/full_front.jpg" width="480">
-<img src="doc/pictures/full_front.jpg" width="480">
+<img src="doc/pictures/full_port.jpg" width="480">
+<img src="doc/pictures/full_starboard.jpg" width="480">

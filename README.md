@@ -34,3 +34,7 @@ Back of the main board<br>
 
 Side view<br>
 <img src="doc/pictures/board_side_view.jpg" width="480">
+
+Final Construction for the 2019 Mackinac Race<br>
+<img src="doc/pictures/full_front.jpg" width="480">
+<img src="doc/pictures/full_front.jpg" width="480">

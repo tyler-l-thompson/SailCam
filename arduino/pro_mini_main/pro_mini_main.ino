@@ -1,25 +1,9 @@
-// ArduCAM Mini demo (C)2017 Lee
-// Web: http://www.ArduCAM.com
-// This program is a demo of how to use the enhanced functions
-// This demo was made for ArduCAM_Mini_5MP_Plus.
-// It can  continue shooting and store it into the SD card  in JPEG format
-// The demo sketch will do the following tasks
-// 1. Set the camera to JPEG output mode.
-// 2. Capture a JPEG photo and buffer the image to FIFO
-// 3.Write the picture data to the SD card
-// 5.close the file
-//You can change the FRAMES_NUM count to change the number of the picture.
-//IF the FRAMES_NUM is 0X00, take one photos
-//IF the FRAMES_NUM is 0X01, take two photos
-//IF the FRAMES_NUM is 0X02, take three photos
-//IF the FRAMES_NUM is 0X03, take four photos
-//IF the FRAMES_NUM is 0X04, take five photos
-//IF the FRAMES_NUM is 0X05, take six photos
-//IF the FRAMES_NUM is 0X06, take seven photos
-//IF the FRAMES_NUM is 0XFF, continue shooting until the FIFO is full
-//You can see the picture in the SD card.
-// This program requires the ArduCAM V4.0.0 (or later) library and ArduCAM_Mini_5MP_Plus
-// and use Arduino IDE 1.6.8 compiler or above
+/*
+ * SailCam
+ * @author: Tyler Thompson
+ * @description: Arduino Mini Pro firmware used for interfacing an ArduCam OV5642 with a SD card. Use arduino IDE 1.6.8 or above.
+ * @date: April 16, 2019
+ */
 
 #include <Wire.h>
 #include <ArduCAM.h>
@@ -32,30 +16,36 @@ DS3231 Clock;
 RTClib RTC;
 DateTime datetime;
 
-//This demo can only work on OV5640_MINI_5MP_PLUS or OV5642_MINI_5MP_PLUS platform.
-#if !(defined (OV5640_MINI_5MP_PLUS)||defined (OV5642_MINI_5MP_PLUS))
-#error Please select the hardware platform and camera module in the ../libraries/ArduCAM/memorysaver.h file
+#if !defined (OV5642_MINI_5MP_PLUS)
+  #error Please select the hardware platform and camera module in the ../libraries/ArduCAM/memorysaver.h file
 #endif
-#define   FRAMES_NUM    0x00
-// set pin 7 as the slave select for the digital pot:
+
+#define   FRAMES_NUM    0x00 // specifies number of pictures to take
 #define CS 7
 #define SD_CS 4
-#define led 10
-bool is_header = false;
+#define led_pin 10
+#define sleep_time 10000
+#define sunrise_hour 6
+#define sunset_hour 9
+#define flash_interval 180
 
+bool is_header = false;
+uint16_t picture_count = 0;
 char filename[] = "0000/00/00/00_00_00.jpg";
 char year_filename[] = "0000";
 char month_filename[] = "0000/00";
 char day_filename[] = "0000/00/00";
-File outFile;
 
+File outFile;
 ArduCAM myCAM(OV5642, CS);
 
+/*
+ * Funtion Definitions
+ */
 void blink_led(int delay_time, int blink_times);
 uint8_t read_fifo_burst(ArduCAM myCAM);
 
 void setup() {
-  // put your setup code here, to run once:
   uint8_t vid, pid;
   uint8_t temp;
 
@@ -67,10 +57,10 @@ void setup() {
   // set the CS as an output:
   pinMode(CS, OUTPUT);
   pinMode(SD_CS, OUTPUT);
-  pinMode(led, OUTPUT);
+  pinMode(led_pin, OUTPUT);
   digitalWrite(CS, HIGH);
   digitalWrite(SD_CS, HIGH);
-  digitalWrite(led, LOW);
+  digitalWrite(led_pin, LOW);
 
   Clock.setClockMode(false);  // set to 24h
   
@@ -118,7 +108,7 @@ void setup() {
   myCAM.clear_fifo_flag();
   myCAM.write_reg(ARDUCHIP_FRAMES, FRAMES_NUM);
 
-//Initialize SD Card
+  //Initialize SD Card
   while(!SD.begin(SD_CS))
   {
     Serial.println(F("SD Card Error!"));
@@ -132,12 +122,12 @@ void setup() {
 }
 
 void loop() {
-  
+  // flush and clear fifo
   myCAM.flush_fifo();
   myCAM.clear_fifo_flag();
   myCAM.OV5642_set_JPEG_size(OV5642_2592x1944);
-  // delay(1000);
 
+  // check and create current year folder
   datetime = RTC.now();
   sprintf(year_filename, "%04d", datetime.year());
   if ( !SD.exists(filename) ) {
@@ -146,6 +136,7 @@ void loop() {
     SD.mkdir(year_filename);
   }
 
+  // check and create current month folder
   sprintf(month_filename, "%04d/%02d", datetime.year(), datetime.month());
   if ( !SD.exists(filename) ) {
     Serial.print("Creating folder: ");
@@ -153,6 +144,7 @@ void loop() {
     SD.mkdir(month_filename);
   }
 
+  // check and create current day folder
   sprintf(day_filename, "%04d/%02d/%02d", datetime.year(), datetime.month(), datetime.day());
   if ( !SD.exists(filename) ) {
     Serial.print("Creating folder: ");
@@ -164,35 +156,53 @@ void loop() {
   datetime = NULL;
   Serial.println(filename);
   
-  //Start capture
-  myCAM.start_capture();
-  Serial.println(F("start capture."));
+  // Start capture
+  Serial.println("start capture.");
+
+  // If night time and enough time has passed, use led flash
+  if (((sunset_hour <= datetime.hour()) || (sunrise_hour >= datetime.hour())) && (picture_count >= flash_interval)) {
+    digitalWrite(led_pin, HIGH);
+  }
   
+  myCAM.start_capture();
   while ( !myCAM.get_bit(ARDUCHIP_TRIG, CAP_DONE_MASK)); 
   
-  Serial.println(F("CAM Capture Done."));
+  digitalWrite(led_pin, LOW); // turn off flash
+  Serial.println("CAM Capture Done.");
+  
+  read_fifo_burst(myCAM); // Save image to SD card
+  
+  myCAM.clear_fifo_flag(); // Clear the capture done flag
 
-  
-  read_fifo_burst(myCAM);
-  
-  Serial.println("Sleeping 10 Seconds...");
-  
-  //Clear the capture done flag
-  myCAM.clear_fifo_flag();
+  // If day time, blink the led
+  if ((sunset_hour > datetime.hour()) && (sunrise_hour < datetime.hour())) {
+    blink_led(300,1);    
+  }
 
-  blink_led(300,1);
-  delay(10000);
+  Serial.println(sleep_time, "Sleeping %d milliseconds...");
+  delay(sleep_time);
 }
 
+/*
+ * Blink the led defined by variable led_pin
+ * @param delay_time The total time of one off and on cycle
+ * @param blink_times Number of times to blink the led
+ * @return NULL
+ */
 void blink_led(int delay_time, int blink_times) {
   for(int i = 0; i < blink_times; i++) {
-    digitalWrite(led, HIGH);
+    digitalWrite(led_pin, HIGH);
     delay(delay_time/2);
-    digitalWrite(led, LOW);
+    digitalWrite(led_pin, LOW);
     delay(delay_time/2);
   }
 }
 
+/*
+ * Save an image to the SD card. Modified from the ArduCam examples.
+ * @param myCam ArduCam camera object
+ * @return int 0 - Failed save | 1 - Successful save
+ */
 uint8_t read_fifo_burst(ArduCAM myCAM) {
   uint8_t temp = 0, temp_last = 0;
   uint32_t length = 0;

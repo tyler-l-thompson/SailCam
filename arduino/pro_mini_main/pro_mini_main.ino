@@ -26,7 +26,7 @@ DateTime datetime;
 #define led_pin 10
 #define sleep_time 10000
 #define sunrise_hour 6
-#define sunset_hour 9
+#define sunset_hour 21
 #define flash_interval 180
 
 bool is_header = false;
@@ -153,15 +153,17 @@ void loop() {
   }
 
   sprintf(filename, "%04d/%02d/%02d/%02d_%02d_%02d.jpg", datetime.year(), datetime.month(), datetime.day(), datetime.hour(), datetime.minute(), datetime.second());
-  datetime = NULL;
+  
   Serial.println(filename);
   
   // Start capture
   Serial.println("start capture.");
 
   // If night time and enough time has passed, use led flash
-  if (((sunset_hour <= datetime.hour()) || (sunrise_hour >= datetime.hour())) && (picture_count >= flash_interval)) {
+  if (((sunset_hour <= datetime.hour()) || (sunrise_hour >= datetime.hour())) && ((picture_count >= flash_interval) || (picture_count == 0))) {
+    picture_count = 0;    
     digitalWrite(led_pin, HIGH);
+    delay(200);
   }
   
   myCAM.start_capture();
@@ -179,7 +181,8 @@ void loop() {
     blink_led(300,1);    
   }
 
-  Serial.println(sleep_time, "Sleeping %d milliseconds...");
+  datetime = NULL;
+  Serial.println("Sleeping 10 seconds...");
   delay(sleep_time);
 }
 

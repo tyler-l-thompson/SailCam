@@ -26,6 +26,7 @@ Batteries: 14500 3.7V 2800mAH Lithium Li-ion
 
 
 # Hardware Build
+
 Front of the main board without the SD card module attached<br>
 <img src="doc/pictures/board_front_view.jpg" height="480">
 
@@ -35,7 +36,8 @@ Back of the main board<br>
 Side view<br>
 <img src="doc/pictures/board_side_view.jpg" height="480">
 
-Final Construction for the 2019 Mackinac Race<br>
+Final Construction for the 2019 Mackinac Race. A lot of the chassis was 3D printed. Originally I design the camera module to be in potrait mode, but after some testing, I decided to change it to landscape. That is why the front module is turned th way it is. A new design is sure to come for the 2020 Mackinac Race.
+<br>
 <img src="doc/pictures/full_front.jpg" width="480"><br>
 <img src="doc/pictures/full_port.jpg" width="480"><br>
 <img src="doc/pictures/full_starboard.jpg" width="480"><br>

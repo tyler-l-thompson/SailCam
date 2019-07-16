@@ -26,5 +26,5 @@ Batteries: 14500 3.7V 2800mAH Lithium Li-ion
 
 
 # Hardware Build
-
+![board_front_view](doc/pictures/board_front_view.jpg)
 

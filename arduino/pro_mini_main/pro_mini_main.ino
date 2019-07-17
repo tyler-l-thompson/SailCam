@@ -165,7 +165,7 @@ void loop() {
     digitalWrite(led_pin, HIGH);
     delay(200);
   }
-  
+  picture_count++;
   myCAM.start_capture();
   while ( !myCAM.get_bit(ARDUCHIP_TRIG, CAP_DONE_MASK)); 
   

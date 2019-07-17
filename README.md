@@ -1,6 +1,8 @@
 # Description
 
-The SailCam is an attempt to put an entirly self sufficent camera on a sail boat in order to capture a peice of what its like to race a sail boat. The camera mounts to the stern rail of the boat and does not require an external power source. It powers it self entirely from solar energy and a battery pack.
+The SailCam is an attempt to put an entirly self sufficent camera on a sail boat in order to capture a peice of what its like to race a sail boat. The camera mounts to the stern rail of the boat and does not require an external power source. It powers itself entirely from solar energy and a battery pack.
+
+The current design sacrifices elegance for modularity and brute force functionality. It is devided into components that can be indevidually detached and redesigned if needed. This allows for design iteration over a testing period. A new design will be created after core funtionality is refined. 
 
 
 # Video Results

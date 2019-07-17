@@ -1,6 +1,8 @@
 # Description
 
-The SailCam is an attempt to put an entirly self sufficent camera on a sail boat in order to capture a peice of what its like to race a sail boat. The camera mounts to the stern rail of the boat and does not require an external power source. It powers it self entirely from solar energy and a battery pack.
+The SailCam is an attempt to put an entirly self sufficent camera on a sail boat. The camera mounts to the stern rail of the boat and does not require an external power source. It powers itself entirely from solar energy and a battery pack.
+
+The current design sacrifices elegance for modularity and brute force functionality. It is divided into components that can be individually detached and redesigned if needed. This allows for design iteration over a testing period. A new design will be created after core functionality is refined. 
 
 
 # Video Results
@@ -25,12 +27,28 @@ Power Controller: TP4056 <br>
 Batteries: 14500 3.7V 2800mAH Lithium Li-ion
 
 
-# Hardware Build
+# Build
+## Main Board
 Front of the main board without the SD card module attached<br>
-<img src="doc/pictures/board_front_view.jpg" width="480">
+
+<img src="doc/pictures/board_front_view.jpg" height="480">
+
+
 
 Back of the main board<br>
-<img src="doc/pictures/board_back_view.jpg" width="480">
+
+<img src="doc/pictures/board_back_view.jpg" height="480">
+
+
 
 Side view<br>
-<img src="doc/pictures/board_side_view.jpg" width="480">
+
+<img src="doc/pictures/board_side_view.jpg" height="480">
+
+## Final Construction
+Final Construction for the 2019 Mackinac Race. A lot of the chassis was 3D printed. Originally I design the camera module to be in potrait mode, but after some testing, I decided to change it to landscape. That is why the front module is turned th way it is. A new design is sure to come for the 2020 Mackinac Race.
+<br>
+
+<img src="doc/pictures/full_front.jpg" width="480"><br>
+<img src="doc/pictures/full_port.jpg" width="480"><br>
+<img src="doc/pictures/full_starboard.jpg" width="480"><br>

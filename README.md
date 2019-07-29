@@ -49,7 +49,7 @@ Side view<br>
 <img src="doc/pictures/board_side_view.jpg" height="480">
 
 ## Final Construction
-Final Construction for the 2019 Mackinac Race. A lot of the chassis was 3D printed. Originally I design the camera module to be in potrait mode, but after some testing, I decided to change it to landscape. That is why the front module is turned th way it is. A new design is sure to come for the 2020 Mackinac Race.
+Final Construction for the 2019 Mackinac Race. A lot of the chassis was 3D printed. Originally the camera module was designed to be in potrait mode, but after testing, it was changed to landscape.
 <br>
 
 <img src="doc/pictures/full_front.jpg" width="480"><br>

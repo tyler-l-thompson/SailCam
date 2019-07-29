@@ -9,6 +9,9 @@ The current design sacrifices elegance for modularity and brute force functional
 
 All timelapse videos processed from the pictures taken by the SailCam can be found [here](https://photos.app.goo.gl/NxdoZSaHQNxRXsou5)
 
+## Port Huron to Mackinac Race 2019
+https://youtu.be/PzzFX_mOYdo
+
 
 # Specifications
 

@@ -1,0 +1,80 @@
+start capture.
+
+CAM Capture Done.
+
+The fifo length is :796200
+
+Save Complete
+
+2020/06/22/23_57_26.jpg
+
+start capture.
+
+CAM Capture Done.
+
+The fifo length is :795560
+
+Save Complete
+
+2020/06/22/23_58_05.jpg
+
+start capture.
+
+CAM Capture Done.
+
+The fifo length is :797464
+
+Save Complete
+
+2020/06/22/23_58_43.jpg
+
+start capture.
+
+CAM Capture Done.
+
+The fifo length is :800280
+
+Save Complete
+
+2020/06/22/23_59_23.jpg
+
+start capture.
+
+CAM Capture Done.
+
+The fifo length is :807512
+
+Save Complete
+
+2020/06/23/00_00_02.jpg
+
+start capture.
+
+CAM Capture Done.
+
+The fifo length is :811848
+
+File open failed
+
+MacCam Start!
+
+SPI interface OK.
+
+OV5642 detected.
+
+SD Card detected.
+
+Creating folder: 2020
+
+Creating folder: 2020/06
+
+Creating folder: 2020/06/23
+
+2020/06/23/00_03_36.jpg
+
+start capture.
+
+CAM Capture Done.
+
+The fifo length is :802952
+

@@ -12,38 +12,41 @@
 #include "memorysaver.h"
 #include <DS3231.h>
 
-DS3231 Clock;
-RTClib RTC;
-DateTime datetime;
-
 #if !defined (OV5642_MINI_5MP_PLUS)
   #error Please select the hardware platform and camera module in the ../libraries/ArduCAM/memorysaver.h file
 #endif
 
-#define   FRAMES_NUM    0x00 // specifies number of pictures to take
-#define CS 7
-#define SD_CS 4
-#define led_pin 10
-#define sleep_time 10000
+#define FRAMES_NUM   0x00 // specifies number of pictures to take
+#define CAM_CS       7
+#define SD_CS        4
+#define PWR_Relay    2
+#define IR_Relay     3
+#define led_pin      10
+#define sleep_time   100
 #define sunrise_hour 6
-#define sunset_hour 21
-#define flash_interval 180
+#define sunset_hour  21
+
+DS3231 Clock;
+RTClib RTC;
+DateTime datetime;
+File outFile;
+ArduCAM myCAM(OV5642, CAM_CS);
 
 bool is_header = false;
-uint16_t picture_count = 0;
+bool night_mode = false;
 char filename[] = "0000/00/00/00_00_00.jpg";
 char year_filename[] = "0000";
 char month_filename[] = "0000/00";
 char day_filename[] = "0000/00/00";
 
-File outFile;
-ArduCAM myCAM(OV5642, CS);
 
 /*
  * Funtion Definitions
  */
 void blink_led(int delay_time, int blink_times);
 uint8_t read_fifo_burst(ArduCAM myCAM);
+void set_night_mode(uint8_t Night_mode);
+
 
 void setup() {
   uint8_t vid, pid;
@@ -54,12 +57,15 @@ void setup() {
   Serial.begin(9600);
   Serial.println(F("MacCam Start!"));
   
-  // set the CS as an output:
-  pinMode(CS, OUTPUT);
+  pinMode(CAM_CS, OUTPUT);
   pinMode(SD_CS, OUTPUT);
+  pinMode(PWR_Relay, OUTPUT);
+  pinMode(IR_Relay, OUTPUT);
   pinMode(led_pin, OUTPUT);
-  digitalWrite(CS, HIGH);
+  digitalWrite(CAM_CS, HIGH);
   digitalWrite(SD_CS, HIGH);
+  digitalWrite(PWR_Relay, LOW);
+  digitalWrite(IR_Relay, LOW);
   digitalWrite(led_pin, LOW);
 
   Clock.setClockMode(false);  // set to 24h
@@ -107,6 +113,7 @@ void setup() {
   myCAM.set_bit(ARDUCHIP_TIM, VSYNC_LEVEL_MASK);
   myCAM.clear_fifo_flag();
   myCAM.write_reg(ARDUCHIP_FRAMES, FRAMES_NUM);
+  //myCAM.set_bit(ARDUCHIP_GPIO,GPIO_PWDN_MASK);
 
   //Initialize SD Card
   while(!SD.begin(SD_CS))
@@ -122,15 +129,35 @@ void setup() {
 }
 
 void loop() {
-  // flush and clear fifo
-  myCAM.flush_fifo();
-  myCAM.clear_fifo_flag();
-  myCAM.OV5642_set_JPEG_size(OV5642_2592x1944);
+  
+//  uint8_t reg_val;
+//  Serial.print("DEBUG: ");
+//  myCAM.rdSensorReg16_8(0x3a17,&reg_val);
+//  Serial.print("Gain Base: ");
+//  Serial.print(reg_val, HEX);
+//  Serial.print(" ");
+//  myCAM.rdSensorReg16_8(0x3a00,&reg_val);
+//  Serial.print("AEC Mode: ");
+//  Serial.print(reg_val, HEX);
+//  Serial.print(" ");
+//  myCAM.rdSensorReg16_8(0x3a02,&reg_val);
+//  Serial.print("Max Exposure:");
+//  Serial.print(reg_val, HEX);
+//  Serial.print(" ");
+//  myCAM.rdSensorReg16_8(0x3a03,&reg_val);
+//  Serial.print("");
+//  Serial.print(reg_val, HEX);
+//  Serial.print(" ");
+//  myCAM.rdSensorReg16_8(0x3a04,&reg_val);
+//  Serial.print("");
+//  Serial.println(reg_val, HEX);
+  //myCAM.wrSensorReg16_8(0x3a00, 0x79);
+
 
   // check and create current year folder
   datetime = RTC.now();
   sprintf(year_filename, "%04d", datetime.year());
-  if ( !SD.exists(filename) ) {
+  if ( !SD.exists(year_filename) ) {
     Serial.print("Creating folder: ");
     Serial.println(year_filename);
     SD.mkdir(year_filename);
@@ -138,7 +165,7 @@ void loop() {
 
   // check and create current month folder
   sprintf(month_filename, "%04d/%02d", datetime.year(), datetime.month());
-  if ( !SD.exists(filename) ) {
+  if ( !SD.exists(month_filename) ) {
     Serial.print("Creating folder: ");
     Serial.println(month_filename);
     SD.mkdir(month_filename);
@@ -146,7 +173,7 @@ void loop() {
 
   // check and create current day folder
   sprintf(day_filename, "%04d/%02d/%02d", datetime.year(), datetime.month(), datetime.day());
-  if ( !SD.exists(filename) ) {
+  if ( !SD.exists(day_filename) ) {
     Serial.print("Creating folder: ");
     Serial.println(day_filename);
     SD.mkdir(day_filename);
@@ -156,33 +183,50 @@ void loop() {
   
   Serial.println(filename);
   
+  // If day time, blink the led
+  if ((sunset_hour > datetime.hour()) && (sunrise_hour < datetime.hour())) {
+    if (night_mode == true) {
+     set_night_mode(Night_Mode_Off); 
+    }
+    night_mode = false;
+    //digitalWrite(PWR_Relay, HIGH); // external power off
+    blink_led(300,1);    
+  }
+  else {
+    if (night_mode == false) {
+      set_night_mode(Night_Mode_On);
+    }
+    night_mode = true;
+    //digitalWrite(PWR_Relay, LOW); //external power on
+  }
+  
+  // flush and clear fifo
+  myCAM.flush_fifo();
+  myCAM.clear_fifo_flag();
+  myCAM.OV5642_set_JPEG_size(OV5642_2592x1944);
+  
   // Start capture
   Serial.println("start capture.");
 
-  // If night time and enough time has passed, use led flash
-  if (((sunset_hour <= datetime.hour()) || (sunrise_hour >= datetime.hour())) && ((picture_count >= flash_interval) || (picture_count == 0))) {
-    picture_count = 0;    
-    digitalWrite(led_pin, HIGH);
-    delay(200);
+  // turn IR flash on
+  if (night_mode == true) {
+   digitalWrite(IR_Relay, HIGH); 
   }
-  picture_count++;
+
+  delay(250);
   myCAM.start_capture();
   while ( !myCAM.get_bit(ARDUCHIP_TRIG, CAP_DONE_MASK)); 
   
-  digitalWrite(led_pin, LOW); // turn off flash
+  delay(1000);
+  
+  // turn off flash
+  digitalWrite(IR_Relay, LOW);
   Serial.println("CAM Capture Done.");
   
   read_fifo_burst(myCAM); // Save image to SD card
   
   myCAM.clear_fifo_flag(); // Clear the capture done flag
 
-  // If day time, blink the led
-  if ((sunset_hour > datetime.hour()) && (sunrise_hour < datetime.hour())) {
-    blink_led(300,1);    
-  }
-
-  datetime = NULL;
-  Serial.println("Sleeping 10 seconds...");
   delay(sleep_time);
 }
 
@@ -287,5 +331,20 @@ uint8_t read_fifo_burst(ArduCAM myCAM) {
   }
     myCAM.CS_HIGH();
     return 1;
+}
+
+void set_night_mode(uint8_t Night_mode) {
+  Serial.print("Night Mode: ");
+  Serial.println(Night_mode);
+  switch(Night_mode) {
+    case Night_Mode_On:
+      myCAM.wrSensorReg16_8(0x3a00, 0x78 );  //AEC mode
+      break;
+    case Night_Mode_Off:
+      myCAM.wrSensorReg16_8(0x3a00, 0x7c);  //AEC mode
+      break;
+    default:
+      break;
+  }
 }
 

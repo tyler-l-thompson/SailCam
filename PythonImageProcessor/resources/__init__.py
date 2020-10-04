@@ -1,5 +1,5 @@
 from abc import ABCMeta
-from PythonImageProcessor.resources import logging
+from resources import logging, config
 
 
 class Resource:
@@ -8,3 +8,4 @@ class Resource:
 
     def __init__(self):
         self.logger = logging.get_logger(__name__)
+        self.config = config.config

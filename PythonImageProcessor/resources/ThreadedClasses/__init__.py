@@ -64,8 +64,8 @@ class ThreadPool(Resource):
                             average_runtime = runtime_sum / threads_processed
 
                             # calc time left
-                            users_remaining = total_thread_count - threads_processed
-                            seconds_left = users_remaining * average_runtime
+                            threads_count_remaining = total_thread_count - threads_processed
+                            seconds_left = (threads_count_remaining / process_threads) * average_runtime
                             minuets_left = int(seconds_left / 60)
                             units = 'minuets'
                             time_left = minuets_left
@@ -79,8 +79,8 @@ class ThreadPool(Resource):
                             print('Progress: [%s%s] %d %%' % (arrow, spaces, percent), end=' ')
 
                             print('Average Runtime: {0:03d} ms,'
-                                  ' ETA: {1:02d} {2}, Remaining: {3:05d}'.
-                                  format(int(average_runtime * 1000), time_left, units, users_remaining), end='\r')
+                                  ' ETL: {1:02d} {2}, Remaining: {3:05d}'.
+                                  format(int(average_runtime * 1000), time_left, units, threads_count_remaining), end='\r')
 
                     # shift threads in and out of thread pool
                     done_threads.append(thread)
@@ -113,8 +113,8 @@ class ThreadPool(Resource):
                                 average_runtime = runtime_sum / threads_processed
 
                                 # calc time left
-                                users_remaining = total_thread_count - threads_processed
-                                seconds_left = users_remaining * average_runtime
+                                threads_count_remaining = total_thread_count - threads_processed
+                                seconds_left = (threads_count_remaining / process_threads) * average_runtime
                                 minuets_left = int(seconds_left / 60)
                                 units = 'minuets'
                                 time_left = minuets_left
@@ -128,9 +128,19 @@ class ThreadPool(Resource):
                                 print('Progress: [%s%s] %d %%' % (arrow, spaces, percent), end=' ')
 
                                 print('Average Runtime: {0:03d} ms,'
-                                      ' ETA: {1:02d} {2}, Remaining: {3:05d}'.
-                                      format(int(average_runtime * 1000), time_left, units, users_remaining), end='\r')
+                                      ' ETL: {1:02d} {2}, Remaining: {3:05d}'.
+                                      format(int(average_runtime * 1000), time_left, units, threads_count_remaining), end='\r')
         if self.config['runtime_stats']:
+            # calc average
+            average_runtime = runtime_sum / threads_processed
+
+            arrow = '-' * int(self.config['progress_bar_length'] - 1) + '>'
+            spaces = ' ' * (self.config['progress_bar_length'] - len(arrow))
+            print('Progress: [%s%s] %d %%' % (arrow, spaces, 100), end=' ')
+
+            print('Average Runtime: {0:03d} ms,'
+                  ' ETL: {1:02d} {2}, Remaining: {3:05d}'.
+                  format(int(average_runtime * 1000), 0, 'seconds', 0), end='\r')
             print()
         self.logger.info(msg="Joining threads...")
         # join all threads

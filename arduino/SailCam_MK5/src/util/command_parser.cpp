@@ -15,6 +15,7 @@ CommandParser::CommandParser(HardwareDrivers* hardware_drivers)
                 {"getwifi", &CommandParser::get_wifi_status},
                 {"getfirmware", &CommandParser::get_firmware_version},
                 {"blinkled", &CommandParser::blink_led},
+                {"checksdcard", &CommandParser::check_sd_card},
             }
 {
     this->hardware_drivers = hardware_drivers;
@@ -154,6 +155,16 @@ void CommandParser::blink_led(char* arg, char* param, char** message)
     int blink_delay = (strlen(param) == 0) ? 100 : atoi(param);
     sprintf(*message, "count=%d, delay=%dms", blink_count, blink_delay);
     hardware_drivers->status_led->blink(blink_count, blink_delay);
+}
+
+void CommandParser::check_sd_card(char* arg, char* param, char** message)
+{
+    int timeout = 10;
+    while(hardware_drivers->storage_controller->check_and_reconnect_card() != true && timeout > 0) {
+        delay(100);
+        timeout--;
+    }
+    sprintf(*message, "sd_card_connected=%s", hardware_drivers->storage_controller->check_and_reconnect_card() ? "True" : "False");
 }
 
 bool CommandParser::process_serial_terminal()

@@ -22,6 +22,8 @@ HardwareDrivers* hardware_drivers;
 
 void setup() 
 {
+    pinMode(camera_chip_select, OUTPUT);
+    digitalWrite(camera_chip_select, HIGH);
     hardware_drivers = new HardwareDrivers();
     hardware_drivers->serial_term = new SerialTerminal(initial_hardware_serial_baud_rate);
     hardware_drivers->serial_term->debug_printf("Firmware Version: %s\r\n", firmware_version);
@@ -68,6 +70,8 @@ void setup()
     command_parser = new CommandParser(hardware_drivers);
 
     web_server = new WebServer(hardware_drivers, command_parser);
+
+    hardware_drivers->old_display = new OledDisplay();
 
     hardware_drivers->serial_term->debug_println("Startup Complete!");
     hardware_drivers->status_led->blink(2, 500);

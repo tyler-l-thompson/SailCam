@@ -28,9 +28,10 @@ private:
     void get_wifi_status(char* arg, char* param, char** message);
     void get_firmware_version(char* arg, char* param, char** message);
     void blink_led(char* arg, char* param, char** message);
+    void check_sd_card(char* arg, char* param, char** message);
 
     HardwareDrivers* hardware_drivers;
-    CommandStruct commands[12];
+    CommandStruct commands[13];
     int commands_size = sizeof(commands) / sizeof(commands[0]);
 
 public:

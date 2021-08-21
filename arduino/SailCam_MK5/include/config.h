@@ -2,6 +2,7 @@
 #define firmware_version "1.0"
 
 #define sd_card_chip_select 16
+#define camera_chip_select 15
 
 #define status_led_pin 2
 
@@ -30,6 +31,6 @@
 #define system_configuration_path "config.ini"
 
 #define hardware_serial_port UART0
-#define initial_hardware_serial_baud_rate 38400
+#define initial_hardware_serial_baud_rate 9600
 
 #define serial_debug_messages true

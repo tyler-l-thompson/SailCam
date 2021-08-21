@@ -8,6 +8,7 @@
 #include <hardware/serial_terminal.h>
 #include <hardware/wifi.h>
 #include <hardware/battery_management.h>
+#include <hardware/oled_display.h>
 
 struct HardwareDrivers {
     Clock* system_clock;
@@ -16,6 +17,7 @@ struct HardwareDrivers {
     StatusLED* status_led;
     Wifi* wifi_radio;
     BatteryManagement* battery_management;
+    OledDisplay* old_display;
 };
 
 #endif

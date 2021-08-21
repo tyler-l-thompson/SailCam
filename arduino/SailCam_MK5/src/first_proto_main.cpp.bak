@@ -1,0 +1,167 @@
+/*
+  Author: Tyler Thompson
+  Date: Oct 15, 2020
+  Description: The beginning prototype of the GN600 LED Wifi Reader
+  Go to http://192.168.4.1 in a web browser connected to this access point to see data.
+*/
+
+#include <Arduino.h>
+#include <ESP8266WiFi.h>
+#include <WiFiClient.h>
+#include <ESP8266WebServer.h>
+#include <SoftwareSerial.h>
+#include <SPI.h>
+#include <SD.h>
+#include <Wire.h>
+#include <DS1672.h>
+
+
+#ifndef APSSID
+#define APSSID "GN600WifiReader"
+#define APPSK  "thecakeisalie"
+#endif
+
+#define buf_length 82
+#define buf_width 6
+
+#define mode_sw_0 16
+//#define mode_sw_1 16
+#define soft_serial_rx 0
+
+#define blue_led 2 // GPIO2 is the on-board LED
+#define red_led 15
+
+const char *ssid = APSSID;
+const char *password = APPSK;
+char serialRead[buf_width][buf_length];
+char timestamps[buf_width][20];
+DateTime cur_timestamp;
+size_t serialReadSize;
+
+uint8_t f = 0;
+uint8_t g = 0;
+uint8_t h = 0;
+uint8_t i = 0;
+uint8_t j = 0;
+uint8_t k = -1;
+
+bool firstFill = true;
+bool firstRun = true;
+bool previousRead = false;
+
+ESP8266WebServer server(80);
+DS1672 ds1672_rtc;
+SoftwareSerial PhotoOpticSerial(soft_serial_rx, -1, false);
+File output_file;
+
+/* Function Prototypes */
+void handleRoot();
+void blinkLED(int pin_num, int blink_count = 1, int delay_time = 100);
+
+void setup() {
+  pinMode(blue_led, OUTPUT);
+  pinMode(red_led, OUTPUT);
+  pinMode(mode_sw_0, INPUT);
+  //pinMode(soft_serial_rx, INPUT);
+
+  digitalWrite(blue_led, HIGH);
+  digitalWrite(red_led, HIGH);
+  delay(1000);
+
+  Serial.begin(38400);
+  PhotoOpticSerial.begin(38400);
+
+  Wire.begin();
+
+  //SPI.pins(14, 12, 13, -1);
+  if (!SD.begin(10)) {
+    blinkLED(blue_led, 3, 50);
+    delay(1000);
+  }
+  
+
+  ds1672_rtc.enable();
+  //DateTime now = DateTime(2020, 12, 10, 12, 8, 00);
+  //ds1672_rtc.set_time(now);
+  
+  WiFi.softAP(ssid, password);
+
+  // IPAddress myIP = WiFi.softAPIP();
+
+  server.on("/", handleRoot);
+  server.begin();
+
+  // digitalWrite(blue_led, LOW);
+  blinkLED(blue_led, 2);
+}
+
+void loop() {
+  server.handleClient();
+
+   // read serial input
+  if (PhotoOpticSerial.available() > 0) {
+    digitalWrite(blue_led, LOW);
+
+    // handle line number
+    k = (k == buf_width - 1) ? 0 : k + 1;
+
+    serialReadSize = PhotoOpticSerial.readBytesUntil('\n', serialRead[k], buf_length);
+    serialRead[k][serialReadSize] = '\0';
+    PhotoOpticSerial.flush();
+    Serial.write(serialRead[k]); // print recieved photo optic data on serial bus
+
+    cur_timestamp = ds1672_rtc.get_time();
+    sprintf(timestamps[k], "%02d/%02d/%02d %02d:%02d:%02d%c", cur_timestamp.month(), cur_timestamp.day(), cur_timestamp.year(), cur_timestamp.hour(), cur_timestamp.minute(), cur_timestamp.second(), '\0');
+
+    output_file = SD.open("testing.txt", FILE_WRITE);
+    if (output_file) {
+      output_file.print(timestamps[k]);
+      output_file.print(",");
+      output_file.print(serialRead[k]);
+      output_file.close();
+    } else {
+      blinkLED(blue_led, 3, 50);
+    }
+
+    digitalWrite(blue_led, HIGH);
+  } // end serial if
+}
+
+void handleRoot() {
+  //digitalWrite(blue_led, HIGH);
+  j = (k == 0) ? buf_width - 1 : (k - 1);
+  i = (j == 0) ? buf_width - 1 : (j - 1);
+  h = (i == 0) ? buf_width - 1 : (i - 1);
+  g = (h == 0) ? buf_width - 1 : (h - 1);
+  f = (g == 0) ? buf_width - 1 : (g - 1);
+  server.send(200, "text/html", "<html><head><meta http-equiv='refresh' content='1'></head><body><div>" +
+                                String(timestamps[k]) + " - " + String(serialRead[k]) + "</div><div>" + 
+                                String(timestamps[j]) + " - " + String(serialRead[j]) + "</div><div>" + 
+                                String(timestamps[i]) + " - " + String(serialRead[i]) + "</div><div>" + 
+                                String(timestamps[h]) + " - " + String(serialRead[h]) + "</div><div>" +
+                                String(timestamps[g]) + " - " + String(serialRead[g]) + "</div><div>" + 
+                                String(timestamps[f]) + " - " + String(serialRead[f]) + "</div></body></html>");
+  //digitalWrite(blue_led, LOW);
+}
+
+void blinkLED(int pin_num, int blink_count, int delay_time) {
+  for(int i = 0; i < blink_count; i++) {
+    digitalWrite(pin_num, HIGH);
+    delay(delay_time);
+    digitalWrite(pin_num, LOW);
+    delay(delay_time);
+  }
+}
+
+void writeSDCard(File output_file, DateTime time_stamp, void * time_stamp_string, void * data) {
+  char folder_path[10];
+  char file_path;
+  sprintf(folder_path, "%04d/%02d/%02d", time_stamp.year(), time_stamp.month(), time_stamp.day());
+
+  if (!SD.exists(folder_path)) {
+    SD.mkdir(folder_path);
+  }
+
+
+  output_file = SD.open("testing.txt", FILE_WRITE);
+}

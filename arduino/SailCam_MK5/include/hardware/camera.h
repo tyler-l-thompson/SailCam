@@ -4,6 +4,7 @@
 
 #include <Arduino.h>
 #include <config.h>
+//#include <ArduCAM.h>
 
 class Camera
 {

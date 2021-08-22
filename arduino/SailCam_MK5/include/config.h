@@ -7,9 +7,9 @@
 #define status_led_pin 2
 
 #define battery_measure_adc_channel A0
-#define battery_measure_op_disable_pin 16
+#define battery_measure_op_disable_pin 0
 #define battery_measure_adc_resolution 1024
-#define battery_max_volts 4.2
+#define battery_max_volts 4.3
 #define battery_min_volts 2.5
 
 #define serial_buffer_length 256  // max length of stored messages

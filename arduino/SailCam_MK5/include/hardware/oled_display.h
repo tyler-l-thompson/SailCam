@@ -11,12 +11,15 @@
 #define SCREEN_ADDRESS 0x3C
 #define SCREEN_WIDTH 128 // OLED display width, in pixels
 #define SCREEN_HEIGHT 32 // OLED display height, in pixels
+#define buf_width 25
+#define buf_height 4
 
 class OledDisplay
 {
 private:
     Adafruit_SSD1306* display;
-    char display_buf[SCREEN_HEIGHT][SCREEN_WIDTH];
+    char display_buf[buf_height][buf_width];
+    int buf_index;
     bool update_required;
 
 public:
@@ -27,6 +30,7 @@ public:
     void clear();
     char* get_buffer();
     void write(const char* value);
+    void writef(const char* value, ...);
 };
 
 #endif

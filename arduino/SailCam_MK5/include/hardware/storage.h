@@ -30,6 +30,7 @@ private:
 public:
     Storage(DateTime* timestamp);
     ~Storage();
+    char* get_formatted_timestamp();
     bool check_and_reconnect_card();
     bool is_card_connected();
     bool log_data_point(DateTime timestamp, char* data);

@@ -11,6 +11,7 @@
 #include <hardware/oled_display.h>
 #include <hardware/camera.h>
 
+// a struct to hold pointers to all hardware classes
 struct HardwareDrivers {
     Clock* system_clock;
     Storage* storage_controller;

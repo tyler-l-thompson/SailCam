@@ -33,6 +33,11 @@ void Storage::set_formatted_timestamp(DateTime timestamp)
     snprintf(formatted_timestamp, 25, "%02d/%02d/%04d %02d:%02d:%02d", timestamp.month(), timestamp.day(), timestamp.year(), timestamp.hour(), timestamp.minute(), timestamp.second());
 }
 
+char* Storage::get_formatted_timestamp()
+{
+    return this->formatted_timestamp;
+}
+
 bool Storage::check_and_reconnect_card()
 {
     if (!this->card_connected) {

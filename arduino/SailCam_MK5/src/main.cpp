@@ -22,8 +22,7 @@ HardwareDrivers* hardware_drivers;
 
 void setup() 
 {
-    pinMode(camera_chip_select, OUTPUT);
-    digitalWrite(camera_chip_select, HIGH);
+    
     hardware_drivers = new HardwareDrivers();
     hardware_drivers->serial_term = new SerialTerminal(initial_hardware_serial_baud_rate);
     hardware_drivers->serial_term->debug_printf("Firmware Version: %s\r\n", firmware_version);
@@ -73,6 +72,8 @@ void setup()
 
     hardware_drivers->old_display = new OledDisplay();
 
+    hardware_drivers->camera = new Camera();
+
     hardware_drivers->serial_term->debug_println("Startup Complete!");
     hardware_drivers->status_led->blink(2, 500);
 
@@ -80,6 +81,8 @@ void setup()
     if (hardware_drivers->wifi_radio->get_mode() == WIFI_CLIENT) {
         int timeout = 0;
         hardware_drivers->serial_term->debug_print("Connecting to WiFi...");
+        hardware_drivers->old_display->write("Connecting to WiFi...");
+        hardware_drivers->old_display->update();
         while (hardware_drivers->wifi_radio->get_connection_status() != WL_CONNECTED && timeout < wifi_client_connect_timeout) {
             delay(500);
             timeout += 500;
@@ -88,16 +91,23 @@ void setup()
         if (hardware_drivers->wifi_radio->get_connection_status() == WL_CONNECTED) {
             hardware_drivers->status_led->info();
             hardware_drivers->serial_term->debug_println(" WiFi Connected.");
+            hardware_drivers->old_display->write("WiFi Connected.");
+            hardware_drivers->old_display->update();
         } else {
             hardware_drivers->status_led->error();
             hardware_drivers->serial_term->debug_println(" WiFi Failed to Connect.");
+            hardware_drivers->old_display->write("WiFi Failed to Connect.");
+            hardware_drivers->old_display->update();
         }
     }
-
+    delay(2000);
+    hardware_drivers->old_display->clear();
 }  // end setup()
 
 void loop() 
 {
+    hardware_drivers->old_display->update();
+
     // handle web server clients
     web_server->handle_client();
 

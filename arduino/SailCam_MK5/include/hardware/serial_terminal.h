@@ -16,7 +16,7 @@ private:
 public:
     SerialTerminal(uint32_t baud_rate);
     ~SerialTerminal();
-    void reinitialize(uint32_t baud_rate, int buffer_width);
+    void reinitialize(uint32_t baud_rate);
     void debug_println(const char* data);
     void debug_print(const char* data);
     void debug_printf(const char* data, ...);

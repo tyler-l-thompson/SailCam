@@ -24,17 +24,24 @@ void setup()
 {
     hardware_drivers = new HardwareDrivers();
 
+    // initialize LED
+    hardware_drivers->status_led = new StatusLED();
+
     // initalize serial terminal
     hardware_drivers->serial_term = new SerialTerminal(initial_hardware_serial_baud_rate);
     hardware_drivers->serial_term->debug_printf("Firmware Version: %s\r\n", firmware_version);
+
+    // initalize camera
+    hardware_drivers->camera = new Camera();
+    hardware_drivers->serial_term->debug_println(hardware_drivers->camera->run_self_test());
+    hardware_drivers->camera->init_cam();
+    //hardware_drivers->old_display->write((char*)hardware_drivers->camera->run_self_test());
+    //hardware_drivers->old_display->update();
 
     // initialize OLED display
     hardware_drivers->old_display = new OledDisplay();
     hardware_drivers->old_display->writef("Firmware: %s", firmware_version);
     hardware_drivers->old_display->update();
-
-    // initialize LED
-    hardware_drivers->status_led = new StatusLED();
 
     // initialize RTC
     timestamp = new DateTime();
@@ -49,8 +56,7 @@ void setup()
     hardware_drivers->storage_controller->read_settings_file(hardware_drivers->serial_term);
     hardware_drivers->serial_term->reinitialize
     (
-        hardware_drivers->storage_controller->get_system_configuration()->get_setting("baud_rate")->get_value_int(),
-        hardware_drivers->storage_controller->get_system_configuration()->get_setting("buffer_width")->get_value_int()
+        hardware_drivers->storage_controller->get_system_configuration()->get_setting("baud_rate")->get_value_int()
     );
     hardware_drivers->serial_term->debug_println("Serial Terminal Reinitialized.");
     hardware_drivers->storage_controller->print_configuration(hardware_drivers->serial_term);
@@ -72,9 +78,6 @@ void setup()
     // write timestamp to oled
     hardware_drivers->old_display->write(hardware_drivers->storage_controller->get_formatted_timestamp());
     hardware_drivers->old_display->update();
-
-    // initalize camera
-    hardware_drivers->camera = new Camera();
 
     // initalize wifi
     hardware_drivers->wifi_radio = new Wifi
@@ -122,7 +125,7 @@ void setup()
     hardware_drivers->old_display->write(hardware_drivers->wifi_radio->get_ip_address().toString().c_str());
     hardware_drivers->old_display->update();
     delay(2000);
-    hardware_drivers->old_display->clear();
+    //hardware_drivers->old_display->clear();
 }  // end setup()
 
 void loop() 

@@ -13,9 +13,9 @@ struct SettingKeyValuePair {
 class SystemConfiguration
 {
 private:
-    SettingKeyValuePair settings_map[7];
+    SettingKeyValuePair settings_map[6];
     int settings_length;
-    const char* settings_defaults[7][2];
+    const char* settings_defaults[6][2];
     void read_settings_defaults();
 
 public:

@@ -4,6 +4,8 @@
 
 #include <hardware/drivers.h>
 
+#define commands_size 15
+
 class CommandParser
 {
 
@@ -29,10 +31,11 @@ private:
     void get_firmware_version(char* arg, char* param, char** message);
     void blink_led(char* arg, char* param, char** message);
     void check_sd_card(char* arg, char* param, char** message);
+    void format_sd_card(char* arg, char* param, char** message);
+    void check_camera(char* arg, char* param, char** message);
 
     HardwareDrivers* hardware_drivers;
-    CommandStruct commands[13];
-    int commands_size = sizeof(commands) / sizeof(commands[0]);
+    CommandStruct commands[commands_size];
 
 public:
     CommandParser(HardwareDrivers* hardware_drivers);

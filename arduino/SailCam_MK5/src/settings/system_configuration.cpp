@@ -5,7 +5,6 @@ SystemConfiguration::SystemConfiguration()
 : settings_defaults 
 { 
     {"baud_rate", "9600" },
-    {"buffer_width", "6"},
     {"wifi_ssid", "SurveillanceCamera6"},
     {"wifi_psk", "hobbesthetiger"},
     {"wifi_mode", "1"}, // 0 - WIFI_ACCESS_POINT, 1 - WIFI_CLIENT, 2 - WIFI_DISABLED

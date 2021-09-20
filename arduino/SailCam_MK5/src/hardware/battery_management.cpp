@@ -36,3 +36,12 @@ double BatteryManagement::get_system_volts()
     delay(10);
     return (battery_max_volts * analogRead(battery_measure_adc_channel)) / battery_measure_adc_resolution;
 }
+
+int BatteryManagement::get_battery_adc()
+{
+    enable_op_amp();
+    delay(10);
+    int amp_enabled_measure = analogRead(battery_measure_adc_channel);
+    disable_op_amp();
+    return amp_enabled_measure;
+} 

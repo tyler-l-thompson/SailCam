@@ -14,165 +14,139 @@ Comment3 ""
 Comment4 ""
 $EndDescr
 $Comp
-L ADA4806-1ARJZ-R7:ADA4806-1ARJZ-R7 U?
-U 1 1 6118AE4B
-P 5100 3700
-AR Path="/6118AE4B" Ref="U?"  Part="1" 
-AR Path="/611821E5/6118AE4B" Ref="U?"  Part="1" 
-AR Path="/61199C7C/6118AE4B" Ref="U1"  Part="1" 
-F 0 "U1" H 5800 4177 60  0000 C CNN
-F 1 "ADA4806-1ARJZ-R7" H 5800 4071 60  0000 C CNN
-F 2 "footprints:ADA4806-1ARJZ-R7" H 6100 3940 60  0001 C CNN
-F 3 "https://www.analog.com/media/en/technical-documentation/data-sheets/ADA4806-1.pdf" H 6100 3981 60  0001 C CNN
-F 4 "Op Amp" H 5800 3973 50  0000 C CNN "Description"
-	1    5100 3700
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	6500 4000 6700 4000
-Wire Wire Line
-	6700 4000 6700 3100
-Wire Wire Line
-	6700 3100 5100 3100
-Wire Wire Line
-	5100 3100 5100 3700
-$Comp
 L Device:R_Small_US R?
 U 1 1 6118AE59
-P 4650 4200
+P 3800 4450
 AR Path="/6118AE59" Ref="R?"  Part="1" 
 AR Path="/611821E5/6118AE59" Ref="R?"  Part="1" 
 AR Path="/61199C7C/6118AE59" Ref="R2"  Part="1" 
-F 0 "R2" H 4700 4100 50  0000 L CNN
-F 1 "100 KΩ" H 4718 4200 50  0000 L CNN
-F 2 "footprints:C_0805_2012Metric_Pad1.15x1.40mm_HandSolder_FullSilk" H 4650 4200 50  0001 C CNN
-F 3 "~" H 4650 4200 50  0001 C CNN
-F 4 "1%" H 4700 4300 50  0000 L CNN "Tolerance"
-	1    4650 4200
+F 0 "R2" H 3850 4350 50  0000 L CNN
+F 1 "100 KΩ" H 3868 4450 50  0000 L CNN
+F 2 "footprints:C_0805_2012Metric_Pad1.15x1.40mm_HandSolder_FullSilk" H 3800 4450 50  0001 C CNN
+F 3 "~" H 3800 4450 50  0001 C CNN
+F 4 "1%" H 3850 4550 50  0000 L CNN "Tolerance"
+	1    3800 4450
 	-1   0    0    1   
 $EndComp
 $Comp
 L power:GND #PWR?
 U 1 1 6118AE5F
-P 4650 4300
+P 3800 4550
 AR Path="/6118AE5F" Ref="#PWR?"  Part="1" 
 AR Path="/611821E5/6118AE5F" Ref="#PWR?"  Part="1" 
 AR Path="/61199C7C/6118AE5F" Ref="#PWR0101"  Part="1" 
-F 0 "#PWR0101" H 4650 4050 50  0001 C CNN
-F 1 "GND" H 4655 4127 50  0000 C CNN
-F 2 "" H 4650 4300 50  0001 C CNN
-F 3 "" H 4650 4300 50  0001 C CNN
-	1    4650 4300
+F 0 "#PWR0101" H 3800 4300 50  0001 C CNN
+F 1 "GND" H 3805 4377 50  0000 C CNN
+F 2 "" H 3800 4550 50  0001 C CNN
+F 3 "" H 3800 4550 50  0001 C CNN
+	1    3800 4550
 	1    0    0    -1  
 $EndComp
 $Comp
 L Device:R_Small_US R?
 U 1 1 6118AE66
-P 4650 3800
+P 3800 4050
 AR Path="/6118AE66" Ref="R?"  Part="1" 
 AR Path="/611821E5/6118AE66" Ref="R?"  Part="1" 
 AR Path="/61199C7C/6118AE66" Ref="R1"  Part="1" 
-F 0 "R1" H 4500 3950 50  0000 L CNN
-F 1 "320 KΩ" H 4350 3850 50  0000 L CNN
-F 2 "footprints:C_0805_2012Metric_Pad1.15x1.40mm_HandSolder_FullSilk" H 4650 3800 50  0001 C CNN
-F 3 "~" H 4650 3800 50  0001 C CNN
-F 4 "1%" H 4500 3750 50  0000 L CNN "Tolerance"
-	1    4650 3800
+F 0 "R1" H 3650 4200 50  0000 L CNN
+F 1 "320 KΩ" H 3500 4100 50  0000 L CNN
+F 2 "footprints:C_0805_2012Metric_Pad1.15x1.40mm_HandSolder_FullSilk" H 3800 4050 50  0001 C CNN
+F 3 "~" H 3800 4050 50  0001 C CNN
+F 4 "1%" H 3650 4000 50  0000 L CNN "Tolerance"
+	1    3800 4050
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	5100 4000 4650 4000
+	4250 4250 3800 4250
 Wire Wire Line
-	4650 4000 4650 3900
+	3800 4250 3800 4150
 Wire Wire Line
-	4650 4000 4650 4100
-Connection ~ 4650 4000
+	3800 4250 3800 4350
+Connection ~ 3800 4250
 $Comp
 L Device:R_Small_US R?
 U 1 1 6118AE77
-P 7300 4200
+P 7650 4450
 AR Path="/6118AE77" Ref="R?"  Part="1" 
 AR Path="/611821E5/6118AE77" Ref="R?"  Part="1" 
 AR Path="/61199C7C/6118AE77" Ref="R4"  Part="1" 
-F 0 "R4" H 7350 4100 50  0000 L CNN
-F 1 "100 KΩ" H 7368 4200 50  0000 L CNN
-F 2 "footprints:C_0805_2012Metric_Pad1.15x1.40mm_HandSolder_FullSilk" H 7300 4200 50  0001 C CNN
-F 3 "~" H 7300 4200 50  0001 C CNN
-F 4 "1%" H 7350 4300 50  0000 L CNN "Tolerance"
-	1    7300 4200
+F 0 "R4" H 7700 4350 50  0000 L CNN
+F 1 "100 KΩ" H 7718 4450 50  0000 L CNN
+F 2 "footprints:C_0805_2012Metric_Pad1.15x1.40mm_HandSolder_FullSilk" H 7650 4450 50  0001 C CNN
+F 3 "~" H 7650 4450 50  0001 C CNN
+F 4 "1%" H 7700 4550 50  0000 L CNN "Tolerance"
+	1    7650 4450
 	-1   0    0    1   
 $EndComp
 $Comp
 L power:GND #PWR?
 U 1 1 6118AE7D
-P 7300 4300
+P 7650 4550
 AR Path="/6118AE7D" Ref="#PWR?"  Part="1" 
 AR Path="/611821E5/6118AE7D" Ref="#PWR?"  Part="1" 
 AR Path="/61199C7C/6118AE7D" Ref="#PWR0102"  Part="1" 
-F 0 "#PWR0102" H 7300 4050 50  0001 C CNN
-F 1 "GND" H 7305 4127 50  0000 C CNN
-F 2 "" H 7300 4300 50  0001 C CNN
-F 3 "" H 7300 4300 50  0001 C CNN
-	1    7300 4300
+F 0 "#PWR0102" H 7650 4300 50  0001 C CNN
+F 1 "GND" H 7655 4377 50  0000 C CNN
+F 2 "" H 7650 4550 50  0001 C CNN
+F 3 "" H 7650 4550 50  0001 C CNN
+	1    7650 4550
 	1    0    0    -1  
 $EndComp
 $Comp
 L Device:R_Small_US R?
 U 1 1 6118AE84
-P 7300 3800
+P 7650 4050
 AR Path="/6118AE84" Ref="R?"  Part="1" 
 AR Path="/611821E5/6118AE84" Ref="R?"  Part="1" 
 AR Path="/61199C7C/6118AE84" Ref="R3"  Part="1" 
-F 0 "R3" H 7150 3950 50  0000 L CNN
-F 1 "320 KΩ" H 7000 3850 50  0000 L CNN
-F 2 "footprints:C_0805_2012Metric_Pad1.15x1.40mm_HandSolder_FullSilk" H 7300 3800 50  0001 C CNN
-F 3 "~" H 7300 3800 50  0001 C CNN
-F 4 "1%" H 7150 3750 50  0000 L CNN "Tolerance"
-	1    7300 3800
+F 0 "R3" H 7500 4200 50  0000 L CNN
+F 1 "320 KΩ" H 7350 4100 50  0000 L CNN
+F 2 "footprints:C_0805_2012Metric_Pad1.15x1.40mm_HandSolder_FullSilk" H 7650 4050 50  0001 C CNN
+F 3 "~" H 7650 4050 50  0001 C CNN
+F 4 "1%" H 7500 4000 50  0000 L CNN "Tolerance"
+	1    7650 4050
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	7300 3900 7300 4000
+	7650 4150 7650 4250
 Wire Wire Line
-	6700 4000 7300 4000
-Connection ~ 6700 4000
-Connection ~ 7300 4000
+	7050 4250 7350 4250
+Connection ~ 7650 4250
 Wire Wire Line
-	7300 4000 7300 4100
+	7650 4250 7650 4350
 $Comp
 L power:VCC #PWR?
 U 1 1 6118AE6C
-P 7300 3700
+P 7650 3950
 AR Path="/6118AE6C" Ref="#PWR?"  Part="1" 
 AR Path="/611821E5/6118AE6C" Ref="#PWR?"  Part="1" 
 AR Path="/61199C7C/6118AE6C" Ref="#PWR0103"  Part="1" 
-F 0 "#PWR0103" H 7300 3550 50  0001 C CNN
-F 1 "VCC" H 7317 3873 50  0000 C CNN
-F 2 "" H 7300 3700 50  0001 C CNN
-F 3 "" H 7300 3700 50  0001 C CNN
-	1    7300 3700
+F 0 "#PWR0103" H 7650 3800 50  0001 C CNN
+F 1 "VCC" H 7667 4123 50  0000 C CNN
+F 2 "" H 7650 3950 50  0001 C CNN
+F 3 "" H 7650 3950 50  0001 C CNN
+	1    7650 3950
 	1    0    0    -1  
 $EndComp
-Text Label 6500 3900 0    50   ~ 0
+Text Label 7050 4150 0    50   ~ 0
 Vcc
-Text Label 6500 3700 0    50   ~ 0
-Vcc
-Text Label 5100 3900 2    50   ~ 0
+Text Label 4250 4350 2    50   ~ 0
 GND
 Text HLabel 3250 3100 0    50   Input ~ 0
 Vcc_Bat
-Text Label 4650 3700 0    50   ~ 0
+Text Label 3800 3950 0    50   ~ 0
 Vcc_Bat
 Text HLabel 3250 3400 0    50   Input ~ 0
 GND
 Text HLabel 3250 3000 0    50   Input ~ 0
 Vcc
 Text HLabel 3250 3200 0    50   Input ~ 0
-EN
-Text Label 6500 3800 0    50   ~ 0
-EN
+OpAmpEN
+Text Label 7050 4050 0    50   ~ 0
+OpAmpEN
 Text Label 3250 3200 0    50   ~ 0
-EN
+OpAmpEN
 Text Label 3250 3100 0    50   ~ 0
 Vcc_Bat
 $Comp
@@ -207,10 +181,32 @@ Text Label 3250 3000 0    50   ~ 0
 Vcc
 Text Label 3250 3400 0    50   ~ 0
 GND
-Text Label 6500 4000 0    50   ~ 0
+Text Label 7050 4250 0    50   ~ 0
 OUT
 Text Label 3250 3300 0    50   ~ 0
 OUT
 Text HLabel 3250 3300 0    50   Input ~ 0
 OUT
+$Comp
+L ADA4841-1YRZ-R7:ADA4841-1YRZ-R7 U1
+U 1 1 614790F1
+P 4250 4050
+F 0 "U1" H 5650 4437 60  0000 C CNN
+F 1 "ADA4841-1YRZ-R7" H 5650 4331 60  0000 C CNN
+F 2 "custom:ADA4841-1YRZ-R7" H 5650 4290 60  0001 C CNN
+F 3 "https://www.analog.com/media/en/technical-documentation/data-sheets/ADA4841-1_4841-2.pdf" H 5650 4331 60  0001 C CNN
+	1    4250 4050
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	4200 4150 4250 4150
+Wire Wire Line
+	7350 4250 7350 3500
+Connection ~ 7350 4250
+Wire Wire Line
+	7350 4250 7650 4250
+Wire Wire Line
+	4200 3500 7350 3500
+Wire Wire Line
+	4200 3500 4200 4150
 $EndSCHEMATC

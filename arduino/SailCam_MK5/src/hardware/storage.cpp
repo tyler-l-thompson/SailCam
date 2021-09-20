@@ -55,7 +55,7 @@ bool Storage::is_card_connected()
 bool Storage::log_data_point(DateTime timestamp, char* data)
 {
     check_directory(log_folder_path);
-    *(this->log_file) = SD.open(log_file_path, "a");
+    *(this->log_file) = SD.open(log_file_path, FILE_WRITE);
     
     if (this->log_file) {
         set_formatted_timestamp(timestamp);
@@ -198,7 +198,7 @@ void Storage::write_settings_file(char** message_buf)
     File settings_file;
     this->check_and_reconnect_card();
     if (this->is_card_connected()) {
-        settings_file = SD.open(system_configuration_path, "w");
+        settings_file = SD.open(system_configuration_path, FILE_WRITE);
         if (settings_file) {
             for (int i = 0; i < this->get_system_configuration()->get_settings_length(); i++) {
                 settings_file.printf("%s=%s\r\n", this->get_system_configuration()->get_settings_defaults_key(i), this->get_system_configuration()->get_setting(this->get_system_configuration()->get_settings_defaults_key(i))->get_value_str());
@@ -212,4 +212,14 @@ void Storage::write_settings_file(char** message_buf)
         this->card_connected = false;
         strcpy(*message_buf, "SD card not connected.\r\n");
     }
+}
+
+uint8_t Storage::get_sd_card_type()
+{
+    return this->SD.type();
+}
+
+bool Storage::format_sd_card()
+{
+    return this->SD_Fat.format();
 }

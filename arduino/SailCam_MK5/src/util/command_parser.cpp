@@ -16,6 +16,8 @@ CommandParser::CommandParser(HardwareDrivers* hardware_drivers)
                 {"getfirmware", &CommandParser::get_firmware_version},
                 {"blinkled", &CommandParser::blink_led},
                 {"checksdcard", &CommandParser::check_sd_card},
+                {"formatsd", &CommandParser::format_sd_card},
+                {"checkcam", &CommandParser::check_camera}
             }
 {
     this->hardware_drivers = hardware_drivers;
@@ -117,15 +119,18 @@ void CommandParser::get_free_memory(char* arg, char* param, char** message)
 void CommandParser::get_battery_level(char* arg, char* param, char** message)
 {
     double battery_volts, system_volts, battery_percent;
+    int battery_adc;
     battery_volts = hardware_drivers->battery_management->get_battery_volts();
     system_volts = hardware_drivers->battery_management->get_system_volts();
+    battery_adc = hardware_drivers->battery_management->get_battery_adc();
     battery_percent = ((battery_volts - battery_min_volts) * 100 / (battery_max_volts - battery_min_volts));
     sprintf
     (
         *message, 
-        "battery_percent=%0.2f%%, battery_volts=%0.2fv, vcc_volts=%0.2fv", 
+        "battery_percent=%0.2f%%, battery_volts=%0.2fv, battery_adc=%d vcc_volts=%0.2fv", 
         battery_percent, 
         battery_volts, 
+        battery_adc,
         system_volts
     );
 }
@@ -159,12 +164,30 @@ void CommandParser::blink_led(char* arg, char* param, char** message)
 
 void CommandParser::check_sd_card(char* arg, char* param, char** message)
 {
+    uint8_t sd_type = 0;
     int timeout = 10;
     while(hardware_drivers->storage_controller->check_and_reconnect_card() != true && timeout > 0) {
         delay(100);
         timeout--;
     }
-    sprintf(*message, "sd_card_connected=%s", hardware_drivers->storage_controller->check_and_reconnect_card() ? "True" : "False");
+    if (timeout < 0) {
+        sd_type = hardware_drivers->storage_controller->get_sd_card_type();
+    }
+    sprintf(*message, "sd_card_connected=%s, sd_card_type=%d", hardware_drivers->storage_controller->check_and_reconnect_card() ? "True" : "False", sd_type);
+}
+
+void CommandParser::format_sd_card(char* arg, char* param, char** message)
+{
+    //sprintf(*message, "%s", hardware_drivers->storage_controller->format_sd_card() ? "sd_card_format=true" : "sd_card_format=false");
+    
+    sprintf(*message, "false");
+    hardware_drivers->storage_controller->format_sd_card();
+    sprintf(*message, "true");
+}
+
+void CommandParser::check_camera(char* arg, char* param, char** message)
+{
+    sprintf(*message, "%s", hardware_drivers->camera->run_self_test());
 }
 
 bool CommandParser::process_serial_terminal()
@@ -177,7 +200,7 @@ bool CommandParser::process_serial_terminal()
     int arg_length;
     bool command_found = false;
 
-    for (int i = 0; i < this->commands_size; i++) {
+    for (int i = 0; i < commands_size; i++) {
         if (strcmp(action, commands[i].name) == 0) {
             command_found = true;
             arg_length = this->hardware_drivers->serial_term->parse_string(this->hardware_drivers->serial_term->get_data(), command_message_buffer_length, &arg, action_length, ' ');
@@ -202,7 +225,7 @@ void CommandParser::process_web_api(const char* command_name, const char* arg, c
 {
     bool command_found = false;
 
-    for (int i = 0; i < this->commands_size; i++) {
+    for (int i = 0; i < commands_size; i++) {
         if (strcmp(command_name, this->commands[i].name) == 0) {
             (this->*(commands[i].function))((char *)arg, (char *)param, message);
             command_found = true;
@@ -225,7 +248,7 @@ void CommandParser::process_tcp_api()
     int arg_length;
     bool command_found = false;
 
-    for (int i = 0; i < this->commands_size; i++) {
+    for (int i = 0; i < commands_size; i++) {
         if (strcmp(action, commands[i].name) == 0) {
             command_found = true;
             arg_length = this->hardware_drivers->serial_term->parse_string(this->hardware_drivers->wifi_radio->get_server_data(), command_message_buffer_length, &arg, action_length, ' ');

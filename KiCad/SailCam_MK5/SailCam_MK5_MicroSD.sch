@@ -3,7 +3,7 @@ EELAYER 30 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 7 7
+Sheet 6 7
 Title "SailCam"
 Date "2021-07-31"
 Rev "MK5"
@@ -14,7 +14,7 @@ Comment3 ""
 Comment4 ""
 $EndDescr
 $Comp
-L DM3BT-DSF-PEJS:DM3BT-DSF-PEJS J?
+L SailCam_MK5-rescue:DM3BT-DSF-PEJS-DM3BT-DSF-PEJS J?
 U 1 1 611DCAF8
 P 5050 2950
 AR Path="/611DCAF8" Ref="J?"  Part="1" 
@@ -28,7 +28,7 @@ F 4 "Micro SD Card Slot" H 5950 3223 50  0000 C CNN "Desription"
 	1    0    0    -1  
 $EndComp
 $Comp
-L MC74HC365ADG-ND:MC74HC365ADG U?
+L SailCam_MK5-rescue:MC74HC365ADG-MC74HC365ADG-ND U?
 U 1 1 611DCAFF
 P 5150 4200
 AR Path="/611DCAFF" Ref="U?"  Part="1" 
@@ -69,9 +69,9 @@ Text Label 5600 1550 0    50   ~ 0
 Vcc
 Text Label 5600 1650 0    50   ~ 0
 GND
-Text Label 5150 4400 2    50   ~ 0
-SD_MISO
 Text Label 5150 4500 2    50   ~ 0
+SD_MISO
+Text Label 5150 4400 2    50   ~ 0
 SD_MOSI
 Text Label 5150 4800 2    50   ~ 0
 SD_SCK

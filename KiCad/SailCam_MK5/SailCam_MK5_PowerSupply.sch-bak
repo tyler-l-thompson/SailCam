@@ -14,7 +14,7 @@ Comment3 ""
 Comment4 ""
 $EndDescr
 $Comp
-L XC6220B331MR-G:XC6220B331MR-G U?
+L SailCam_MK5-rescue:XC6220B331MR-G-XC6220B331MR-G U?
 U 1 1 611C1252
 P 6150 3100
 AR Path="/611C1252" Ref="U?"  Part="1" 
@@ -98,7 +98,7 @@ Wire Wire Line
 	7750 3100 8050 3100
 Connection ~ 8050 3100
 $Comp
-L LTC4054ES5-4.2_TRMPBF:LTC4054ES5-4.2#TRMPBF U?
+L SailCam_MK5-rescue:LTC4054ES5-4.2#TRMPBF-LTC4054ES5-4.2_TRMPBF U?
 U 1 1 611C1280
 P 4600 4400
 AR Path="/611C1280" Ref="U?"  Part="1" 
@@ -194,7 +194,7 @@ F 3 "" H 3650 4800 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L NCV7805BD2TG:NCV7805BD2TG U?
+L SailCam_MK5-rescue:NCV7805BD2TG-NCV7805BD2TG U?
 U 1 1 611C12B3
 P 3800 3100
 AR Path="/611C12B3" Ref="U?"  Part="1" 
@@ -381,4 +381,10 @@ Wire Wire Line
 	3250 3450 5750 3450
 Wire Wire Line
 	5750 3450 5750 2850
+Text HLabel 2000 1700 0    50   Input ~ 0
+Bat_Chg_Vcc
+Text Label 5600 4100 0    50   ~ 0
+Bat_Chg_Vcc
+Text Label 2000 1700 0    50   ~ 0
+Bat_Chg_Vcc
 $EndSCHEMATC

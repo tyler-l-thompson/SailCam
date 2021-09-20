@@ -3,7 +3,7 @@ EELAYER 30 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 6 7
+Sheet 7 7
 Title "SailCam"
 Date "2021-07-31"
 Rev "MK5"
@@ -47,9 +47,9 @@ Text Label 6450 3100 0    50   ~ 0
 MOSI
 Text Label 6450 3000 0    50   ~ 0
 SCK
-Text Label 6450 2900 0    50   ~ 0
-Cam_CS
 Text Label 6450 2800 0    50   ~ 0
+Cam_CS
+Text Label 5650 2800 2    50   ~ 0
 SD_CS
 Text Label 5650 2500 2    50   ~ 0
 ADC0
@@ -216,7 +216,7 @@ F 3 "" H 7050 3150 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L CH340G_Interface_USB:CH340G U?
+L SailCam_MK5-rescue:CH340G-CH340G_Interface_USB U?
 U 1 1 6121FD94
 P 6050 4600
 AR Path="/6121FD94" Ref="U?"  Part="1" 
@@ -282,7 +282,7 @@ NoConn ~ 6450 4700
 NoConn ~ 6450 4600
 NoConn ~ 6450 4500
 Text Label 5250 4350 0    50   ~ 0
-CHG
+Bat_Chg_Vcc
 Wire Wire Line
 	5250 4350 5450 4350
 Wire Wire Line
@@ -502,10 +502,10 @@ Wire Wire Line
 Wire Wire Line
 	7300 5050 7800 5050
 Connection ~ 7300 4650
-Text Label 5650 2800 2    50   ~ 0
-GPIO0
+Text Label 6450 2900 0    50   ~ 0
+OpAmpEN
 Text Label 7950 5450 0    50   ~ 0
-GPIO0
+SD_CS
 Wire Wire Line
 	7950 5450 7800 5450
 Wire Wire Line
@@ -554,8 +554,6 @@ Text HLabel 3300 3100 0    50   Input ~ 0
 Vcc
 Text HLabel 3300 3200 0    50   Input ~ 0
 GND
-Text HLabel 3300 3300 0    50   Input ~ 0
-CHG
 Text HLabel 3300 3400 0    50   Input ~ 0
 Rx
 Text HLabel 3300 3500 0    50   Input ~ 0
@@ -614,8 +612,6 @@ Text Label 3300 3100 0    50   ~ 0
 Vcc
 Text Label 3300 3200 0    50   ~ 0
 GND
-Text Label 3300 3300 0    50   ~ 0
-CHG
 Text Label 3300 3500 0    50   ~ 0
 Tx0
 Text Label 3300 3400 0    50   ~ 0
@@ -722,7 +718,7 @@ $EndComp
 Text Label 8500 2600 2    50   ~ 0
 RST
 Text Label 9200 2600 2    50   ~ 0
-GPIO0
+SD_CS
 Text HLabel 3300 4300 0    50   Input ~ 0
 ADC0
 Text Label 3300 4300 0    50   ~ 0
@@ -732,14 +728,14 @@ OpAmpEN
 Text Label 5650 2700 2    50   ~ 0
 GPIO2
 Text Label 3300 4400 0    50   ~ 0
-GPIO0
+OpAmpEN
 $Comp
-L AOD1N60:AOD1N60 Q3
+L SailCam_MK5-rescue:AOD1N60-AOD1N60 Q3
 U 1 1 612A588A
 P 10050 4450
 F 0 "Q3" H 10258 4541 50  0000 L CNN
 F 1 "AOD1N60" H 10258 4450 50  0000 L CNN
-F 2 "TO228P1003X240-3N" H 10050 4450 50  0001 L BNN
+F 2 "custom:TO228P1003X240-3N" H 10050 4450 50  0001 L BNN
 F 3 "" H 10050 4450 50  0001 L BNN
 F 4 "IPC 7351B" H 10050 4450 50  0001 L BNN "STANDARD"
 F 5 "2.4 mm" H 10050 4450 50  0001 L BNN "MAXIMUM_PACKAGE_HEIGHT"
@@ -834,4 +830,8 @@ F 4 "5%" H 10218 4059 50  0000 L CNN "Tolerance"
 $EndComp
 Wire Wire Line
 	9900 4550 9950 4550
+Text HLabel 3300 4700 0    50   Input ~ 0
+Bat_Chg_Vcc
+Text Label 3300 4700 0    50   ~ 0
+Bat_Chg_Vcc
 $EndSCHEMATC

@@ -4,6 +4,7 @@
 
 #include <SPI.h>
 #include <SD.h>
+#include <SdFat.h>
 #include <hardware/serial_terminal.h>
 #include <hardware/clock.h>
 #include <settings/system_configuration.h>
@@ -26,6 +27,8 @@ private:
     void write_settings_defaults(File settings_file, int length);
     SystemConfiguration* system_configuration;
     File* log_file;
+    SDClass SD;
+    sdfat::SdFat SD_Fat;
 
 public:
     Storage(DateTime* timestamp);
@@ -43,6 +46,8 @@ public:
     void print_configuration(char** message_buf);
     void print_configuration(SerialTerminal* serial_term);
     void write_settings_file(char** message_buf);
+    uint8_t get_sd_card_type();
+    bool format_sd_card();
 };
 
 void sd_datetime_callback(uint16_t* date, uint16_t* time);

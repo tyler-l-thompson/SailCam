@@ -15,6 +15,7 @@ public:
     ~BatteryManagement();
     double get_battery_volts();
     double get_system_volts();
+    int get_battery_adc();
 };
 
 #endif

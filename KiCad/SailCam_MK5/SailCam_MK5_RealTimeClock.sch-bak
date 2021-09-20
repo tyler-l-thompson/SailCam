@@ -14,7 +14,7 @@ Comment3 ""
 Comment4 ""
 $EndDescr
 $Comp
-L ds1672:DS1672S-33+T&R U?
+L SailCam_MK5-rescue:DS1672S-33+T&R-ds1672 U?
 U 1 1 611A5679
 P 5200 3800
 AR Path="/611A5679" Ref="U?"  Part="1" 
@@ -28,7 +28,7 @@ F 4 "Real Time Clock" H 5875 4073 50  0000 C CNN "Description"
 	1    0    0    -1  
 $EndComp
 $Comp
-L ABS25-32.768KHZ-6-1-T:ABS25-32.768KHZ-6-1-T Y?
+L SailCam_MK5-rescue:ABS25-32.768KHZ-6-1-T-ABS25-32.768KHZ-6-1-T Y?
 U 1 1 611A5681
 P 4900 3800
 AR Path="/611A5681" Ref="Y?"  Part="1" 
@@ -43,7 +43,7 @@ F 5 "19131" H 4900 3800 50  0001 L BNN "SANPEDA_PACKAGE_ID"
 	1    0    0    -1  
 $EndComp
 $Comp
-L BU2032SM-BT-GTR:BU2032SM-BT-GTR B?
+L SailCam_MK5-rescue:BU2032SM-BT-GTR-BU2032SM-BT-GTR B?
 U 1 1 611A568F
 P 3950 3800
 AR Path="/611A568F" Ref="B?"  Part="1" 

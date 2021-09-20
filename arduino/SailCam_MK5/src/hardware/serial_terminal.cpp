@@ -16,7 +16,7 @@ SerialTerminal::~SerialTerminal()
     end();
 }
 
-void SerialTerminal::reinitialize(uint32_t baud_rate, int buffer_width)
+void SerialTerminal::reinitialize(uint32_t baud_rate)
 {
     new_data = false;
     flush();

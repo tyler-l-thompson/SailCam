@@ -2,9 +2,9 @@
 #define firmware_version "1.0"
 
 #define sd_card_chip_select 16
-#define camera_chip_select 15
+#define camera_chip_select 2
 
-#define status_led_pin 2
+#define status_led_pin 15
 
 #define battery_measure_adc_channel A0
 #define battery_measure_op_disable_pin 0
@@ -34,3 +34,16 @@
 #define initial_hardware_serial_baud_rate 9600
 
 #define serial_debug_messages true
+
+
+/**
+ * 0    SD CS
+ * 2    IR/Status LED
+ * 4    SDA
+ * 5    SCL
+ * 12   MISO
+ * 13   MOSI
+ * 14   SCK
+ * 15   OpAmpEN
+ * 16   CAM CS
+ **/

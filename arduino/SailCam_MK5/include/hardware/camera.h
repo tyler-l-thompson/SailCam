@@ -4,15 +4,21 @@
 
 #include <Arduino.h>
 #include <config.h>
-//#include <ArduCAM.h>
+#include <Wire.h>
+#include <SPI.h>
+#include "memorysaver.h"
+#include <ArduCAM.h>
 
 class Camera
 {
 private:
+    ArduCAM* cam;
 
 public:
     Camera();
     ~Camera();
+    const char* run_self_test();
+    void init_cam();
 };
 
 #endif

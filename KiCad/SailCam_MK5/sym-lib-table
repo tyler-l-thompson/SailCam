@@ -17,4 +17,5 @@
   (lib (name CH340G_Interface_USB)(type Legacy)(uri ${KIPRJMOD}/lib/symbols/CH340G_Interface_USB.lib)(options "")(descr "")(disabled))
   (lib (name AOD1N60)(type Legacy)(uri ${KIPRJMOD}/lib/symbols/AOD1N60.lib)(options "")(descr "")(disabled))
   (lib (name SailCam_MK5-rescue)(type Legacy)(uri ${KIPRJMOD}/SailCam_MK5-rescue.lib)(options "")(descr "")(disabled))
+  (lib (name SailCam)(type Legacy)(uri C:/Users/Dexter/Documents/PlatformIO/Projects/SailCam/KiCad/lib/symbols/SailCam.lib)(options "")(descr ""))
 )

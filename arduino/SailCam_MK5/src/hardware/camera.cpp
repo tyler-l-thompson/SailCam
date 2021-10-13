@@ -12,7 +12,7 @@ Camera::Camera()
     //this->cam->CS_LOW();
     
     SPI.begin();
-    //SPI.setFrequency(4000000); //4MHz
+    SPI.setFrequency(4000000); //4MHz
     
     //Reset the CPLD
     this->cam->write_reg(0x07, 0x80);
@@ -53,7 +53,7 @@ const char* Camera::run_self_test()
     //this->cam->CS_HIGH();
     if (temp != 0x55){
         const char* return_str = "Cam: SPI Error 0000";
-        snprintf((char*)return_str, 19, "Cam: SPI Error %d", temp);
+        snprintf((char*)return_str, 19, "Cam: SPI Error %02x", temp);
         return return_str;
     }
 

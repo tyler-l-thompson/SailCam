@@ -1,13 +1,13 @@
 
 #define firmware_version "1.0"
 
-#define sd_card_chip_select 16
-#define camera_chip_select 2
+#define sd_card_chip_select 0
+#define camera_chip_select 16
 
-#define status_led_pin 15
+#define status_led_pin 2
 
 #define battery_measure_adc_channel A0
-#define battery_measure_op_disable_pin 0
+#define battery_measure_op_disable_pin 15
 #define battery_measure_adc_resolution 1024
 #define battery_max_volts 4.3
 #define battery_min_volts 2.5

@@ -214,31 +214,16 @@ Wire Wire Line
 $Comp
 L Device:C_Small C?
 U 1 1 611C12BC
-P 3800 2750
+P 3800 3200
 AR Path="/611C12BC" Ref="C?"  Part="1" 
 AR Path="/611BA1F2/611C12BC" Ref="C1"  Part="1" 
-F 0 "C1" H 3892 2796 50  0000 L CNN
-F 1 "0.33 uF" H 3892 2705 50  0000 L CNN
-F 2 "footprints:C_0805_2012Metric_Pad1.15x1.40mm_HandSolder_FullSilk" H 3800 2750 50  0001 C CNN
-F 3 "~" H 3800 2750 50  0001 C CNN
-	1    3800 2750
+F 0 "C1" H 3892 3246 50  0000 L CNN
+F 1 "0.33 uF" H 3892 3155 50  0000 L CNN
+F 2 "footprints:C_0805_2012Metric_Pad1.15x1.40mm_HandSolder_FullSilk" H 3800 3200 50  0001 C CNN
+F 3 "~" H 3800 3200 50  0001 C CNN
+	1    3800 3200
 	1    0    0    -1  
 $EndComp
-$Comp
-L power:VCC #PWR?
-U 1 1 611C12C2
-P 3800 2650
-AR Path="/611C12C2" Ref="#PWR?"  Part="1" 
-AR Path="/611BA1F2/611C12C2" Ref="#PWR0114"  Part="1" 
-F 0 "#PWR0114" H 3800 2500 50  0001 C CNN
-F 1 "VCC" H 3817 2823 50  0000 C CNN
-F 2 "" H 3800 2650 50  0001 C CNN
-F 3 "" H 3800 2650 50  0001 C CNN
-	1    3800 2650
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	3800 2850 3800 3100
 Connection ~ 5600 4100
 Text Label 3800 3100 2    50   ~ 0
 CHG
@@ -387,4 +372,15 @@ Text Label 5600 4100 0    50   ~ 0
 Bat_Chg_Vcc
 Text Label 2000 1700 0    50   ~ 0
 Bat_Chg_Vcc
+$Comp
+L power:GND #PWR?
+U 1 1 6153E2D4
+P 3800 3300
+F 0 "#PWR?" H 3800 3050 50  0001 C CNN
+F 1 "GND" H 3805 3127 50  0000 C CNN
+F 2 "" H 3800 3300 50  0001 C CNN
+F 3 "" H 3800 3300 50  0001 C CNN
+	1    3800 3300
+	1    0    0    -1  
+$EndComp
 $EndSCHEMATC

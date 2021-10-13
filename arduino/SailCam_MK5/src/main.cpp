@@ -39,7 +39,9 @@ void setup()
     //hardware_drivers->old_display->update();
 
     // initialize OLED display
+    delay(200);
     hardware_drivers->old_display = new OledDisplay();
+    hardware_drivers->old_display->clear();
     hardware_drivers->old_display->writef("Firmware: %s", firmware_version);
     hardware_drivers->old_display->update();
 

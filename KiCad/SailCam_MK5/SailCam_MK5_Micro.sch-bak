@@ -229,19 +229,6 @@ F 3 "http://www.datasheet5.com/pdf-local-2195953" H 5700 5400 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L Connector:USB_B J?
-U 1 1 6121FD9A
-P 4950 4550
-AR Path="/6121FD9A" Ref="J?"  Part="1" 
-AR Path="/61217E38/6121FD9A" Ref="J7"  Part="1" 
-F 0 "J7" H 5007 5017 50  0000 C CNN
-F 1 "USB_B" H 5007 4926 50  0000 C CNN
-F 2 "footprints:AMPHENOL_61729-1011BLF" H 5100 4500 50  0001 C CNN
-F 3 "https://www.amphenol-icc.com/media/wysiwyg/files/drawing/61729.pdf" H 5100 4500 50  0001 C CNN
-	1    4950 4550
-	1    0    0    -1  
-$EndComp
-$Comp
 L power:GND #PWR?
 U 1 1 61220EEA
 P 4950 4950
@@ -258,10 +245,6 @@ $EndComp
 Wire Wire Line
 	4850 4950 4950 4950
 Connection ~ 4950 4950
-Wire Wire Line
-	5250 4550 5650 4550
-Wire Wire Line
-	5650 4650 5250 4650
 $Comp
 L power:GND #PWR?
 U 1 1 61226E1E
@@ -414,8 +397,6 @@ F 3 "" H 3400 5550 50  0001 C CNN
 	1    3400 5550
 	1    0    0    -1  
 $EndComp
-Wire Wire Line
-	4050 5250 5250 5250
 Connection ~ 4050 5250
 Wire Wire Line
 	4050 5550 5350 5550
@@ -424,10 +405,6 @@ Wire Wire Line
 Wire Wire Line
 	5350 4850 5650 4850
 Connection ~ 4050 5550
-Wire Wire Line
-	5250 4750 5650 4750
-Wire Wire Line
-	5250 4750 5250 5250
 $Comp
 L Device:Q_NPN_BEC Q1
 U 1 1 6123D76E
@@ -663,62 +640,6 @@ F 3 "~" H 7050 2500 50  0001 C CNN
 $EndComp
 Wire Wire Line
 	6450 2400 7050 2400
-$Comp
-L Switch:SW_Push S2
-U 1 1 61289747
-P 8500 2800
-F 0 "S2" V 8409 2948 50  0000 L CNN
-F 1 "SW_Push" V 8500 2948 50  0000 L CNN
-F 2 "Button_Switch_THT:SW_PUSH_6mm" H 8500 3000 50  0001 C CNN
-F 3 "~" H 8500 3000 50  0001 C CNN
-F 4 "Reset" V 8591 2948 50  0000 L CNN "Description"
-	1    8500 2800
-	0    1    1    0   
-$EndComp
-$Comp
-L power:GND #PWR?
-U 1 1 6128AA66
-P 8500 3000
-AR Path="/6128AA66" Ref="#PWR?"  Part="1" 
-AR Path="/611BA1F2/6128AA66" Ref="#PWR?"  Part="1" 
-AR Path="/61217E38/6128AA66" Ref="#PWR015"  Part="1" 
-F 0 "#PWR015" H 8500 2750 50  0001 C CNN
-F 1 "GND" H 8505 2827 50  0000 C CNN
-F 2 "" H 8500 3000 50  0001 C CNN
-F 3 "" H 8500 3000 50  0001 C CNN
-	1    8500 3000
-	1    0    0    -1  
-$EndComp
-$Comp
-L Switch:SW_Push S3
-U 1 1 6128D069
-P 9200 2800
-F 0 "S3" V 9109 2948 50  0000 L CNN
-F 1 "SW_Push" V 9200 2948 50  0000 L CNN
-F 2 "Button_Switch_THT:SW_PUSH_6mm" H 9200 3000 50  0001 C CNN
-F 3 "~" H 9200 3000 50  0001 C CNN
-F 4 "Flash" V 9291 2948 50  0000 L CNN "Description"
-	1    9200 2800
-	0    1    1    0   
-$EndComp
-$Comp
-L power:GND #PWR?
-U 1 1 6128D06F
-P 9200 3000
-AR Path="/6128D06F" Ref="#PWR?"  Part="1" 
-AR Path="/611BA1F2/6128D06F" Ref="#PWR?"  Part="1" 
-AR Path="/61217E38/6128D06F" Ref="#PWR017"  Part="1" 
-F 0 "#PWR017" H 9200 2750 50  0001 C CNN
-F 1 "GND" H 9205 2827 50  0000 C CNN
-F 2 "" H 9200 3000 50  0001 C CNN
-F 3 "" H 9200 3000 50  0001 C CNN
-	1    9200 3000
-	1    0    0    -1  
-$EndComp
-Text Label 8500 2600 2    50   ~ 0
-RST
-Text Label 9200 2600 2    50   ~ 0
-SD_CS
 Text HLabel 3300 4300 0    50   Input ~ 0
 ADC0
 Text Label 3300 4300 0    50   ~ 0
@@ -735,7 +656,7 @@ U 1 1 612A588A
 P 10050 4450
 F 0 "Q3" H 10258 4541 50  0000 L CNN
 F 1 "AOD1N60" H 10258 4450 50  0000 L CNN
-F 2 "TO228P1003X240-3N" H 10050 4450 50  0001 L BNN
+F 2 "custom:TO228P1003X240-3N" H 10050 4450 50  0001 L BNN
 F 3 "" H 10050 4450 50  0001 L BNN
 F 4 "IPC 7351B" H 10050 4450 50  0001 L BNN "STANDARD"
 F 5 "2.4 mm" H 10050 4450 50  0001 L BNN "MAXIMUM_PACKAGE_HEIGHT"
@@ -834,4 +755,26 @@ Text HLabel 3300 4700 0    50   Input ~ 0
 Bat_Chg_Vcc
 Text Label 3300 4700 0    50   ~ 0
 Bat_Chg_Vcc
+$Comp
+L SailCam:USB_B_Micro J7
+U 1 1 614CF04D
+P 4950 4550
+F 0 "J7" H 5007 5017 50  0000 C CNN
+F 1 "USB_B_Mini" H 5007 4926 50  0000 C CNN
+F 2 "digikey-footprints:USB_Mini_B_Female_548190519" H 5100 4500 50  0001 C CNN
+F 3 "~" H 5100 4500 50  0001 C CNN
+	1    4950 4550
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	5650 4750 5300 4750
+Wire Wire Line
+	5300 4750 5300 5250
+Wire Wire Line
+	4050 5250 5300 5250
+NoConn ~ 5250 4750
+Wire Wire Line
+	5250 4650 5650 4650
+Wire Wire Line
+	5250 4550 5650 4550
 $EndSCHEMATC

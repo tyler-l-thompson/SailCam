@@ -32,14 +32,14 @@ void setup()
     hardware_drivers->serial_term->debug_printf("Firmware Version: %s\r\n", firmware_version);
 
     // initalize camera
-    hardware_drivers->camera = new Camera();
-    hardware_drivers->serial_term->debug_println(hardware_drivers->camera->run_self_test());
-    hardware_drivers->camera->init_cam();
+    //hardware_drivers->camera = new Camera();
+    //hardware_drivers->serial_term->debug_println(hardware_drivers->camera->run_self_test());
+    //hardware_drivers->camera->init_cam();
     //hardware_drivers->old_display->write((char*)hardware_drivers->camera->run_self_test());
     //hardware_drivers->old_display->update();
 
     // initialize OLED display
-    delay(200);
+    //delay(200);
     hardware_drivers->old_display = new OledDisplay();
     hardware_drivers->old_display->clear();
     hardware_drivers->old_display->writef("Firmware: %s", firmware_version);

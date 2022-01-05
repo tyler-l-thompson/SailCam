@@ -19,6 +19,10 @@ WebServer::WebServer(HardwareDrivers* hardware_drivers, CommandParser* command_p
         this->api_parser();
     });
 
+    server->on("/stream", HTTP_GET, [this]() {
+        this->stream_camera();
+    });
+
     server->onNotFound([this]() {
         server->send(404, "text/html", "Page not found.");
     });
@@ -57,4 +61,57 @@ void WebServer::api_parser()
     this->command_parser->process_web_api(server->arg("command").c_str(), server->arg("arg").c_str(), server->arg("param").c_str(), &html);
     server->send(200, "text/html", html);
     free(html);
+}
+
+void WebServer::stream_camera()
+{
+    WiFiClient client = server->client();
+  
+    String response = "HTTP/1.1 200 OK\r\n";
+    response += "Content-Type: multipart/x-mixed-replace; boundary=frame\r\n\r\n";
+    server->sendContent(response);
+  
+    while (1) {
+
+        hardware_drivers->camera->cam->clear_fifo_flag();
+        hardware_drivers->camera->cam->start_capture();
+
+        while (!hardware_drivers->camera->cam->get_bit(ARDUCHIP_TRIG, CAP_DONE_MASK));
+
+        size_t len = hardware_drivers->camera->cam->read_fifo_length();
+        if (len >= MAX_FIFO_SIZE) {
+            continue;
+        } else if (len == 0 ){
+            continue;
+        }
+
+        hardware_drivers->camera->cam->CS_LOW();
+        hardware_drivers->camera->cam->set_fifo_burst(); 
+
+        #if !(defined (OV5642_MINI_5MP_PLUS) ||(defined (ARDUCAM_SHIELD_V2) && defined (OV5642_CAM)))
+        SPI.transfer(0xFF);
+        #endif   
+
+        if (!client.connected()) break;
+
+        response = "--frame\r\n";
+        response += "Content-Type: image/jpeg\r\n\r\n";
+        server->sendContent(response);
+        
+        static const size_t bufferSize = 4096;
+        static uint8_t buffer[bufferSize] = {0xFF};
+        
+        while (len) {
+            size_t will_copy = (len < bufferSize) ? len : bufferSize;
+            hardware_drivers->camera->cam->transferBytes(&buffer[0], &buffer[0], will_copy);
+
+            if (!client.connected()) break;
+
+            client.write(&buffer[0], will_copy);
+            len -= will_copy;
+        }
+        hardware_drivers->camera->cam->CS_HIGH();
+
+        if (!client.connected()) break;
+    }
 }

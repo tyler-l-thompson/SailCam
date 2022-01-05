@@ -18,6 +18,7 @@ private:
     void format_html_response();
     void handle_root();
     void api_parser();
+    void stream_camera();
 
 
 public:

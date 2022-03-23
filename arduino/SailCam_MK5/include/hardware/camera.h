@@ -18,7 +18,6 @@ public:
     Camera();
     ~Camera();
     const char* run_self_test();
-    void init_cam();
     ArduCAM* cam;
 };
 

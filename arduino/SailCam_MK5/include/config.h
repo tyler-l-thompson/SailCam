@@ -37,6 +37,7 @@
 
 
 /**
+ * IO Pinout
  * 0    SD CS
  * 2    IR/Status LED
  * 4    SDA
@@ -46,4 +47,11 @@
  * 14   SCK
  * 15   OpAmpEN
  * 16   CAM CS
- **/
+ */
+
+/**
+ * I2C Slave Addresses
+ * 0x3D - OLED Display
+ * 0x78 - Camera
+ * 0x68 - RTC
+ */

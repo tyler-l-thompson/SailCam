@@ -8,7 +8,7 @@ Camera::Camera()
     Wire.begin();
     
     SPI.begin();
-    SPI.setFrequency(4000000); // 4MHz
+    SPI.setFrequency(8000000); // 8MHz
     
     this->cam->set_format(JPEG);
     this->cam->InitCAM();
@@ -29,10 +29,10 @@ Camera::~Camera()
 {
 }
 
-const char* Camera::run_self_test()
+bool Camera::run_self_test(char** return_message)
 {
+    bool self_test_pass;
     uint8_t spi_return, vid, pid;
-    const char * return_str = new char[41];
 
     // Check if the ArduCAM SPI bus is OK
     // write 0x55 to test register, then read it back
@@ -47,6 +47,110 @@ const char* Camera::run_self_test()
     this->cam->rdSensorReg16_8(OV5642_CHIPID_HIGH, &vid);
     this->cam->rdSensorReg16_8(OV5642_CHIPID_LOW, &pid);
 
-    snprintf((char*) return_str, 41, "CAM - SPI 55:%02x, I2C 56:%02x 42:%02x", spi_return, vid, pid);
-    return return_str;
+    if (spi_return == 0x55 && vid == 0x56 && pid == 0x42)
+    {
+        self_test_pass = true;
+    } else
+    {
+        self_test_pass = false;
+    }
+
+    snprintf(*return_message, 36, "CAM:%s-SPI:55|%02x,I2C:56|%02x:42|%02x", self_test_pass ? "True " : "False" , spi_return, vid, pid);
+    return self_test_pass;
+}
+
+void Camera::capture_image()
+{
+    this->cam->start_capture();
+    while(!this->cam->get_bit(ARDUCHIP_TRIG, CAP_DONE_MASK));
+}
+
+bool Camera::save_image(Storage* storage, char* file_name)
+{
+    File output_file;
+    uint8_t temp = 0, temp_last = 0;
+    uint32_t length = 0;
+    static int i = 0;
+    
+    byte buf[256]; 
+    
+    // check the length
+    length = this->cam->read_fifo_length();
+    if (length >= MAX_FIFO_SIZE) // 8M - oversized
+    {
+        return false;
+    }
+    if (length == 0 ) // 0kb - undersized
+    {
+        return false;
+    } 
+
+    this->cam->CS_LOW();
+    this->cam->set_fifo_burst(); // Set fifo burst mode
+    i = 0;
+    while (length--)
+    {
+        temp_last = temp;
+        temp = SPI.transfer(0x00);
+
+        // Read JPEG data from FIFO
+        if ( (temp == 0xD9) && (temp_last == 0xFF) ) // If find the end ,break while,
+        {
+            buf[i++] = temp;  // save the last  0XD9     
+            // Write the remain bytes in the buffer
+            this->cam->CS_HIGH();
+            output_file.write(buf, i);
+
+            // Close the file
+            output_file.close();
+
+            this->is_header = false;
+            this->cam->CS_LOW();
+            this->cam->set_fifo_burst();
+            i = 0;
+        }  
+
+        if (this->is_header)
+        { 
+            // Write image data to buffer if not full
+            if (i < 256)
+            {
+                buf[i++] = temp;
+            }
+            else
+            {
+                // Write 256 bytes image data to file
+                this->cam->CS_HIGH();
+                output_file.write(buf, 256);
+                i = 0;
+                buf[i++] = temp;
+                this->cam->CS_LOW();
+                this->cam->set_fifo_burst();
+            }        
+        }
+        else if ((temp == 0xD8) & (temp_last == 0xFF))
+        {
+            this->is_header = true;
+            this->cam->CS_HIGH();
+
+            // output_file = SD.open(filename, FILE_WRITE);
+            output_file = storage->open_file(file_name, FILE_WRITE);
+            delay(100);
+            // if (!output_file)
+            // {
+            //     Serial.println(F("File open failed"));
+            //     while (1) {
+            //     blink_led(100, 3);
+            //     delay(1000);
+            //     }
+            // }
+            this->cam->CS_LOW();
+            this->cam->set_fifo_burst();   
+            buf[i++] = temp_last;
+            buf[i++] = temp;   
+        }
+    }
+
+    this->cam->CS_HIGH();
+    return true;
 }

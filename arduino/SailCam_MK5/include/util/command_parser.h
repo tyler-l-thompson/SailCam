@@ -4,7 +4,7 @@
 
 #include <hardware/drivers.h>
 
-#define commands_size 15
+#define commands_size 17
 
 class CommandParser
 {
@@ -26,6 +26,7 @@ private:
     void get_config(char* arg, char* param, char** message);
     void save_config(char* arg, char* param, char** message);
     void get_free_memory(char* arg, char* param, char** message);
+    void get_cpu_speed(char* arg, char* param, char** message);
     void get_battery_level(char* arg, char* param, char** message);
     void get_wifi_status(char* arg, char* param, char** message);
     void get_firmware_version(char* arg, char* param, char** message);
@@ -33,6 +34,7 @@ private:
     void check_sd_card(char* arg, char* param, char** message);
     void format_sd_card(char* arg, char* param, char** message);
     void check_camera(char* arg, char* param, char** message);
+    void capture_image(char* arg, char* param, char** message);
 
     HardwareDrivers* hardware_drivers;
     CommandStruct commands[commands_size];

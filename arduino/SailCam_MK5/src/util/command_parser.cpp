@@ -11,13 +11,15 @@ CommandParser::CommandParser(HardwareDrivers* hardware_drivers)
                 {"getconfig", &CommandParser::get_config},
                 {"saveconfig", &CommandParser::save_config},
                 {"getmem", &CommandParser::get_free_memory},
+                {"getcpu", &CommandParser::get_cpu_speed},
                 {"getbat", &CommandParser::get_battery_level},
                 {"getwifi", &CommandParser::get_wifi_status},
                 {"getfirmware", &CommandParser::get_firmware_version},
                 {"blinkled", &CommandParser::blink_led},
                 {"checksdcard", &CommandParser::check_sd_card},
                 {"formatsd", &CommandParser::format_sd_card},
-                {"checkcam", &CommandParser::check_camera}
+                {"checkcam", &CommandParser::check_camera},
+                {"captureimage", &CommandParser::capture_image}
             }
 {
     this->hardware_drivers = hardware_drivers;
@@ -116,6 +118,11 @@ void CommandParser::get_free_memory(char* arg, char* param, char** message)
     sprintf(*message, "free_memory=%d, units=Bytes", system_get_free_heap_size());
 }
 
+void CommandParser::get_cpu_speed(char* arg, char* param, char** message)
+{
+    sprintf(*message, "cpu_speed=%d", system_get_cpu_freq());
+}
+
 void CommandParser::get_battery_level(char* arg, char* param, char** message)
 {
     double battery_volts, system_volts, battery_percent;
@@ -127,7 +134,7 @@ void CommandParser::get_battery_level(char* arg, char* param, char** message)
     sprintf
     (
         *message, 
-        "battery_percent=%0.2f%%, battery_volts=%0.2fv, battery_adc=%d vcc_volts=%0.2fv", 
+        "battery_percent=%0.2f%%, battery_volts=%0.2fv, battery_adc=%d, vcc_volts=%0.2fv", 
         battery_percent, 
         battery_volts, 
         battery_adc,
@@ -173,21 +180,30 @@ void CommandParser::check_sd_card(char* arg, char* param, char** message)
     if (timeout < 0) {
         sd_type = hardware_drivers->storage_controller->get_sd_card_type();
     }
-    sprintf(*message, "sd_card_connected=%s, sd_card_type=%d", hardware_drivers->storage_controller->check_and_reconnect_card() ? "True" : "False", sd_type);
+    sprintf(*message, "sd_card_connected=%s, sd_card_type=%d", hardware_drivers->storage_controller->check_and_reconnect_card() ? "true" : "false", sd_type);
 }
 
 void CommandParser::format_sd_card(char* arg, char* param, char** message)
 {
-    //sprintf(*message, "%s", hardware_drivers->storage_controller->format_sd_card() ? "sd_card_format=true" : "sd_card_format=false");
-    
-    sprintf(*message, "false");
-    hardware_drivers->storage_controller->format_sd_card();
-    sprintf(*message, "true");
+    sprintf(*message, "sd_card_format=%s", hardware_drivers->storage_controller->format_sd_card() ? "true" : "false");
 }
 
 void CommandParser::check_camera(char* arg, char* param, char** message)
 {
-    sprintf(*message, "%s", hardware_drivers->camera->run_self_test());
+    hardware_drivers->camera->run_self_test(message);
+}
+
+void CommandParser::capture_image(char* arg, char* param, char** message)
+{
+    char file_name[50];
+    DateTime* now = new DateTime();
+    bool save_success;
+
+    *now = hardware_drivers->system_clock->get_time();
+    snprintf(file_name, 50, "%02d%02d%04d_%02d%02d%02d.jpg", now->year(), now->month(), now->day(), now->hour(), now->minute(), now->second());
+    hardware_drivers->camera->capture_image();
+    save_success = hardware_drivers->camera->save_image(hardware_drivers->storage_controller, file_name);
+    sprintf(*message, "save_success=%s", save_success ? "true" : "false");
 }
 
 bool CommandParser::process_serial_terminal()

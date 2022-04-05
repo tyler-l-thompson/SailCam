@@ -12,7 +12,7 @@
 #define battery_max_volts 4.3
 #define battery_min_volts 2.5
 
-#define serial_buffer_length 256  // max length of stored messages
+#define serial_buffer_length 256 // max length of stored messages
 #define serial_min_read 5 // minimum number of characters that need to appear in a message for it to register
 #define command_message_buffer_length 1024
 #define file_buffer_size 32

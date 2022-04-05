@@ -65,6 +65,12 @@ void WebServer::api_parser()
 
 void WebServer::stream_camera()
 {
+    static const size_t bufferSize = 4096;
+    static uint8_t buffer[bufferSize] = {0xFF};
+
+    size_t len;
+    size_t will_copy;
+
     WiFiClient client = server->client();
   
     String response = "HTTP/1.1 200 OK\r\n";
@@ -78,7 +84,7 @@ void WebServer::stream_camera()
 
         while (!hardware_drivers->camera->cam->get_bit(ARDUCHIP_TRIG, CAP_DONE_MASK));
 
-        size_t len = hardware_drivers->camera->cam->read_fifo_length();
+        len = hardware_drivers->camera->cam->read_fifo_length();
         if (len >= MAX_FIFO_SIZE) {
             continue;
         } else if (len == 0 ){
@@ -86,11 +92,7 @@ void WebServer::stream_camera()
         }
 
         hardware_drivers->camera->cam->CS_LOW();
-        hardware_drivers->camera->cam->set_fifo_burst(); 
-
-        #if !(defined (OV5642_MINI_5MP_PLUS) ||(defined (ARDUCAM_SHIELD_V2) && defined (OV5642_CAM)))
-        SPI.transfer(0xFF);
-        #endif   
+        hardware_drivers->camera->cam->set_fifo_burst();   
 
         if (!client.connected()) break;
 
@@ -98,11 +100,10 @@ void WebServer::stream_camera()
         response += "Content-Type: image/jpeg\r\n\r\n";
         server->sendContent(response);
         
-        static const size_t bufferSize = 4096;
-        static uint8_t buffer[bufferSize] = {0xFF};
+        // static uint8_t buffer[bufferSize] = {0xFF};
         
         while (len) {
-            size_t will_copy = (len < bufferSize) ? len : bufferSize;
+            will_copy = (len < bufferSize) ? len : bufferSize;
             hardware_drivers->camera->cam->transferBytes(&buffer[0], &buffer[0], will_copy);
 
             if (!client.connected()) break;

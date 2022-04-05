@@ -31,15 +31,20 @@ void setup()
     hardware_drivers->serial_term = new SerialTerminal(initial_hardware_serial_baud_rate);
     hardware_drivers->serial_term->debug_printf("Firmware Version: %s\r\n", firmware_version);
 
-    // initalize camera
-    hardware_drivers->camera = new Camera();
-
     // initialize OLED display
     delay(200);
     hardware_drivers->old_display = new OledDisplay();
     hardware_drivers->old_display->clear();
     hardware_drivers->old_display->writef("Firmware: %s", firmware_version);
     hardware_drivers->old_display->update();
+
+    // initalize camera
+    hardware_drivers->camera = new Camera();
+    char* cam_self_test = (char*) malloc(50);
+    hardware_drivers->old_display->writef("CAM: %s", hardware_drivers->camera->run_self_test(&cam_self_test) ? "True" : "False");
+    hardware_drivers->old_display->update();
+    hardware_drivers->serial_term->debug_printf("%s", cam_self_test);
+    free(cam_self_test);
 
     // initialize RTC
     timestamp = new DateTime();

@@ -13,7 +13,8 @@ Camera::Camera()
     this->cam->set_format(JPEG);
     this->cam->InitCAM();
     this->cam->write_reg(ARDUCHIP_TIM, VSYNC_LEVEL_MASK);
-    this->cam->OV5642_set_JPEG_size(OV5642_2592x1944);
+    // this->cam->OV5642_set_JPEG_size(OV5642_2592x1944);
+    this->cam->OV5642_set_JPEG_size(OV5642_320x240);
 
     // Reset the CPLD
     this->cam->write_reg(0x07, 0x80);

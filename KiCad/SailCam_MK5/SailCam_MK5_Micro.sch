@@ -267,40 +267,7 @@ NoConn ~ 6450 4500
 Text Label 5250 4350 0    50   ~ 0
 Bat_Chg_Vcc
 Wire Wire Line
-	5250 4350 5450 4350
-Wire Wire Line
-	5450 4350 5450 4200
-Wire Wire Line
 	5450 4200 5650 4200
-$Comp
-L Device:C_Small C?
-U 1 1 6122930C
-P 5550 5700
-AR Path="/6122930C" Ref="C?"  Part="1" 
-AR Path="/61217E38/6122930C" Ref="C9"  Part="1" 
-F 0 "C9" H 5642 5746 50  0000 L CNN
-F 1 "0.1 uF" H 5642 5655 50  0000 L CNN
-F 2 "footprints:C_0805_2012Metric_Pad1.15x1.40mm_HandSolder_FullSilk" H 5550 5700 50  0001 C CNN
-F 3 "~" H 5550 5700 50  0001 C CNN
-	1    5550 5700
-	1    0    0    -1  
-$EndComp
-$Comp
-L power:GND #PWR?
-U 1 1 61229E38
-P 5550 5800
-AR Path="/61229E38" Ref="#PWR?"  Part="1" 
-AR Path="/611BA1F2/61229E38" Ref="#PWR?"  Part="1" 
-AR Path="/61217E38/61229E38" Ref="#PWR011"  Part="1" 
-F 0 "#PWR011" H 5550 5550 50  0001 C CNN
-F 1 "GND" H 5555 5627 50  0000 C CNN
-F 2 "" H 5550 5800 50  0001 C CNN
-F 3 "" H 5550 5800 50  0001 C CNN
-	1    5550 5800
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	5550 4300 5650 4300
 $Comp
 L Device:C_Small C?
 U 1 1 6122B8E0
@@ -329,12 +296,7 @@ F 3 "" H 5150 5800 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	5550 4300 5550 5600
-Wire Wire Line
 	5150 5600 5450 5600
-Wire Wire Line
-	5450 5600 5450 4350
-Connection ~ 5450 4350
 $Comp
 L Device:Crystal Y2
 U 1 1 6122FDFD
@@ -777,4 +739,11 @@ Wire Wire Line
 	5250 4650 5650 4650
 Wire Wire Line
 	5250 4550 5650 4550
+Wire Wire Line
+	5450 4200 5450 5600
+Text Label 5650 4200 2    50   ~ 0
+Vcc
+Wire Wire Line
+	5650 4300 5650 4200
+Connection ~ 5650 4200
 $EndSCHEMATC

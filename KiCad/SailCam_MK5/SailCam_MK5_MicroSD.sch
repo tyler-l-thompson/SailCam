@@ -45,8 +45,6 @@ Text Label 5150 4200 2    50   ~ 0
 GND
 Text Label 5150 4900 2    50   ~ 0
 GND
-Text Label 6750 4300 0    50   ~ 0
-GND
 Text Label 6850 3350 0    50   ~ 0
 GND
 Text Label 6750 4200 0    50   ~ 0
@@ -87,8 +85,6 @@ Text Label 6850 3250 0    50   ~ 0
 SD_MISO
 NoConn ~ 6850 3150
 NoConn ~ 5050 2950
-NoConn ~ 6850 3050
-NoConn ~ 6850 2950
 NoConn ~ 6750 4600
 NoConn ~ 6750 4700
 NoConn ~ 6750 4800
@@ -168,4 +164,48 @@ F 3 "" H 7800 4350 50  0001 C CNN
 	1    7800 4350
 	1    0    0    -1  
 $EndComp
+$Comp
+L Device:R_Small_US R?
+U 1 1 624E72BB
+P 7000 4150
+AR Path="/624E72BB" Ref="R?"  Part="1" 
+AR Path="/61217E38/624E72BB" Ref="R?"  Part="1" 
+AR Path="/611DB121/624E72BB" Ref="R27"  Part="1" 
+F 0 "R27" H 7068 4241 50  0000 L CNN
+F 1 "10 KΩ" H 7068 4150 50  0000 L CNN
+F 2 "footprints:C_0805_2012Metric_Pad1.15x1.40mm_HandSolder_FullSilk" H 7000 4150 50  0001 C CNN
+F 3 "~" H 7000 4150 50  0001 C CNN
+F 4 "5%" H 7068 4059 50  0000 L CNN "Tolerance"
+	1    7000 4150
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:VCC #PWR?
+U 1 1 624E72C1
+P 7000 4050
+AR Path="/624E72C1" Ref="#PWR?"  Part="1" 
+AR Path="/611821E5/624E72C1" Ref="#PWR?"  Part="1" 
+AR Path="/61199C7C/624E72C1" Ref="#PWR?"  Part="1" 
+AR Path="/61217E38/624E72C1" Ref="#PWR?"  Part="1" 
+AR Path="/611DB121/624E72C1" Ref="#PWR017"  Part="1" 
+F 0 "#PWR017" H 7000 3900 50  0001 C CNN
+F 1 "VCC" H 7017 4223 50  0000 C CNN
+F 2 "" H 7000 4050 50  0001 C CNN
+F 3 "" H 7000 4050 50  0001 C CNN
+	1    7000 4050
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	6750 4300 7000 4300
+Wire Wire Line
+	7000 4300 7000 4250
+Wire Wire Line
+	7000 4300 7400 4300
+Wire Wire Line
+	7400 4300 7400 3050
+Wire Wire Line
+	7400 3050 6850 3050
+Connection ~ 7000 4300
+Text Label 6850 2950 0    50   ~ 0
+GND
 $EndSCHEMATC

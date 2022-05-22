@@ -4,22 +4,26 @@
 CommandParser::CommandParser(HardwareDrivers* hardware_drivers)
 : commands {
                 {"restart", &CommandParser::restart},
-                {"gettime", &CommandParser::get_time},
-                {"settime", &CommandParser::set_time},
-                {"getvar", &CommandParser::get_var},
-                {"setvar", &CommandParser::set_var},
-                {"getconfig", &CommandParser::get_config},
-                {"saveconfig", &CommandParser::save_config},
-                {"getmem", &CommandParser::get_free_memory},
-                {"getcpu", &CommandParser::get_cpu_speed},
-                {"getbat", &CommandParser::get_battery_level},
-                {"getwifi", &CommandParser::get_wifi_status},
-                {"getfirmware", &CommandParser::get_firmware_version},
-                {"blinkled", &CommandParser::blink_led},
-                {"checksdcard", &CommandParser::check_sd_card},
-                {"formatsd", &CommandParser::format_sd_card},
-                {"checkcam", &CommandParser::check_camera},
-                {"captureimage", &CommandParser::capture_image}
+                {"get_time", &CommandParser::get_time},
+                {"set_time", &CommandParser::set_time},
+                {"get_var", &CommandParser::get_var},
+                {"set_var", &CommandParser::set_var},
+                {"get_config", &CommandParser::get_config},
+                {"save_config", &CommandParser::save_config},
+                {"get_mem", &CommandParser::get_free_memory},
+                {"get_cpu", &CommandParser::get_cpu_speed},
+                {"get_bat", &CommandParser::get_battery_level},
+                {"get_wifi", &CommandParser::get_wifi_status},
+                {"get_firmware", &CommandParser::get_firmware_version},
+                {"blink_led", &CommandParser::blink_led},
+                {"check_sd_card", &CommandParser::check_sd_card},
+                {"format_sd", &CommandParser::format_sd_card},
+                {"check_cam", &CommandParser::check_camera},
+                {"capture_image", &CommandParser::capture_image},
+                {"write_spi_reg", &CommandParser::write_spi_reg},
+                {"read_spi_reg", &CommandParser::read_spi_reg},
+                {"write_i2c_reg", &CommandParser::write_i2c_reg},
+                {"read_i2c_reg", &CommandParser::read_i2c_reg}
             }
 {
     this->hardware_drivers = hardware_drivers;
@@ -200,10 +204,52 @@ void CommandParser::capture_image(char* arg, char* param, char** message)
     bool save_success;
 
     *now = hardware_drivers->system_clock->get_time();
-    snprintf(file_name, 50, "%02d%02d%04d_%02d%02d%02d.jpg", now->year(), now->month(), now->day(), now->hour(), now->minute(), now->second());
+    snprintf(file_name, 50, "%04d%02d%02d_%02d%02d%02d.jpg", now->year(), now->month(), now->day(), now->hour(), now->minute(), now->second());
     hardware_drivers->camera->capture_image();
-    save_success = hardware_drivers->camera->save_image(hardware_drivers->storage_controller, file_name);
+    save_success = hardware_drivers->camera->save_image(hardware_drivers->storage_controller, file_name, *now);
     sprintf(*message, "save_success=%s", save_success ? "true" : "false");
+}
+
+void CommandParser::write_spi_reg(char* arg, char* param, char** message)
+{
+    uint8_t addr, data, read_back;
+    addr = strtol(arg, NULL, 16);
+    data = strtol(param, NULL, 16);
+    this->hardware_drivers->camera->cam->CS_LOW();
+    this->hardware_drivers->camera->cam->write_reg(addr, data);
+    read_back = this->hardware_drivers->camera->cam->read_reg(addr);
+    sprintf(*message, "addr:%02x, write:%02x, read:%02x", addr, data, read_back);
+    this->hardware_drivers->camera->cam->CS_HIGH();
+}
+
+void CommandParser::read_spi_reg(char* arg, char* param, char** message)
+{    
+    uint8_t addr, read_back;
+    addr = strtol(arg, NULL, 16);
+    this->hardware_drivers->camera->cam->CS_LOW();
+    read_back = this->hardware_drivers->camera->cam->read_reg(addr);
+    sprintf(*message, "addr:%02x, read:%02x", addr, read_back);
+    this->hardware_drivers->camera->cam->CS_HIGH();
+}
+
+void CommandParser::write_i2c_reg(char* arg, char* param, char** message)
+{
+    uint16_t addr;
+    uint8_t data, read_back;
+    addr = strtol(arg, NULL, 16);
+    data = strtol(param, NULL, 16);
+    this->hardware_drivers->camera->cam->wrSensorReg16_8(addr, data);
+    this->hardware_drivers->camera->cam->rdSensorReg16_8(addr, &read_back);
+    sprintf(*message, "addr:%02x, write:%02x, read:%02x", addr, data, read_back);
+}
+
+void CommandParser::read_i2c_reg(char* arg, char* param, char** message)
+{
+    uint16_t addr;
+    uint8_t read_back;
+    addr = strtol(arg, NULL, 16);
+    this->hardware_drivers->camera->cam->rdSensorReg16_8(addr, &read_back);
+    sprintf(*message, "addr:%02x, read:%02x", addr, read_back);
 }
 
 bool CommandParser::process_serial_terminal()

@@ -2,9 +2,10 @@
 #ifndef COMMAND_PARSER_H
 #define COMMAND_PARSER_H
 
+#include <stdlib.h>
 #include <hardware/drivers.h>
 
-#define commands_size 17
+#define commands_size 21
 
 class CommandParser
 {
@@ -35,6 +36,10 @@ private:
     void format_sd_card(char* arg, char* param, char** message);
     void check_camera(char* arg, char* param, char** message);
     void capture_image(char* arg, char* param, char** message);
+    void write_spi_reg(char* arg, char* param, char** message);
+    void read_spi_reg(char* arg, char* param, char** message);
+    void write_i2c_reg(char* arg, char* param, char** message);
+    void read_i2c_reg(char* arg, char* param, char** message);
 
     HardwareDrivers* hardware_drivers;
     CommandStruct commands[commands_size];

@@ -9,10 +9,11 @@ SystemConfiguration::SystemConfiguration()
     {"wifi_psk", "hobbesthetiger"},
     {"wifi_mode", "1"}, // 0 - WIFI_ACCESS_POINT, 1 - WIFI_CLIENT, 2 - WIFI_DISABLED
     {"tcp_port", "723"},
-    {"device_name", "SailCam"}
+    {"device_name", "SailCam"},
+    {"capture_mode", "1"},
+    {"capture_interval", "10"}
 }
 {
-    this->settings_length = sizeof(settings_defaults) / sizeof(settings_defaults[0]);
     read_settings_defaults();
 }
 
@@ -22,7 +23,7 @@ SystemConfiguration::~SystemConfiguration()
 
 int SystemConfiguration::get_settings_length() 
 {
-    return this->settings_length;
+    return settings_length;
 }
 
 void SystemConfiguration::read_settings_defaults()

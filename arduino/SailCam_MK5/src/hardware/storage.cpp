@@ -3,7 +3,6 @@
 
 Storage::Storage(DateTime* timestamp)
 {
-    
     set_log_paths(*timestamp);
     set_formatted_timestamp(*timestamp);
     pinMode(sd_card_chip_select, OUTPUT);

@@ -2,6 +2,8 @@
 #ifndef SYSTEM_CONFIGURATION_H
 #define SYSTEM_CONFIGURATION_H
 
+#define settings_length 8
+
 #include <settings/system_setting.h>
 
 struct SettingKeyValuePair {
@@ -13,9 +15,8 @@ struct SettingKeyValuePair {
 class SystemConfiguration
 {
 private:
-    SettingKeyValuePair settings_map[6];
-    int settings_length;
-    const char* settings_defaults[6][2];
+    SettingKeyValuePair settings_map[settings_length];
+    const char* settings_defaults[settings_length][2];
     void read_settings_defaults();
 
 public:

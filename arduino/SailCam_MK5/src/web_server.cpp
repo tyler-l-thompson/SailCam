@@ -19,8 +19,12 @@ WebServer::WebServer(HardwareDrivers* hardware_drivers, CommandParser* command_p
         this->api_parser();
     });
 
-    server->on("/stream", HTTP_GET, [this]() {
-        this->stream_camera();
+    // server->on("/stream", HTTP_GET, [this]() {
+    //     this->stream_camera();
+    // });
+
+    server->on("/capture", HTTP_GET, [this]() {
+        this->capture_camera();
     });
 
     server->onNotFound([this]() {
@@ -115,4 +119,61 @@ void WebServer::stream_camera()
 
         if (!client.connected()) break;
     }
+}
+
+void WebServer::capture_camera()
+{
+    static const size_t bufferSize = 4096;
+    static uint8_t buffer[bufferSize] = {0xFF};
+
+    size_t len;
+    size_t will_copy;
+
+    WiFiClient client = server->client();
+  
+    String response = "HTTP/1.1 200 OK\r\n";
+    response += "Content-Type: multipart/x-mixed-replace; boundary=frame\r\n\r\n";
+    server->sendContent(response);
+  
+    hardware_drivers->camera->set_sensor_power(true);
+    while (1) {
+
+        hardware_drivers->camera->cam->clear_fifo_flag();
+        hardware_drivers->camera->cam->start_capture();
+
+        while (!hardware_drivers->camera->cam->get_bit(ARDUCHIP_TRIG, CAP_DONE_MASK));
+
+        len = hardware_drivers->camera->cam->read_fifo_length();
+        if (len >= MAX_FIFO_SIZE) {
+            continue;
+        } else if (len == 0 ){
+            continue;
+        }
+
+        hardware_drivers->camera->cam->CS_LOW();
+        hardware_drivers->camera->cam->set_fifo_burst();   
+
+        if (!client.connected()) break;
+
+        response = "--frame\r\n";
+        response += "Content-Type: image/jpeg\r\n\r\n";
+        server->sendContent(response);
+        
+        // static uint8_t buffer[bufferSize] = {0xFF};
+        
+        while (len) {
+            will_copy = (len < bufferSize) ? len : bufferSize;
+            hardware_drivers->camera->cam->transferBytes(&buffer[0], &buffer[0], will_copy);
+
+            if (!client.connected()) break;
+
+            client.write(&buffer[0], will_copy);
+            len -= will_copy;
+        }
+        hardware_drivers->camera->cam->CS_HIGH();
+        hardware_drivers->camera->set_sensor_power(false);
+
+        break;
+    }
+    
 }

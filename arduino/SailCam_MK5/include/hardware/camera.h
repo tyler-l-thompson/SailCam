@@ -15,14 +15,17 @@ class Camera
 private:
     //ArduCAM* cam;
     bool is_header;
+    DateTime last_save;
 
 public:
     Camera();
     ~Camera();
     ArduCAM* cam;
+    void set_sensor_power(bool state);
     bool run_self_test(char** return_message);
     void capture_image();
-    bool save_image(Storage* storage, char* file_name);
+    bool save_image(Storage* storage, char* file_name, DateTime timestmap);
+    DateTime get_last_save();
 };
 
 #endif

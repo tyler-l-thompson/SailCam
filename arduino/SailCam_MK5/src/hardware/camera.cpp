@@ -10,11 +10,15 @@ Camera::Camera()
     SPI.begin();
     SPI.setFrequency(8000000); // 8MHz
     
+    this->cam->CS_LOW();
     this->cam->set_format(JPEG);
     this->cam->InitCAM();
+    
     this->cam->write_reg(ARDUCHIP_TIM, VSYNC_LEVEL_MASK);
-    // this->cam->OV5642_set_JPEG_size(OV5642_2592x1944);
-    this->cam->OV5642_set_JPEG_size(OV5642_320x240);
+    // this->cam->OV5642_set_RAW_size(OV5642_2592x1944);
+    this->cam->OV5642_set_JPEG_size(OV5642_2592x1944);
+    // this->cam->OV5642_set_JPEG_size(OV5642_320x240);
+    // this->cam->OV5642_set_Light_Mode(Advanced_AWB);
 
     // Reset the CPLD
     this->cam->write_reg(0x07, 0x80);
@@ -24,22 +28,56 @@ Camera::Camera()
     this->cam->clear_fifo_flag();
     this->cam->write_reg(ARDUCHIP_FRAMES, 0x00);
 
+    // sensor in stanby
+    set_sensor_power(false);
 }
 
 Camera::~Camera()
 {
 }
 
+void Camera::set_sensor_power(bool state)
+{
+    uint8_t reg_read;
+    this->cam->CS_LOW();
+    reg_read = this->cam->read_reg(ARDUCHIP_GPIO);
+    if (state == true) {
+        this->cam->write_reg(ARDUCHIP_GPIO, reg_read | 0x04);
+        this->cam->set_format(JPEG);
+        this->cam->InitCAM();
+        
+        this->cam->write_reg(ARDUCHIP_TIM, VSYNC_LEVEL_MASK);
+        // this->cam->OV5642_set_RAW_size(OV5642_2592x1944);
+        this->cam->OV5642_set_JPEG_size(OV5642_2592x1944);
+        // this->cam->OV5642_set_JPEG_size(OV5642_320x240);
+        // this->cam->OV5642_set_Light_Mode(Advanced_AWB);
+
+        // Reset the CPLD
+        this->cam->write_reg(0x07, 0x80);
+        this->cam->write_reg(0x07, 0x00);
+
+        this->cam->set_bit(ARDUCHIP_TIM, VSYNC_LEVEL_MASK);
+        this->cam->clear_fifo_flag();
+        this->cam->write_reg(ARDUCHIP_FRAMES, 0x00);
+        delay(250);
+    } else {
+        this->cam->write_reg(ARDUCHIP_GPIO, reg_read ^ 0x04);
+    }
+    this->cam->CS_HIGH();
+}
+
 bool Camera::run_self_test(char** return_message)
 {
     bool self_test_pass;
-    uint8_t spi_return, vid, pid;
+    uint8_t spi_return, vid, pid, gpio_val;
 
+    set_sensor_power(true);
     // Check if the ArduCAM SPI bus is OK
     // write 0x55 to test register, then read it back
     this->cam->CS_LOW();
     this->cam->write_reg(ARDUCHIP_TEST1, 0x55);
     spi_return = this->cam->read_reg(ARDUCHIP_TEST1);
+    gpio_val = this->cam->read_reg(ARDUCHIP_GPIO);
     this->cam->CS_HIGH();
 
     // Check if the camera module type is OV5642
@@ -55,18 +93,20 @@ bool Camera::run_self_test(char** return_message)
     {
         self_test_pass = false;
     }
-
-    snprintf(*return_message, 36, "CAM:%s-SPI:55|%02x,I2C:56|%02x:42|%02x", self_test_pass ? "True " : "False" , spi_return, vid, pid);
+    set_sensor_power(false);
+    snprintf(*return_message, 47, "CAM:%s-GPIO:15|%02x,SPI:55|%02x,I2C:56|%02x:42|%02x", self_test_pass ? "True " : "False" , gpio_val, spi_return, vid, pid);
     return self_test_pass;
 }
 
 void Camera::capture_image()
 {
+    set_sensor_power(true);
     this->cam->start_capture();
     while(!this->cam->get_bit(ARDUCHIP_TRIG, CAP_DONE_MASK));
+    set_sensor_power(false);
 }
 
-bool Camera::save_image(Storage* storage, char* file_name)
+bool Camera::save_image(Storage* storage, char* file_name, DateTime timestamp)
 {
     File output_file;
     uint8_t temp = 0, temp_last = 0;
@@ -75,6 +115,10 @@ bool Camera::save_image(Storage* storage, char* file_name)
     
     byte buf[256]; 
     
+    this->last_save = timestamp;
+
+    set_sensor_power(true);
+
     // check the length
     length = this->cam->read_fifo_length();
     if (length >= MAX_FIFO_SIZE) // 8M - oversized
@@ -152,6 +196,11 @@ bool Camera::save_image(Storage* storage, char* file_name)
         }
     }
 
-    this->cam->CS_HIGH();
+    set_sensor_power(false);
     return true;
+}
+
+DateTime Camera::get_last_save()
+{
+    return this->last_save;
 }

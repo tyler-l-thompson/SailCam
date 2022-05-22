@@ -19,6 +19,7 @@ private:
     void handle_root();
     void api_parser();
     void stream_camera();
+    void capture_camera();
 
 
 public:

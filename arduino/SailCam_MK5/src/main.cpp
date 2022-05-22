@@ -10,7 +10,11 @@
 #include <settings/system_configuration.h>
 #include <util/command_parser.h>
 
+/* Function Prototypes */
+bool is_capture_required(DateTime now);
+
 int loop_counter = 0;
+char file_name[50];
 
 WebServer* web_server;
 CommandParser* command_parser;
@@ -18,7 +22,6 @@ CommandParser* command_parser;
 DateTime* timestamp;
 
 HardwareDrivers* hardware_drivers;
-
 
 void setup() 
 {
@@ -125,6 +128,7 @@ void setup()
             hardware_drivers->old_display->update();
         }
     }
+
     hardware_drivers->old_display->write(hardware_drivers->wifi_radio->get_ip_address().toString().c_str());
     hardware_drivers->old_display->update();
     delay(2000);
@@ -133,7 +137,18 @@ void setup()
 
 void loop() 
 {
-    hardware_drivers->old_display->update();
+    *timestamp = hardware_drivers->system_clock->get_time();
+
+    // update oled display
+    if (loop_counter % 1000 == 0) {
+        hardware_drivers->old_display->write_overview(*timestamp, hardware_drivers->wifi_radio->get_ip_address(), hardware_drivers->storage_controller->get_system_configuration()->get_setting("wifi_ssid")->get_value_str());
+    }
+
+    if (hardware_drivers->storage_controller->get_system_configuration()->get_setting("capture_mode")->get_value_int() == 1 && is_capture_required(*timestamp)) {
+        snprintf(file_name, 50, "%04d%02d%02d_%02d%02d%02d.jpg", timestamp->year(), timestamp->month(), timestamp->day(), timestamp->hour(), timestamp->minute(), timestamp->second());
+        hardware_drivers->serial_term->debug_printf("Auto Capturing Image: %02d/%02d/%04d %02d:%02d:%02d\r\n", timestamp->month(), timestamp->day(), timestamp->year(), timestamp->hour(), timestamp->minute(), timestamp->second());
+        hardware_drivers->camera->save_image(hardware_drivers->storage_controller, file_name, *timestamp);
+    }
 
     // handle web server clients
     web_server->handle_client();
@@ -159,5 +174,16 @@ void loop()
         hardware_drivers->status_led->error();
     }
 
+    hardware_drivers->old_display->update();
+
     loop_counter++;
 }  // end loop()
+
+bool is_capture_required(DateTime now)
+{
+    if (now.secondstime() - hardware_drivers->camera->get_last_save().secondstime() >= (uint32_t)hardware_drivers->storage_controller->get_system_configuration()->get_setting("capture_interval")->get_value_int()) {
+        return true;
+    } else {
+        return false;
+    }
+}

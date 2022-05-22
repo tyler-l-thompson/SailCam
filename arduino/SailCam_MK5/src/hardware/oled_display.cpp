@@ -84,3 +84,14 @@ void OledDisplay::writef(const char* value, ...)
     this->buf_index < buf_height ? this->buf_index++ : this->buf_index = buf_height;
     this->update_required = true;
 }
+
+void OledDisplay::write_overview(DateTime date, IPAddress ip_address, char* wifi_ssid)
+{
+    this->display->setTextSize(1, 1);
+    snprintf(this->display_buf[0], buf_width-1, "%02d/%02d/%04d %02d:%02d %s", date.month(), date.day(), date.year(), date.hour_12h(), date.minute(), date.am_pm());
+    snprintf(this->display_buf[1], buf_width-1, "%s", ip_address.toString().c_str());
+    snprintf(this->display_buf[2], buf_width-1, "%s", wifi_ssid);
+    snprintf(this->display_buf[3], buf_width-1, " ");
+    this->buf_index = buf_height;
+    this->update_required = true;
+}

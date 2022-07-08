@@ -7,11 +7,11 @@ SystemConfiguration::SystemConfiguration()
     {"baud_rate", "9600" },
     {"wifi_ssid", "SurveillanceCamera6"},
     {"wifi_psk", "hobbesthetiger"},
-    {"wifi_mode", "1"}, // 0 - WIFI_ACCESS_POINT, 1 - WIFI_CLIENT, 2 - WIFI_DISABLED
+    {"wifi_mode", "2"}, // 0 - WIFI_ACCESS_POINT, 1 - WIFI_CLIENT, 2 - WIFI_DISABLED
     {"tcp_port", "723"},
     {"device_name", "SailCam"},
-    {"capture_mode", "1"},
-    {"capture_interval", "10"}
+    {"capture_mode", "0"},
+    {"capture_interval", "15"}
 }
 {
     read_settings_defaults();

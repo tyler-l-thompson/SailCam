@@ -7,15 +7,15 @@ Storage::Storage(DateTime* timestamp)
     set_formatted_timestamp(*timestamp);
     pinMode(sd_card_chip_select, OUTPUT);
     digitalWrite(sd_card_chip_select, LOW);
-    this->card_connected = SD.begin(sd_card_chip_select);
+    this->card_connected = SD.begin(sd_card_chip_select, SD_SCK_MHZ(8));
     sdfat::SdFile::dateTimeCallback(sd_datetime_callback);
     this->system_configuration = new SystemConfiguration();
-    this->log_file = new File();
+    this->log_file = new sdfat::File32();
 }
 
 Storage::~Storage()
 {
-    SD.end();
+
     delete this->system_configuration;
     this->log_file = NULL;
 }
@@ -40,7 +40,6 @@ char* Storage::get_formatted_timestamp()
 bool Storage::check_and_reconnect_card()
 {
     if (!this->card_connected) {
-        SD.end();
         this->card_connected = SD.begin(sd_card_chip_select);
     }
     return this->card_connected;
@@ -54,7 +53,7 @@ bool Storage::is_card_connected()
 bool Storage::log_data_point(DateTime timestamp, char* data)
 {
     check_directory(log_folder_path);
-    *(this->log_file) = SD.open(log_file_path, FILE_WRITE);
+    *(this->log_file) = SD.open(log_file_path, sdfat::O_WRITE);
     
     if (this->log_file) {
         set_formatted_timestamp(timestamp);
@@ -70,11 +69,17 @@ bool Storage::log_data_point(DateTime timestamp, char* data)
     }
 }
 
-void Storage::check_directory(char* dir_name)
+bool Storage::directory_exists(char* dir_name)
+{
+    return SD.exists(dir_name);
+}
+
+bool Storage::check_directory(char* dir_name)
 {
     if (!SD.exists(dir_name)) {
-        SD.mkdir(dir_name);
+        return SD.mkdir(dir_name);
     }
+    return true;
 }
 
 SystemConfiguration* Storage::get_system_configuration()
@@ -82,17 +87,17 @@ SystemConfiguration* Storage::get_system_configuration()
     return this->system_configuration;
 }
 
-File Storage::open_file(char* file_path, uint8_t mode)
+sdfat::File32 Storage::open_file(char* file_path, uint8_t mode)
 {
-    return SD.open(file_path, mode);
+    return this->SD.open(file_path, mode);
 }
 
-File Storage::open_file(const char* file_path, uint8_t mode)
+sdfat::File32 Storage::open_file(const char* file_path, uint8_t mode)
 {
-    return SD.open(file_path, mode);
+    return this->SD.open(file_path, mode);
 }
 
-int Storage::get_file_line_count(File working_file)
+int Storage::get_file_line_count(sdfat::File32 working_file)
 {
     int line_count = 0;
     char buf;
@@ -104,6 +109,11 @@ int Storage::get_file_line_count(File working_file)
     return line_count;
 }
 
+bool Storage::format_sd_card(sdfat::print_t* pr)
+{   
+    return this->SD.format(pr);
+}
+
 // gets the time from the RTC for timestamping files
 // not efficient to initialize RTC again, needs improvement
 void sd_datetime_callback(uint16_t* date, uint16_t* time) 
@@ -111,8 +121,8 @@ void sd_datetime_callback(uint16_t* date, uint16_t* time)
     DS1672* system_clock = new DS1672();
     DateTime now = system_clock->get_time();
     
-    *date = FAT_DATE(now.year(), now.month(), now.day());
-    *time = FAT_TIME(now.hour(), now.minute(), now.second());
+    *date = sdfat::FAT_DATE(now.year(), now.month(), now.day());
+    *time = sdfat::FAT_TIME(now.hour(), now.minute(), now.second());
     system_clock->~DS1672();
     now.~DateTime();
     delete system_clock;
@@ -120,14 +130,14 @@ void sd_datetime_callback(uint16_t* date, uint16_t* time)
 
 void Storage::read_settings_file(SerialTerminal* serial_term)
 {
-    File setting_file;
+    sdfat::File32 setting_file;
     char key_buffer[file_buffer_size];
     char value_buffer[file_buffer_size];
     int key_size, value_size, line_count;
 
     if (this->is_card_connected()) {
         serial_term->debug_println("Card connected.");
-        setting_file = this->open_file(system_configuration_path);
+        setting_file.open(system_configuration_path);
         if (setting_file) {
             line_count = this->get_file_line_count(setting_file);
             for (int i = 0; i < line_count; i++) {
@@ -144,7 +154,7 @@ void Storage::read_settings_file(SerialTerminal* serial_term)
       
         } else {  // config.ini not found. Using default values
             setting_file.close();
-            setting_file = this->open_file(system_configuration_path, FILE_WRITE);
+            setting_file = this->open_file(system_configuration_path, sdfat::O_WRITE | sdfat::O_CREAT);
             write_settings_defaults(setting_file, this->get_system_configuration()->get_settings_length());
             serial_term->debug_printf("%s not found. A new file was created with default system configuration values.", system_configuration_path);
         }
@@ -157,7 +167,7 @@ void Storage::read_settings_file(SerialTerminal* serial_term)
 /**
  * Writes default values to a file that is already open
  **/
-void Storage::write_settings_defaults(File settings_file, int length)
+void Storage::write_settings_defaults(sdfat::File32 settings_file, int length)
 {
     for (int i = 0; i < length; i++) {
         settings_file.printf("%s=%s\r\n", this->get_system_configuration()->get_settings_defaults_key(i), this->get_system_configuration()->get_settings_defaults_value(i));
@@ -194,10 +204,10 @@ void Storage::print_configuration(SerialTerminal* serial_term)
  **/
 void Storage::write_settings_file(char** message_buf)
 {
-    File settings_file;
+    sdfat::File32 settings_file;
     this->check_and_reconnect_card();
     if (this->is_card_connected()) {
-        settings_file = SD.open(system_configuration_path, FILE_WRITE);
+        settings_file.open(system_configuration_path, sdfat::O_WRITE);
         if (settings_file) {
             for (int i = 0; i < this->get_system_configuration()->get_settings_length(); i++) {
                 settings_file.printf("%s=%s\r\n", this->get_system_configuration()->get_settings_defaults_key(i), this->get_system_configuration()->get_setting(this->get_system_configuration()->get_settings_defaults_key(i))->get_value_str());
@@ -215,10 +225,69 @@ void Storage::write_settings_file(char** message_buf)
 
 uint8_t Storage::get_sd_card_type()
 {
-    return this->SD.type();
+    return this->SD.fatType();
 }
 
-bool Storage::format_sd_card()
+int Storage::get_free_space()
 {
-    return this->SD_Fat.format();
+    return 0;
+}
+
+int Storage::list_directory(sdfat::File32 dir, char** buffer, int buffer_length, int start_pos, const char* prefix, const char* suffix)
+{
+    // sdfat::File32 start_dir;
+    // int buff_index = start_pos;
+    // while (start_dir.openNext(&dir, sdfat::O_RDONLY)) {
+    //     buff_index += start_dir.printFileSize((sdfat::print_t*) *buffer);
+    //     buff_index += start_dir.printModifyDateTime((sdfat::print_t*) *buffer);
+    //     buff_index += snprintf(*buffer, buffer_length - buff_index, " ");
+    //     buff_index += start_dir.printName((sdfat::print_t*) *buffer);
+
+    //     if (start_dir.isDir()) {
+    //         buff_index += snprintf(*buffer, buffer_length - buff_index, "/");
+    //     }
+    //     buff_index += snprintf(*buffer, buffer_length - buff_index, "\r\n");
+    //     start_dir.close();
+    // }
+    sdfat::File32 last_entry;
+    sdfat::File32 start_dir;
+    int buff_index = start_pos;
+    for (sdfat::File32 entry = start_dir.openNextFile(sdfat::O_READ); entry; entry = start_dir.openNextFile(sdfat::O_READ)) {
+        // file & directory prefix
+        buff_index += snprintf(&(*buffer)[buff_index], buffer_length - buff_index, "%s", prefix);
+
+        // directory prefix
+        if (entry.isDirectory()) {
+            buff_index += snprintf(&(*buffer)[buff_index], buffer_length - buff_index, ">");
+        }
+
+        // file/directory name
+        // buff_index += snprintf(&(*buffer)[buff_index], buffer_length - buff_index, "%s", entry.name());
+        entry.getName(&(*buffer)[buff_index], 13);
+        buff_index += 13;
+        
+        // directory suffix and recursion
+        if (entry.isDirectory()) {
+            buff_index += snprintf(&(*buffer)[buff_index], buffer_length - buff_index, "%s", suffix); 
+            last_entry = entry;
+            buff_index += list_directory(last_entry, buffer, buffer_length, buff_index, "*", suffix);
+            last_entry.close();
+        } 
+
+        // file size and suffix
+        else if (entry.isFile())
+        {
+            buff_index += snprintf(&(*buffer)[buff_index], buffer_length - buff_index, " - %.2fKB%s", (double) entry.size() / 1024, suffix);
+        }
+
+        entry.close();
+    }
+    dir.close();
+    start_dir.close();
+    return buff_index;
+}
+
+uint8_t Storage::get_sd_error()
+{
+    return this->SD.card()->errorCode();
 }

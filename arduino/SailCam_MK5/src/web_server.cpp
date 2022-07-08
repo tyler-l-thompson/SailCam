@@ -47,10 +47,10 @@ void WebServer::handle_client()
 
 void WebServer::format_html_response() 
 {
-    int buffer_index = sprintf(html_response, "<html><head><meta http-equiv='refresh' content='1'></head><body>");
-
-    buffer_index += sprintf(&html_response[buffer_index], "</body></html>");
-    html_response[buffer_index] = '\0';
+    //int buffer_index = sprintf(html_response, "<html><head></head><body><table>");
+    // int buffer_index = 0;
+    hardware_drivers->storage_controller->list_directory(hardware_drivers->storage_controller->open_file("/"), &html_response, serial_buffer_length, 0, "", "<br>");
+    //buffer_index += sprintf(&html_response[buffer_index], "</table></body></html>");
 }
 
 void WebServer::handle_root()

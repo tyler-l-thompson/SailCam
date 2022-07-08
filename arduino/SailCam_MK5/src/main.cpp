@@ -13,8 +13,9 @@
 /* Function Prototypes */
 bool is_capture_required(DateTime now);
 
-int loop_counter = 0;
-char file_name[50];
+uint32_t loop_counter = 0;
+char file_name[25];
+uint8_t save_success = 0;
 
 WebServer* web_server;
 CommandParser* command_parser;
@@ -54,7 +55,7 @@ void setup()
     hardware_drivers->system_clock = new Clock();
     *timestamp = hardware_drivers->system_clock->get_time();
 
-    // initalize battery measurement devic
+    // initalize battery measurement device
     hardware_drivers->battery_management = new BatteryManagement();
 
     // initialize SD card and read config.ini
@@ -137,17 +138,31 @@ void setup()
 
 void loop() 
 {
-    *timestamp = hardware_drivers->system_clock->get_time();
-
+    
     // update oled display
-    if (loop_counter % 1000 == 0) {
-        hardware_drivers->old_display->write_overview(*timestamp, hardware_drivers->wifi_radio->get_ip_address(), hardware_drivers->storage_controller->get_system_configuration()->get_setting("wifi_ssid")->get_value_str());
+    if (loop_counter % 1000 == 0 || loop_counter == 0) {
+        *timestamp = hardware_drivers->system_clock->get_time();
+        hardware_drivers->old_display->write_overview(
+            *timestamp, 
+            hardware_drivers->wifi_radio->get_ip_address(), 
+            hardware_drivers->storage_controller->get_system_configuration()->get_setting("wifi_mode")->get_value_int(),
+            hardware_drivers->camera->get_image_count(),
+            hardware_drivers->storage_controller->get_system_configuration()->get_setting("capture_mode")->get_value_int(),
+            hardware_drivers->storage_controller->get_system_configuration()->get_setting("capture_interval")->get_value_int(),
+            save_success,
+            hardware_drivers->battery_management->get_battery_volts());
+        hardware_drivers->old_display->update();
     }
 
+    // run auto capture
     if (hardware_drivers->storage_controller->get_system_configuration()->get_setting("capture_mode")->get_value_int() == 1 && is_capture_required(*timestamp)) {
-        snprintf(file_name, 50, "%04d%02d%02d_%02d%02d%02d.jpg", timestamp->year(), timestamp->month(), timestamp->day(), timestamp->hour(), timestamp->minute(), timestamp->second());
-        hardware_drivers->serial_term->debug_printf("Auto Capturing Image: %02d/%02d/%04d %02d:%02d:%02d\r\n", timestamp->month(), timestamp->day(), timestamp->year(), timestamp->hour(), timestamp->minute(), timestamp->second());
-        hardware_drivers->camera->save_image(hardware_drivers->storage_controller, file_name, *timestamp);
+        // capture and save the image
+        hardware_drivers->camera->capture_image();
+        save_success = (hardware_drivers->camera->save_image(hardware_drivers->storage_controller, *timestamp, hardware_drivers->serial_term));
+        
+        // send status update
+        hardware_drivers->serial_term->debug_printf("Auto Capturing Image: %06d %02d/%02d/%04d %02d:%02d:%02d %d\r\n", hardware_drivers->camera->get_image_count(), timestamp->month(), timestamp->day(), timestamp->year(), timestamp->hour(), timestamp->minute(), timestamp->second(), save_success);
+        hardware_drivers->status_led->info();
     }
 
     // handle web server clients
@@ -174,9 +189,7 @@ void loop()
         hardware_drivers->status_led->error();
     }
 
-    hardware_drivers->old_display->update();
-
-    loop_counter++;
+    loop_counter = loop_counter == 0xFFFFFFFF ? 0 : loop_counter + 1;
 }  // end loop()
 
 bool is_capture_required(DateTime now)

@@ -17,13 +17,15 @@ CommandParser::CommandParser(HardwareDrivers* hardware_drivers)
                 {"get_firmware", &CommandParser::get_firmware_version},
                 {"blink_led", &CommandParser::blink_led},
                 {"check_sd_card", &CommandParser::check_sd_card},
-                {"format_sd", &CommandParser::format_sd_card},
+                {"format_sd_card", &CommandParser::format_sd_card},
                 {"check_cam", &CommandParser::check_camera},
                 {"capture_image", &CommandParser::capture_image},
                 {"write_spi_reg", &CommandParser::write_spi_reg},
                 {"read_spi_reg", &CommandParser::read_spi_reg},
                 {"write_i2c_reg", &CommandParser::write_i2c_reg},
-                {"read_i2c_reg", &CommandParser::read_i2c_reg}
+                {"read_i2c_reg", &CommandParser::read_i2c_reg},
+                {"ls", &CommandParser::list_directory},
+                {"mkdir", &CommandParser::make_directory}
             }
 {
     this->hardware_drivers = hardware_drivers;
@@ -184,12 +186,13 @@ void CommandParser::check_sd_card(char* arg, char* param, char** message)
     if (timeout < 0) {
         sd_type = hardware_drivers->storage_controller->get_sd_card_type();
     }
-    sprintf(*message, "sd_card_connected=%s, sd_card_type=%d", hardware_drivers->storage_controller->check_and_reconnect_card() ? "true" : "false", sd_type);
+    sprintf(*message, "sd_card_connected=%s, sd_card_type=%d, error=%d", hardware_drivers->storage_controller->check_and_reconnect_card() ? "true" : "false", sd_type, hardware_drivers->storage_controller->get_sd_error());
 }
 
 void CommandParser::format_sd_card(char* arg, char* param, char** message)
 {
-    sprintf(*message, "sd_card_format=%s", hardware_drivers->storage_controller->format_sd_card() ? "true" : "false");
+    bool success = hardware_drivers->storage_controller->format_sd_card();
+    sprintf(*message, "format_success=%s", success ? "True" : "False");
 }
 
 void CommandParser::check_camera(char* arg, char* param, char** message)
@@ -199,15 +202,13 @@ void CommandParser::check_camera(char* arg, char* param, char** message)
 
 void CommandParser::capture_image(char* arg, char* param, char** message)
 {
-    char file_name[50];
     DateTime* now = new DateTime();
-    bool save_success;
+    uint8_t save_success;
 
     *now = hardware_drivers->system_clock->get_time();
-    snprintf(file_name, 50, "%04d%02d%02d_%02d%02d%02d.jpg", now->year(), now->month(), now->day(), now->hour(), now->minute(), now->second());
     hardware_drivers->camera->capture_image();
-    save_success = hardware_drivers->camera->save_image(hardware_drivers->storage_controller, file_name, *now);
-    sprintf(*message, "save_success=%s", save_success ? "true" : "false");
+    save_success = hardware_drivers->camera->save_image(hardware_drivers->storage_controller, *now, hardware_drivers->serial_term);
+    sprintf(*message, "save_success=%s, error_code=%d", save_success == 0 ? "True" : "False", save_success);
 }
 
 void CommandParser::write_spi_reg(char* arg, char* param, char** message)
@@ -218,7 +219,7 @@ void CommandParser::write_spi_reg(char* arg, char* param, char** message)
     this->hardware_drivers->camera->cam->CS_LOW();
     this->hardware_drivers->camera->cam->write_reg(addr, data);
     read_back = this->hardware_drivers->camera->cam->read_reg(addr);
-    sprintf(*message, "addr:%02x, write:%02x, read:%02x", addr, data, read_back);
+    sprintf(*message, "addr=%02x, write=%02x, read=%02x", addr, data, read_back);
     this->hardware_drivers->camera->cam->CS_HIGH();
 }
 
@@ -228,7 +229,7 @@ void CommandParser::read_spi_reg(char* arg, char* param, char** message)
     addr = strtol(arg, NULL, 16);
     this->hardware_drivers->camera->cam->CS_LOW();
     read_back = this->hardware_drivers->camera->cam->read_reg(addr);
-    sprintf(*message, "addr:%02x, read:%02x", addr, read_back);
+    sprintf(*message, "addr=%02x, read=%02x", addr, read_back);
     this->hardware_drivers->camera->cam->CS_HIGH();
 }
 
@@ -240,7 +241,7 @@ void CommandParser::write_i2c_reg(char* arg, char* param, char** message)
     data = strtol(param, NULL, 16);
     this->hardware_drivers->camera->cam->wrSensorReg16_8(addr, data);
     this->hardware_drivers->camera->cam->rdSensorReg16_8(addr, &read_back);
-    sprintf(*message, "addr:%02x, write:%02x, read:%02x", addr, data, read_back);
+    sprintf(*message, "addr=%02x, write=%02x, read=%02x", addr, data, read_back);
 }
 
 void CommandParser::read_i2c_reg(char* arg, char* param, char** message)
@@ -249,7 +250,38 @@ void CommandParser::read_i2c_reg(char* arg, char* param, char** message)
     uint8_t read_back;
     addr = strtol(arg, NULL, 16);
     this->hardware_drivers->camera->cam->rdSensorReg16_8(addr, &read_back);
-    sprintf(*message, "addr:%02x, read:%02x", addr, read_back);
+    sprintf(*message, "addr=%02x, read=%02x", addr, read_back);
+}
+
+void CommandParser::list_directory(char* arg, char* param, char** message)
+{
+    if (!this->hardware_drivers->storage_controller->is_card_connected()) {
+        sprintf(*message, "SD card not connected.\r\n");
+        return;
+    }
+
+    if (strlen(arg) == 0) {
+        this->hardware_drivers->storage_controller->list_directory(hardware_drivers->storage_controller->open_file("/"), message, serial_buffer_length, 0, "", "\r\n");
+    } else {
+        if (hardware_drivers->storage_controller->directory_exists(arg)) {
+            this->hardware_drivers->storage_controller->list_directory(hardware_drivers->storage_controller->open_file(arg), message, serial_buffer_length, 0, "", "\r\n");
+        } else {
+            sprintf(*message, "Directory %s doesn't exist.\r\n", arg);
+        }
+    }
+}
+
+void CommandParser::make_directory(char* arg, char* param, char** message)
+{
+    if (!this->hardware_drivers->storage_controller->is_card_connected()) {
+        sprintf(*message, "SD card not connected.\r\n");
+        return;
+    }
+    if (strlen(arg) == 0) {
+        sprintf(*message, "Pass a directory as an argument.\r\n");
+        return;
+    }
+    sprintf(*message, "%s\r\n", this->hardware_drivers->storage_controller->check_directory(arg) ? "Directory successfully created." : "Failed to create directory.");
 }
 
 bool CommandParser::process_serial_terminal()
@@ -258,7 +290,7 @@ bool CommandParser::process_serial_terminal()
     char* arg;
     char* param;
     char* message;
-    int action_length = this->hardware_drivers->serial_term->parse_string(this->hardware_drivers->serial_term->get_data(), 10, &action, 0, ' ');
+    int action_length = this->hardware_drivers->serial_term->parse_string(this->hardware_drivers->serial_term->get_data(), 32, &action, 0, ' ');
     int arg_length;
     bool command_found = false;
 

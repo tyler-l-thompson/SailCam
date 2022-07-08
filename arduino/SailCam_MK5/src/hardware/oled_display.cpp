@@ -18,6 +18,11 @@ OledDisplay::~OledDisplay()
     this->display->clearDisplay();
 }
 
+void OledDisplay::dim(bool state)
+{
+    this->display->dim(state);
+}
+
 void OledDisplay::update()
 {
     if (this->update_required) {
@@ -85,13 +90,13 @@ void OledDisplay::writef(const char* value, ...)
     this->update_required = true;
 }
 
-void OledDisplay::write_overview(DateTime date, IPAddress ip_address, char* wifi_ssid)
+void OledDisplay::write_overview(DateTime date, IPAddress ip_address, int wifi_mode, int capture_count, int capture_mode, int capture_interval, uint8_t last_cam_error, double battery_volts)
 {
-    this->display->setTextSize(1, 1);
-    snprintf(this->display_buf[0], buf_width-1, "%02d/%02d/%04d %02d:%02d %s", date.month(), date.day(), date.year(), date.hour_12h(), date.minute(), date.am_pm());
-    snprintf(this->display_buf[1], buf_width-1, "%s", ip_address.toString().c_str());
-    snprintf(this->display_buf[2], buf_width-1, "%s", wifi_ssid);
-    snprintf(this->display_buf[3], buf_width-1, " ");
+    this->clear();
+    snprintf(this->display_buf[0], buf_width-1, "%02d/%02d/%04d  %2d:%02d %s", date.month(), date.day(), date.year(), date.hour_12h(), date.minute(), date.am_pm());
+    snprintf(this->display_buf[1], buf_width-1, "IP:%s", ip_address.toString().c_str());
+    snprintf(this->display_buf[2], buf_width-1, "WM:%1u CM:%1u Bat:%1.2fv", wifi_mode, capture_mode, battery_volts);
+    snprintf(this->display_buf[3], buf_width-1, "E:%1u I:%03us C:%06u", last_cam_error, capture_interval, capture_count);
     this->buf_index = buf_height;
     this->update_required = true;
 }

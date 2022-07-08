@@ -13,7 +13,7 @@
 #define SCREEN_ADDRESS 0x3D
 #define SCREEN_WIDTH 128 // OLED display width, in pixels
 #define SCREEN_HEIGHT 32 // OLED display height, in pixels
-#define buf_width 25
+#define buf_width 22 // display actually width is 21 characters
 #define buf_height 4
 
 class OledDisplay
@@ -27,13 +27,14 @@ private:
 public:
     OledDisplay();
     ~OledDisplay();
+    void dim(bool state);
     void update();
     void disable();
     void clear();
     char* get_buffer();
     void write(const char* value);
     void writef(const char* value, ...);
-    void write_overview(DateTime date, IPAddress ip_address, char* wifi_ssid);
+    void write_overview(DateTime date, IPAddress ip_address, int wifi_mode, int capture_count, int capture_mode, int capture_interval, uint8_t last_cam_error, double battery_volts);
 };
 
 #endif

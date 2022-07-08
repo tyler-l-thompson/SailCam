@@ -1,0 +1,3 @@
+[submodule "arduino/SailCam_MK5/lib/ds1672"]
+	path = arduino/SailCam_MK5/lib/ds1672
+	url = https://github.com/tylerlthompson/ds1672.git

@@ -1,0 +1,1716 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<export version="D">
+  <design>
+    <source>C:\Users\Dexter\Documents\SailCam_MK5\SailCam_MK5\SailCam_MK5.sch</source>
+    <date>8/5/2021 7:54:40 PM</date>
+    <tool>Eeschema (5.1.5)-3</tool>
+    <sheet number="1" name="/" tstamps="/">
+      <title_block>
+        <title>SailCam</title>
+        <company>Octana Laboratories</company>
+        <rev>MK5</rev>
+        <date>2021-07-31</date>
+        <source>SailCam_MK5.sch</source>
+        <comment number="1" value="Tyler Thompson"/>
+        <comment number="2" value=""/>
+        <comment number="3" value=""/>
+        <comment number="4" value=""/>
+      </title_block>
+    </sheet>
+    <sheet number="2" name="/BatteryMeasurement/" tstamps="/61199C7C/">
+      <title_block>
+        <title>SailCam</title>
+        <company>Octana Laboratories</company>
+        <rev>MK5</rev>
+        <date>2021-07-31</date>
+        <source>SailCam_MK5_BatteryMeasurement.sch</source>
+        <comment number="1" value="Tyler Thompson"/>
+        <comment number="2" value=""/>
+        <comment number="3" value=""/>
+        <comment number="4" value=""/>
+      </title_block>
+    </sheet>
+    <sheet number="3" name="/RealTimeClock/" tstamps="/6119E11D/">
+      <title_block>
+        <title>SailCam</title>
+        <company>Octana Laboratories</company>
+        <rev>MK5</rev>
+        <date>2021-07-31</date>
+        <source>SailCam_MK5_RealTimeClock.sch</source>
+        <comment number="1" value="Tyler Thompson"/>
+        <comment number="2" value=""/>
+        <comment number="3" value=""/>
+        <comment number="4" value=""/>
+      </title_block>
+    </sheet>
+    <sheet number="4" name="/PowerSupply/" tstamps="/611BA1F2/">
+      <title_block>
+        <title>SailCam</title>
+        <company>Octana Laboratories</company>
+        <rev>MK5</rev>
+        <date>2021-07-31</date>
+        <source>SailCam_MK5_PowerSupply.sch</source>
+        <comment number="1" value="Tyler Thompson"/>
+        <comment number="2" value=""/>
+        <comment number="3" value=""/>
+        <comment number="4" value=""/>
+      </title_block>
+    </sheet>
+    <sheet number="5" name="/NEMAInterface/" tstamps="/611AF886/">
+      <title_block>
+        <title>SailCam</title>
+        <company>Octana Laboratories</company>
+        <rev>MK5</rev>
+        <date>2021-07-31</date>
+        <source>SailCam_MK5_NEMAInterface.sch</source>
+        <comment number="1" value="Tyler Thompson"/>
+        <comment number="2" value=""/>
+        <comment number="3" value=""/>
+        <comment number="4" value=""/>
+      </title_block>
+    </sheet>
+    <sheet number="6" name="/Micro/" tstamps="/61217E38/">
+      <title_block>
+        <title>SailCam</title>
+        <company>Octana Laboratories</company>
+        <rev>MK5</rev>
+        <date>2021-07-31</date>
+        <source>SailCam_MK5_Micro.sch</source>
+        <comment number="1" value="Tyler Thompson"/>
+        <comment number="2" value=""/>
+        <comment number="3" value=""/>
+        <comment number="4" value=""/>
+      </title_block>
+    </sheet>
+    <sheet number="7" name="/MicroSD/" tstamps="/611DB121/">
+      <title_block>
+        <title>SailCam</title>
+        <company>Octana Laboratories</company>
+        <rev>MK5</rev>
+        <date>2021-07-31</date>
+        <source>SailCam_MK5_MicroSD.sch</source>
+        <comment number="1" value="Tyler Thompson"/>
+        <comment number="2" value=""/>
+        <comment number="3" value=""/>
+        <comment number="4" value=""/>
+      </title_block>
+    </sheet>
+  </design>
+  <components>
+    <comp ref="J5">
+      <value>SSW-108-02-G-S</value>
+      <footprint>footprints:SSW-108-02-G-S</footprint>
+      <datasheet>https://www.uctronics.com/download/Amazon/B0068.pdf</datasheet>
+      <fields>
+        <field name="Description">ArduCam OV5642 Header</field>
+        <field name="manual">https://www.uctronics.com/download/Image_Sensor/OV5642_DS.pdf</field>
+      </fields>
+      <libsource lib="SSW-108-02-G-S" part="SSW-108-02-G-S" description=""/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>61092C68</tstamp>
+    </comp>
+    <comp ref="J3">
+      <value>B2B-PH-K-SLFSN</value>
+      <footprint>footprints:B2B-PH-K-SLFSN</footprint>
+      <datasheet>https://www.jst-mfg.com/product/pdf/eng/ePH.pdf</datasheet>
+      <fields>
+        <field name="Description">Battery Header</field>
+      </fields>
+      <libsource lib="B2B-PH-K-SLFSN" part="B2B-PH-K-SLFSN" description=""/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>61095DC0</tstamp>
+    </comp>
+    <comp ref="J6">
+      <value>SSW-104-02-G-S</value>
+      <footprint>footprints:SSW-104-02-G-S_OLED</footprint>
+      <datasheet>http://suddendocs.samtec.com/catalog_english/ssw_th.pdf</datasheet>
+      <fields>
+        <field name="Description">OLED Display</field>
+      </fields>
+      <libsource lib="SSW-104-02-G-S" part="SSW-104-02-G-S" description=""/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>610EDBD8</tstamp>
+    </comp>
+    <comp ref="J4">
+      <value>B4B-PH-K-SLFSN</value>
+      <footprint>footprints:B4B-PH-K-SLFSN</footprint>
+      <datasheet>https://www.jst-mfg.com/product/pdf/eng/ePH.pdf</datasheet>
+      <fields>
+        <field name="Description">Power/Data Header</field>
+      </fields>
+      <libsource lib="B4B-PH-K-SLFSN" part="B4B-PH-K-SLFSN" description=""/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>6110A6B6</tstamp>
+    </comp>
+    <comp ref="J2">
+      <value>B2B-PH-K-SLFSN</value>
+      <footprint>footprints:B2B-PH-K-SLFSN</footprint>
+      <datasheet>https://www.jst-mfg.com/product/pdf/eng/ePH.pdf</datasheet>
+      <fields>
+        <field name="Description">Power Switch Header</field>
+      </fields>
+      <libsource lib="B2B-PH-K-SLFSN" part="B2B-PH-K-SLFSN" description=""/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>611F6EFF</tstamp>
+    </comp>
+    <comp ref="J1">
+      <value>B2B-PH-K-SLFSN</value>
+      <footprint>footprints:B2B-PH-K-SLFSN</footprint>
+      <datasheet>https://www.jst-mfg.com/product/pdf/eng/ePH.pdf</datasheet>
+      <fields>
+        <field name="Description">IR Flash Header</field>
+      </fields>
+      <libsource lib="B2B-PH-K-SLFSN" part="B2B-PH-K-SLFSN" description=""/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>6129E01E</tstamp>
+    </comp>
+    <comp ref="U1">
+      <value>ADA4806-1ARJZ-R7</value>
+      <footprint>footprints:ADA4806-1ARJZ-R7</footprint>
+      <datasheet>https://www.analog.com/media/en/technical-documentation/data-sheets/ADA4806-1.pdf</datasheet>
+      <fields>
+        <field name="Description">Op Amp</field>
+      </fields>
+      <libsource lib="ADA4806-1ARJZ-R7" part="ADA4806-1ARJZ-R7" description=""/>
+      <sheetpath names="/BatteryMeasurement/" tstamps="/61199C7C/"/>
+      <tstamp>6118AE4B</tstamp>
+    </comp>
+    <comp ref="R2">
+      <value>100 KΩ</value>
+      <footprint>footprints:C_0805_2012Metric_Pad1.15x1.40mm_HandSolder_FullSilk</footprint>
+      <datasheet>~</datasheet>
+      <fields>
+        <field name="Tolerance">1%</field>
+      </fields>
+      <libsource lib="Device" part="R_Small_US" description="Resistor, small US symbol"/>
+      <sheetpath names="/BatteryMeasurement/" tstamps="/61199C7C/"/>
+      <tstamp>6118AE59</tstamp>
+    </comp>
+    <comp ref="R1">
+      <value>320 KΩ</value>
+      <footprint>footprints:C_0805_2012Metric_Pad1.15x1.40mm_HandSolder_FullSilk</footprint>
+      <datasheet>~</datasheet>
+      <fields>
+        <field name="Tolerance">1%</field>
+      </fields>
+      <libsource lib="Device" part="R_Small_US" description="Resistor, small US symbol"/>
+      <sheetpath names="/BatteryMeasurement/" tstamps="/61199C7C/"/>
+      <tstamp>6118AE66</tstamp>
+    </comp>
+    <comp ref="R4">
+      <value>100 KΩ</value>
+      <footprint>footprints:C_0805_2012Metric_Pad1.15x1.40mm_HandSolder_FullSilk</footprint>
+      <datasheet>~</datasheet>
+      <fields>
+        <field name="Tolerance">1%</field>
+      </fields>
+      <libsource lib="Device" part="R_Small_US" description="Resistor, small US symbol"/>
+      <sheetpath names="/BatteryMeasurement/" tstamps="/61199C7C/"/>
+      <tstamp>6118AE77</tstamp>
+    </comp>
+    <comp ref="R3">
+      <value>320 KΩ</value>
+      <footprint>footprints:C_0805_2012Metric_Pad1.15x1.40mm_HandSolder_FullSilk</footprint>
+      <datasheet>~</datasheet>
+      <fields>
+        <field name="Tolerance">1%</field>
+      </fields>
+      <libsource lib="Device" part="R_Small_US" description="Resistor, small US symbol"/>
+      <sheetpath names="/BatteryMeasurement/" tstamps="/61199C7C/"/>
+      <tstamp>6118AE84</tstamp>
+    </comp>
+    <comp ref="U2">
+      <value>DS1672S-33+T&amp;R</value>
+      <footprint>footprints:DS1672S-33&amp;plus_T&amp;R</footprint>
+      <datasheet>https://datasheets.maximintegrated.com/en/ds/DS1672.pdf</datasheet>
+      <fields>
+        <field name="Description">Real Time Clock</field>
+      </fields>
+      <libsource lib="ds1672" part="DS1672S-33+T&amp;R" description=""/>
+      <sheetpath names="/RealTimeClock/" tstamps="/6119E11D/"/>
+      <tstamp>611A5679</tstamp>
+    </comp>
+    <comp ref="Y1">
+      <value>ABS25-32.768KHZ-6-1-T</value>
+      <footprint>footprints:XTAL_ABS25-32.768KHZ-6-1-T</footprint>
+      <datasheet>https://abracon.com/Resonators/abs25.pdf</datasheet>
+      <fields>
+        <field name="MANUFACTURER">ABRACON LLC</field>
+        <field name="SANPEDA_PACKAGE_ID">19131</field>
+      </fields>
+      <libsource lib="ABS25-32.768KHZ-6-1-T" part="ABS25-32.768KHZ-6-1-T" description=""/>
+      <sheetpath names="/RealTimeClock/" tstamps="/6119E11D/"/>
+      <tstamp>611A5681</tstamp>
+    </comp>
+    <comp ref="B1">
+      <value>BU2032SM-BT-GTR</value>
+      <footprint>footprints:BAT_BU2032SM-BT-GTR</footprint>
+      <datasheet>https://media.digikey.com/pdf/Data%20Sheets/Memory%20Protection%20PDFs/Coin_Cell_Guide.pdf</datasheet>
+      <fields>
+        <field name="AVAILABILITY">Unavailable</field>
+        <field name="DESCRIPTION">BATTERY HOLDER COIN 20MM SMD</field>
+        <field name="MAXIMUM_PACKAGE_HEIGHT">5.20mm</field>
+        <field name="MF">MPD _Memory</field>
+        <field name="MP">BU2032SM-HD-G</field>
+        <field name="PACKAGE">None</field>
+        <field name="PARTREV">F</field>
+        <field name="PRICE">None</field>
+      </fields>
+      <libsource lib="BU2032SM-BT-GTR" part="BU2032SM-BT-GTR" description=""/>
+      <sheetpath names="/RealTimeClock/" tstamps="/6119E11D/"/>
+      <tstamp>611A568F</tstamp>
+    </comp>
+    <comp ref="R5">
+      <value>1 KΩ</value>
+      <footprint>footprints:C_0805_2012Metric_Pad1.15x1.40mm_HandSolder_FullSilk</footprint>
+      <datasheet>~</datasheet>
+      <fields>
+        <field name="Tolerance">5%</field>
+      </fields>
+      <libsource lib="Device" part="R_Small_US" description="Resistor, small US symbol"/>
+      <sheetpath names="/RealTimeClock/" tstamps="/6119E11D/"/>
+      <tstamp>611A56A0</tstamp>
+    </comp>
+    <comp ref="R6">
+      <value>1 KΩ</value>
+      <footprint>footprints:C_0805_2012Metric_Pad1.15x1.40mm_HandSolder_FullSilk</footprint>
+      <datasheet>~</datasheet>
+      <fields>
+        <field name="Tolerance">5%</field>
+      </fields>
+      <libsource lib="Device" part="R_Small_US" description="Resistor, small US symbol"/>
+      <sheetpath names="/RealTimeClock/" tstamps="/6119E11D/"/>
+      <tstamp>611A56AE</tstamp>
+    </comp>
+    <comp ref="R7">
+      <value>1 KΩ</value>
+      <footprint>footprints:C_0805_2012Metric_Pad1.15x1.40mm_HandSolder_FullSilk</footprint>
+      <datasheet>~</datasheet>
+      <fields>
+        <field name="Tolerance">5%</field>
+      </fields>
+      <libsource lib="Device" part="R_Small_US" description="Resistor, small US symbol"/>
+      <sheetpath names="/RealTimeClock/" tstamps="/6119E11D/"/>
+      <tstamp>611A56BB</tstamp>
+    </comp>
+    <comp ref="U5">
+      <value>XC6220B331MR-G</value>
+      <footprint>footprints:XC6220B331MR-G</footprint>
+      <datasheet>https://media.digikey.com/pdf/Data%20Sheets/Torex/XC6220.pdf</datasheet>
+      <fields>
+        <field name="Description">3.3v DC Regulator</field>
+      </fields>
+      <libsource lib="XC6220B331MR-G" part="XC6220B331MR-G" description=""/>
+      <sheetpath names="/PowerSupply/" tstamps="/611BA1F2/"/>
+      <tstamp>611C1252</tstamp>
+    </comp>
+    <comp ref="C4">
+      <value>10 uF</value>
+      <footprint>footprints:C_0805_2012Metric_Pad1.15x1.40mm_HandSolder_FullSilk</footprint>
+      <datasheet>~</datasheet>
+      <libsource lib="Device" part="C_Small" description="Unpolarized capacitor, small symbol"/>
+      <sheetpath names="/PowerSupply/" tstamps="/611BA1F2/"/>
+      <tstamp>611C1259</tstamp>
+    </comp>
+    <comp ref="C2">
+      <value>1 uF</value>
+      <footprint>footprints:C_0805_2012Metric_Pad1.15x1.40mm_HandSolder_FullSilk</footprint>
+      <datasheet>~</datasheet>
+      <libsource lib="Device" part="C_Small" description="Unpolarized capacitor, small symbol"/>
+      <sheetpath names="/PowerSupply/" tstamps="/611BA1F2/"/>
+      <tstamp>611C126B</tstamp>
+    </comp>
+    <comp ref="U4">
+      <value>LTC4054ES5-4.2#TRMPBF</value>
+      <footprint>footprints:SOT95P280X100-5N</footprint>
+      <datasheet>https://www.analog.com/media/en/technical-documentation/data-sheets/405442xf.pdf</datasheet>
+      <fields>
+        <field name="DESCRIPTION">Linear Li-Ion Battery Charger</field>
+        <field name="MANUFACTURER">Linear Technology/Analog</field>
+        <field name="MP">LTC4054ES5-4.2#TRMPBF</field>
+        <field name="PACKAGE">SOT-23-5 Linear Technology</field>
+        <field name="PRICE">None</field>
+        <field name="STANDARD">Manufacturer Recommendations</field>
+      </fields>
+      <libsource lib="LTC4054ES5-4.2_TRMPBF" part="LTC4054ES5-4.2#TRMPBF" description=""/>
+      <sheetpath names="/PowerSupply/" tstamps="/611BA1F2/"/>
+      <tstamp>611C1280</tstamp>
+    </comp>
+    <comp ref="D1">
+      <value>LED</value>
+      <footprint>LED_THT:LED_D3.0mm</footprint>
+      <datasheet>~</datasheet>
+      <libsource lib="Device" part="LED" description="Light emitting diode"/>
+      <sheetpath names="/PowerSupply/" tstamps="/611BA1F2/"/>
+      <tstamp>611C1289</tstamp>
+    </comp>
+    <comp ref="R8">
+      <value>1k Ω</value>
+      <footprint>footprints:C_0805_2012Metric_Pad1.15x1.40mm_HandSolder_FullSilk</footprint>
+      <datasheet>~</datasheet>
+      <fields>
+        <field name="Tolerance">5%</field>
+      </fields>
+      <libsource lib="Device" part="R_Small_US" description="Resistor, small US symbol"/>
+      <sheetpath names="/PowerSupply/" tstamps="/611BA1F2/"/>
+      <tstamp>611C1290</tstamp>
+    </comp>
+    <comp ref="R9">
+      <value>3 KΩ</value>
+      <footprint>footprints:C_0805_2012Metric_Pad1.15x1.40mm_HandSolder_FullSilk</footprint>
+      <datasheet>~</datasheet>
+      <fields>
+        <field name="Tolerance">1%</field>
+      </fields>
+      <libsource lib="Device" part="R_Small_US" description="Resistor, small US symbol"/>
+      <sheetpath names="/PowerSupply/" tstamps="/611BA1F2/"/>
+      <tstamp>611C129F</tstamp>
+    </comp>
+    <comp ref="U3">
+      <value>NCV7805BD2TG</value>
+      <footprint>footprints:NCV7805BD2TG</footprint>
+      <datasheet>https://www.onsemi.com/pdf/datasheet/mc7800-d.pdf</datasheet>
+      <fields>
+        <field name="Description">5v DC Regulator</field>
+      </fields>
+      <libsource lib="NCV7805BD2TG" part="NCV7805BD2TG" description=""/>
+      <sheetpath names="/PowerSupply/" tstamps="/611BA1F2/"/>
+      <tstamp>611C12B3</tstamp>
+    </comp>
+    <comp ref="C1">
+      <value>0.33 uF</value>
+      <footprint>footprints:C_0805_2012Metric_Pad1.15x1.40mm_HandSolder_FullSilk</footprint>
+      <datasheet>~</datasheet>
+      <libsource lib="Device" part="C_Small" description="Unpolarized capacitor, small symbol"/>
+      <sheetpath names="/PowerSupply/" tstamps="/611BA1F2/"/>
+      <tstamp>611C12BC</tstamp>
+    </comp>
+    <comp ref="C3">
+      <value>10 uF</value>
+      <footprint>footprints:C_0805_2012Metric_Pad1.15x1.40mm_HandSolder_FullSilk</footprint>
+      <datasheet>~</datasheet>
+      <libsource lib="Device" part="C_Small" description="Unpolarized capacitor, small symbol"/>
+      <sheetpath names="/PowerSupply/" tstamps="/611BA1F2/"/>
+      <tstamp>611C12CF</tstamp>
+    </comp>
+    <comp ref="S1">
+      <value>SW_SPST</value>
+      <footprint>digikey-footprints:Switch_Toggle_ATE1D-2M3-10-Z</footprint>
+      <datasheet>~</datasheet>
+      <fields>
+        <field name="Description">Power On/Off Bypass</field>
+      </fields>
+      <libsource lib="Switch" part="SW_SPST" description="Single Pole Single Throw (SPST) switch"/>
+      <sheetpath names="/PowerSupply/" tstamps="/611BA1F2/"/>
+      <tstamp>61287042</tstamp>
+    </comp>
+    <comp ref="R11">
+      <value>10 KΩ</value>
+      <footprint>footprints:C_0805_2012Metric_Pad1.15x1.40mm_HandSolder_FullSilk</footprint>
+      <datasheet>~</datasheet>
+      <fields>
+        <field name="Tolerance">5%</field>
+      </fields>
+      <libsource lib="Device" part="R_Small_US" description="Resistor, small US symbol"/>
+      <sheetpath names="/NEMAInterface/" tstamps="/611AF886/"/>
+      <tstamp>611B59E8</tstamp>
+    </comp>
+    <comp ref="R12">
+      <value>10 Ω</value>
+      <footprint>footprints:C_0805_2012Metric_Pad1.15x1.40mm_HandSolder_FullSilk</footprint>
+      <datasheet>~</datasheet>
+      <fields>
+        <field name="Tolerance">5%</field>
+      </fields>
+      <libsource lib="Device" part="R_Small_US" description="Resistor, small US symbol"/>
+      <sheetpath names="/NEMAInterface/" tstamps="/611AF886/"/>
+      <tstamp>611B59F6</tstamp>
+    </comp>
+    <comp ref="R14">
+      <value>10 Ω</value>
+      <footprint>footprints:C_0805_2012Metric_Pad1.15x1.40mm_HandSolder_FullSilk</footprint>
+      <datasheet>~</datasheet>
+      <fields>
+        <field name="Tolerance">5%</field>
+      </fields>
+      <libsource lib="Device" part="R_Small_US" description="Resistor, small US symbol"/>
+      <sheetpath names="/NEMAInterface/" tstamps="/611AF886/"/>
+      <tstamp>611B59FD</tstamp>
+    </comp>
+    <comp ref="R15">
+      <value>330 Ω</value>
+      <footprint>footprints:C_0805_2012Metric_Pad1.15x1.40mm_HandSolder_FullSilk</footprint>
+      <datasheet>~</datasheet>
+      <fields>
+        <field name="Tolerance">5%</field>
+      </fields>
+      <libsource lib="Device" part="R_Small_US" description="Resistor, small US symbol"/>
+      <sheetpath names="/NEMAInterface/" tstamps="/611AF886/"/>
+      <tstamp>611B5A06</tstamp>
+    </comp>
+    <comp ref="U7">
+      <value>SM712.TCT</value>
+      <footprint>footprints:SM712.TCT</footprint>
+      <datasheet>https://semtech.my.salesforce.com/sfc/p/#E0000000JelG/a/440000001MKW/f6pBKheIN2CeR0DxWdS3THuJ7nh4aKYltSzghsLP5iw</datasheet>
+      <libsource lib="SM712-TCT" part="SM712.TCT" description=""/>
+      <sheetpath names="/NEMAInterface/" tstamps="/611AF886/"/>
+      <tstamp>611B5A15</tstamp>
+    </comp>
+    <comp ref="R13">
+      <value>330 Ω</value>
+      <footprint>footprints:C_0805_2012Metric_Pad1.15x1.40mm_HandSolder_FullSilk</footprint>
+      <datasheet>~</datasheet>
+      <fields>
+        <field name="Tolerance">5%</field>
+      </fields>
+      <libsource lib="Device" part="R_Small_US" description="Resistor, small US symbol"/>
+      <sheetpath names="/NEMAInterface/" tstamps="/611AF886/"/>
+      <tstamp>611B5A27</tstamp>
+    </comp>
+    <comp ref="U6">
+      <value>MAX485CSA+</value>
+      <footprint>footprints:MAX485CSA&amp;plus_</footprint>
+      <datasheet>https://datasheets.maximintegrated.com/en/ds/MAX1487-MAX491.pdf</datasheet>
+      <fields>
+        <field name="Description">RS-422/485 Transceiver</field>
+      </fields>
+      <libsource lib="MAX485CSA&amp;plus_" part="MAX485CSA+" description=""/>
+      <sheetpath names="/NEMAInterface/" tstamps="/611AF886/"/>
+      <tstamp>611B5A2E</tstamp>
+    </comp>
+    <comp ref="R10">
+      <value>10 KΩ</value>
+      <footprint>footprints:C_0805_2012Metric_Pad1.15x1.40mm_HandSolder_FullSilk</footprint>
+      <datasheet>~</datasheet>
+      <fields>
+        <field name="Tolerance">5%</field>
+      </fields>
+      <libsource lib="Device" part="R_Small_US" description="Resistor, small US symbol"/>
+      <sheetpath names="/NEMAInterface/" tstamps="/611AF886/"/>
+      <tstamp>611B5A35</tstamp>
+    </comp>
+    <comp ref="M1">
+      <value>2491</value>
+      <footprint>digikey-footprints:WIFI_Module_ESP8266_2491</footprint>
+      <datasheet>https://media.digikey.com/pdf/Data%20Sheets/Adafruit%20PDFs/2491_Web.pdf</datasheet>
+      <fields>
+        <field name="Category">RF/IF and RFID</field>
+        <field name="DK_Datasheet_Link">https://media.digikey.com/pdf/Data%20Sheets/Adafruit%20PDFs/2491_Web.pdf</field>
+        <field name="DK_Detail_Page">/product-detail/en/adafruit-industries-llc/2491/1528-1438-ND/5761206</field>
+        <field name="Description">ESP8266 SMT MODULE</field>
+        <field name="Digi-Key_PN">1528-1438-ND</field>
+        <field name="Family">RF Transceiver Modules</field>
+        <field name="MPN">2491</field>
+        <field name="Manufacturer">Adafruit Industries LLC</field>
+        <field name="Status">Active</field>
+      </fields>
+      <libsource lib="dk_RF-Transceiver-Modules" part="2491" description="ESP8266 SMT MODULE"/>
+      <sheetpath names="/Micro/" tstamps="/61217E38/"/>
+      <tstamp>6121FD37</tstamp>
+    </comp>
+    <comp ref="R18">
+      <value>10 KΩ</value>
+      <footprint>footprints:C_0805_2012Metric_Pad1.15x1.40mm_HandSolder_FullSilk</footprint>
+      <datasheet>~</datasheet>
+      <fields>
+        <field name="Tolerance">5%</field>
+      </fields>
+      <libsource lib="Device" part="R_Small_US" description="Resistor, small US symbol"/>
+      <sheetpath names="/Micro/" tstamps="/61217E38/"/>
+      <tstamp>6121FD4A</tstamp>
+    </comp>
+    <comp ref="R19">
+      <value>10 KΩ</value>
+      <footprint>footprints:C_0805_2012Metric_Pad1.15x1.40mm_HandSolder_FullSilk</footprint>
+      <datasheet>~</datasheet>
+      <fields>
+        <field name="Tolerance">5%</field>
+      </fields>
+      <libsource lib="Device" part="R_Small_US" description="Resistor, small US symbol"/>
+      <sheetpath names="/Micro/" tstamps="/61217E38/"/>
+      <tstamp>6121FD51</tstamp>
+    </comp>
+    <comp ref="R17">
+      <value>10 KΩ</value>
+      <footprint>footprints:C_0805_2012Metric_Pad1.15x1.40mm_HandSolder_FullSilk</footprint>
+      <datasheet>~</datasheet>
+      <fields>
+        <field name="Tolerance">5%</field>
+      </fields>
+      <libsource lib="Device" part="R_Small_US" description="Resistor, small US symbol"/>
+      <sheetpath names="/Micro/" tstamps="/61217E38/"/>
+      <tstamp>6121FD5C</tstamp>
+    </comp>
+    <comp ref="R16">
+      <value>10 KΩ</value>
+      <footprint>footprints:C_0805_2012Metric_Pad1.15x1.40mm_HandSolder_FullSilk</footprint>
+      <datasheet>~</datasheet>
+      <fields>
+        <field name="Tolerance">5%</field>
+      </fields>
+      <libsource lib="Device" part="R_Small_US" description="Resistor, small US symbol"/>
+      <sheetpath names="/Micro/" tstamps="/61217E38/"/>
+      <tstamp>6121FD63</tstamp>
+    </comp>
+    <comp ref="R22">
+      <value>10 KΩ</value>
+      <footprint>footprints:C_0805_2012Metric_Pad1.15x1.40mm_HandSolder_FullSilk</footprint>
+      <datasheet>~</datasheet>
+      <fields>
+        <field name="Tolerance">5%</field>
+      </fields>
+      <libsource lib="Device" part="R_Small_US" description="Resistor, small US symbol"/>
+      <sheetpath names="/Micro/" tstamps="/61217E38/"/>
+      <tstamp>6121FD6E</tstamp>
+    </comp>
+    <comp ref="U8">
+      <value>CH340G</value>
+      <footprint>Package_SO:SOIC-16_3.9x9.9mm_P1.27mm</footprint>
+      <datasheet>http://www.datasheet5.com/pdf-local-2195953</datasheet>
+      <libsource lib="CH340G_Interface_USB" part="CH340G" description="USB serial converter, UART, SOIC-16"/>
+      <sheetpath names="/Micro/" tstamps="/61217E38/"/>
+      <tstamp>6121FD94</tstamp>
+    </comp>
+    <comp ref="J7">
+      <value>USB_B</value>
+      <footprint>footprints:AMPHENOL_61729-1011BLF</footprint>
+      <datasheet>https://www.amphenol-icc.com/media/wysiwyg/files/drawing/61729.pdf</datasheet>
+      <libsource lib="Connector" part="USB_B" description="USB Type B connector"/>
+      <sheetpath names="/Micro/" tstamps="/61217E38/"/>
+      <tstamp>6121FD9A</tstamp>
+    </comp>
+    <comp ref="C9">
+      <value>0.1 uF</value>
+      <footprint>footprints:C_0805_2012Metric_Pad1.15x1.40mm_HandSolder_FullSilk</footprint>
+      <datasheet>~</datasheet>
+      <libsource lib="Device" part="C_Small" description="Unpolarized capacitor, small symbol"/>
+      <sheetpath names="/Micro/" tstamps="/61217E38/"/>
+      <tstamp>6122930C</tstamp>
+    </comp>
+    <comp ref="C7">
+      <value>0.1 uF</value>
+      <footprint>footprints:C_0805_2012Metric_Pad1.15x1.40mm_HandSolder_FullSilk</footprint>
+      <datasheet>~</datasheet>
+      <libsource lib="Device" part="C_Small" description="Unpolarized capacitor, small symbol"/>
+      <sheetpath names="/Micro/" tstamps="/61217E38/"/>
+      <tstamp>6122B8E0</tstamp>
+    </comp>
+    <comp ref="Y2">
+      <value>ECS-120-20-4X</value>
+      <footprint>footprints:XTAL_ECS-120-20-4X</footprint>
+      <datasheet>https://ecsxtal.com/store/pdf/hc-49usx.pdf</datasheet>
+      <fields>
+        <field name="Description">12 MHz Crystal</field>
+      </fields>
+      <libsource lib="Device" part="Crystal" description="Two pin crystal"/>
+      <sheetpath names="/Micro/" tstamps="/61217E38/"/>
+      <tstamp>6122FDFD</tstamp>
+    </comp>
+    <comp ref="C6">
+      <value>22 pF</value>
+      <footprint>footprints:C_0805_2012Metric_Pad1.15x1.40mm_HandSolder_FullSilk</footprint>
+      <datasheet>~</datasheet>
+      <libsource lib="Device" part="C_Small" description="Unpolarized capacitor, small symbol"/>
+      <sheetpath names="/Micro/" tstamps="/61217E38/"/>
+      <tstamp>61235D34</tstamp>
+    </comp>
+    <comp ref="C5">
+      <value>22 pF</value>
+      <footprint>footprints:C_0805_2012Metric_Pad1.15x1.40mm_HandSolder_FullSilk</footprint>
+      <datasheet>~</datasheet>
+      <libsource lib="Device" part="C_Small" description="Unpolarized capacitor, small symbol"/>
+      <sheetpath names="/Micro/" tstamps="/61217E38/"/>
+      <tstamp>612375C6</tstamp>
+    </comp>
+    <comp ref="Q1">
+      <value>SS8050-G</value>
+      <footprint>footprints:SS8050-G</footprint>
+      <datasheet>https://www.digikey.com/en/htmldatasheets/production/1953165/0/0/1/ss8050-g.html</datasheet>
+      <libsource lib="Device" part="Q_NPN_BEC" description="NPN transistor, base/emitter/collector"/>
+      <sheetpath names="/Micro/" tstamps="/61217E38/"/>
+      <tstamp>6123D76E</tstamp>
+    </comp>
+    <comp ref="Q2">
+      <value>SS8050-G</value>
+      <footprint>footprints:SS8050-G</footprint>
+      <datasheet>https://www.digikey.com/en/htmldatasheets/production/1953165/0/0/1/ss8050-g.html</datasheet>
+      <libsource lib="Device" part="Q_NPN_BEC" description="NPN transistor, base/emitter/collector"/>
+      <sheetpath names="/Micro/" tstamps="/61217E38/"/>
+      <tstamp>6123EBF4</tstamp>
+    </comp>
+    <comp ref="R23">
+      <value>10 KΩ</value>
+      <footprint>footprints:C_0805_2012Metric_Pad1.15x1.40mm_HandSolder_FullSilk</footprint>
+      <datasheet>~</datasheet>
+      <fields>
+        <field name="Tolerance">5%</field>
+      </fields>
+      <libsource lib="Device" part="R_Small_US" description="Resistor, small US symbol"/>
+      <sheetpath names="/Micro/" tstamps="/61217E38/"/>
+      <tstamp>612479FA</tstamp>
+    </comp>
+    <comp ref="R24">
+      <value>10 KΩ</value>
+      <footprint>footprints:C_0805_2012Metric_Pad1.15x1.40mm_HandSolder_FullSilk</footprint>
+      <datasheet>~</datasheet>
+      <fields>
+        <field name="Tolerance">5%</field>
+      </fields>
+      <libsource lib="Device" part="R_Small_US" description="Resistor, small US symbol"/>
+      <sheetpath names="/Micro/" tstamps="/61217E38/"/>
+      <tstamp>6124AF8B</tstamp>
+    </comp>
+    <comp ref="R20">
+      <value>470 Ω</value>
+      <footprint>footprints:C_0805_2012Metric_Pad1.15x1.40mm_HandSolder_FullSilk</footprint>
+      <datasheet>~</datasheet>
+      <fields>
+        <field name="Tolerance">5%</field>
+      </fields>
+      <libsource lib="Device" part="R_Small_US" description="Resistor, small US symbol"/>
+      <sheetpath names="/Micro/" tstamps="/61217E38/"/>
+      <tstamp>6125BD6A</tstamp>
+    </comp>
+    <comp ref="R21">
+      <value>470 Ω</value>
+      <footprint>footprints:C_0805_2012Metric_Pad1.15x1.40mm_HandSolder_FullSilk</footprint>
+      <datasheet>~</datasheet>
+      <fields>
+        <field name="Tolerance">5%</field>
+      </fields>
+      <libsource lib="Device" part="R_Small_US" description="Resistor, small US symbol"/>
+      <sheetpath names="/Micro/" tstamps="/61217E38/"/>
+      <tstamp>6125D445</tstamp>
+    </comp>
+    <comp ref="C8">
+      <value>0.1 uF</value>
+      <footprint>footprints:C_0805_2012Metric_Pad1.15x1.40mm_HandSolder_FullSilk</footprint>
+      <datasheet>~</datasheet>
+      <libsource lib="Device" part="C_Small" description="Unpolarized capacitor, small symbol"/>
+      <sheetpath names="/Micro/" tstamps="/61217E38/"/>
+      <tstamp>61264107</tstamp>
+    </comp>
+    <comp ref="C10">
+      <value>0.1 uF</value>
+      <footprint>footprints:C_0805_2012Metric_Pad1.15x1.40mm_HandSolder_FullSilk</footprint>
+      <datasheet>~</datasheet>
+      <libsource lib="Device" part="C_Small" description="Unpolarized capacitor, small symbol"/>
+      <sheetpath names="/Micro/" tstamps="/61217E38/"/>
+      <tstamp>61280263</tstamp>
+    </comp>
+    <comp ref="S2">
+      <value>SW_Push</value>
+      <footprint>Button_Switch_THT:SW_PUSH_6mm</footprint>
+      <datasheet>~</datasheet>
+      <fields>
+        <field name="Description">Reset</field>
+      </fields>
+      <libsource lib="Switch" part="SW_Push" description="Push button switch, generic, two pins"/>
+      <sheetpath names="/Micro/" tstamps="/61217E38/"/>
+      <tstamp>61289747</tstamp>
+    </comp>
+    <comp ref="S3">
+      <value>SW_Push</value>
+      <footprint>Button_Switch_THT:SW_PUSH_6mm</footprint>
+      <datasheet>~</datasheet>
+      <fields>
+        <field name="Description">Flash</field>
+      </fields>
+      <libsource lib="Switch" part="SW_Push" description="Push button switch, generic, two pins"/>
+      <sheetpath names="/Micro/" tstamps="/61217E38/"/>
+      <tstamp>6128D069</tstamp>
+    </comp>
+    <comp ref="Q3">
+      <value>AOD1N60</value>
+      <footprint>TO228P1003X240-3N</footprint>
+      <fields>
+        <field name="Description">IR Flash Control</field>
+        <field name="MANUFACTURER">Alpha &amp; Omega</field>
+        <field name="MAXIMUM_PACKAGE_HEIGHT">2.4 mm</field>
+        <field name="PARTREV">U</field>
+        <field name="STANDARD">IPC 7351B</field>
+      </fields>
+      <libsource lib="AOD1N60" part="AOD1N60" description=""/>
+      <sheetpath names="/Micro/" tstamps="/61217E38/"/>
+      <tstamp>612A588A</tstamp>
+    </comp>
+    <comp ref="R25">
+      <value>1 KΩ</value>
+      <footprint>footprints:C_0805_2012Metric_Pad1.15x1.40mm_HandSolder_FullSilk</footprint>
+      <datasheet>~</datasheet>
+      <fields>
+        <field name="Tolerance">5%</field>
+      </fields>
+      <libsource lib="Device" part="R_Small_US" description="Resistor, small US symbol"/>
+      <sheetpath names="/Micro/" tstamps="/61217E38/"/>
+      <tstamp>612A9D0D</tstamp>
+    </comp>
+    <comp ref="C11">
+      <value>100 uF</value>
+      <footprint>Capacitor_THT:CP_Radial_D5.0mm_P2.00mm</footprint>
+      <datasheet>~</datasheet>
+      <libsource lib="Device" part="C_Small" description="Unpolarized capacitor, small symbol"/>
+      <sheetpath names="/Micro/" tstamps="/61217E38/"/>
+      <tstamp>612B2E67</tstamp>
+    </comp>
+    <comp ref="R26">
+      <value>10 KΩ</value>
+      <footprint>Resistor_THT:R_Box_L8.4mm_W2.5mm_P5.08mm</footprint>
+      <datasheet>~</datasheet>
+      <fields>
+        <field name="Tolerance">5%</field>
+      </fields>
+      <libsource lib="Device" part="R_Small_US" description="Resistor, small US symbol"/>
+      <sheetpath names="/Micro/" tstamps="/61217E38/"/>
+      <tstamp>612BDB8C</tstamp>
+    </comp>
+    <comp ref="J8">
+      <value>DM3BT-DSF-PEJS</value>
+      <footprint>footprints:DM3BT-DSF-PEJS</footprint>
+      <datasheet>https://www.hirose.com/product/document?clcode=CL0609-0033-6-00&amp;productname=DM3AT-SF-PEJ2M5&amp;series=DM3&amp;documenttype=Catalog&amp;lang=en&amp;documentid=D49662_en</datasheet>
+      <fields>
+        <field name="Desription">Micro SD Card Slot</field>
+      </fields>
+      <libsource lib="DM3BT-DSF-PEJS" part="DM3BT-DSF-PEJS" description=""/>
+      <sheetpath names="/MicroSD/" tstamps="/611DB121/"/>
+      <tstamp>611DCAF8</tstamp>
+    </comp>
+    <comp ref="U9">
+      <value>MC74HC365ADG</value>
+      <footprint>footprints:MC74HC365ADG</footprint>
+      <datasheet>https://www.onsemi.com/pdf/datasheet/mc74hc365a-d.pdf</datasheet>
+      <fields>
+        <field name="Description">3.3v Level Buffer</field>
+      </fields>
+      <libsource lib="MC74HC365ADG-ND" part="MC74HC365ADG" description=""/>
+      <sheetpath names="/MicroSD/" tstamps="/611DB121/"/>
+      <tstamp>611DCAFF</tstamp>
+    </comp>
+    <comp ref="C12">
+      <value>0.1 uF</value>
+      <footprint>footprints:C_0805_2012Metric_Pad1.15x1.40mm_HandSolder_FullSilk</footprint>
+      <datasheet>~</datasheet>
+      <libsource lib="Device" part="C_Small" description="Unpolarized capacitor, small symbol"/>
+      <sheetpath names="/MicroSD/" tstamps="/611DB121/"/>
+      <tstamp>61294A83</tstamp>
+    </comp>
+  </components>
+  <libparts>
+    <libpart lib="ABS25-32.768KHZ-6-1-T" part="ABS25-32.768KHZ-6-1-T">
+      <fields>
+        <field name="Reference">Y</field>
+        <field name="Value">ABS25-32.768KHZ-6-1-T</field>
+        <field name="Footprint">XTAL_ABS25-32.768KHZ-6-1-T</field>
+        <field name="MANUFACTURER">ABRACON LLC</field>
+        <field name="SANPEDA_PACKAGE_ID">19131</field>
+      </fields>
+      <pins>
+        <pin num="1" name="~" type="passive"/>
+        <pin num="4" name="~" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="ADA4806-1ARJZ-R7" part="ADA4806-1ARJZ-R7">
+      <footprints>
+        <fp>RJ-8_ADI</fp>
+        <fp>RJ-8_ADI-M</fp>
+        <fp>RJ-8_ADI-L</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">U</field>
+        <field name="Value">ADA4806-1ARJZ-R7</field>
+        <field name="Footprint">RJ-8_ADI</field>
+      </fields>
+      <pins>
+        <pin num="1" name="VOUT" type="output"/>
+        <pin num="2" name="NC" type="NotConnected"/>
+        <pin num="3" name="-VS" type="power_in"/>
+        <pin num="4" name="+IN" type="input"/>
+        <pin num="5" name="-IN" type="input"/>
+        <pin num="6" name="*SLEEP" type="input"/>
+        <pin num="7" name="*SHUTDOWN" type="input"/>
+        <pin num="8" name="+VS" type="power_in"/>
+      </pins>
+    </libpart>
+    <libpart lib="AOD1N60" part="AOD1N60">
+      <fields>
+        <field name="Reference">Q</field>
+        <field name="Value">AOD1N60</field>
+        <field name="Footprint">TO228P1003X240-3N</field>
+        <field name="STANDARD">IPC 7351B</field>
+        <field name="MAXIMUM_PACKAGE_HEIGHT">2.4 mm</field>
+        <field name="MANUFACTURER">Alpha &amp; Omega</field>
+        <field name="PARTREV">U</field>
+      </fields>
+      <pins>
+        <pin num="1" name="~" type="passive"/>
+        <pin num="3" name="~" type="passive"/>
+        <pin num="4" name="~" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="B2B-PH-K-SLFSN" part="B2B-PH-K-SLFSN">
+      <footprints>
+        <fp>CONN_B2B-PH-K-SLFSN_JST</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">J</field>
+        <field name="Value">B2B-PH-K-SLFSN</field>
+        <field name="Footprint">CONN_B2B-PH-K-SLFSN_JST</field>
+      </fields>
+      <pins>
+        <pin num="1" name="1" type="unspc"/>
+        <pin num="2" name="2" type="unspc"/>
+      </pins>
+    </libpart>
+    <libpart lib="B4B-PH-K-SLFSN" part="B4B-PH-K-SLFSN">
+      <footprints>
+        <fp>CONN_B4B-PH-K-S_JST</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">J</field>
+        <field name="Value">B4B-PH-K-SLFSN</field>
+        <field name="Footprint">CONN_B4B-PH-K-S_JST</field>
+      </fields>
+      <pins>
+        <pin num="1" name="1" type="unspc"/>
+        <pin num="2" name="2" type="unspc"/>
+        <pin num="3" name="3" type="unspc"/>
+        <pin num="4" name="4" type="unspc"/>
+      </pins>
+    </libpart>
+    <libpart lib="BU2032SM-BT-GTR" part="BU2032SM-BT-GTR">
+      <fields>
+        <field name="Reference">BT</field>
+        <field name="Value">BU2032SM-BT-GTR</field>
+        <field name="Footprint">BAT_BU2032SM-BT-GTR</field>
+        <field name="MP">BU2032SM-HD-G</field>
+        <field name="MAXIMUM_PACKAGE_HEIGHT">5.20mm</field>
+        <field name="PRICE">None</field>
+        <field name="PACKAGE">None</field>
+        <field name="MF">MPD _Memory</field>
+        <field name="DESCRIPTION">BATTERY HOLDER COIN 20MM SMD</field>
+        <field name="AVAILABILITY">Unavailable</field>
+        <field name="PARTREV">F</field>
+      </fields>
+      <pins>
+        <pin num="+" name="~" type="passive"/>
+        <pin num="-" name="~" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="CH340G_Interface_USB" part="CH340G">
+      <description>USB serial converter, UART, SOIC-16</description>
+      <docs>http://www.datasheet5.com/pdf-local-2195953</docs>
+      <footprints>
+        <fp>SOIC*3.9x9.9mm*P1.27mm*</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">U</field>
+        <field name="Value">CH340G</field>
+        <field name="Footprint">Package_SO:SOIC-16_3.9x9.9mm_P1.27mm</field>
+      </fields>
+      <pins>
+        <pin num="1" name="GND" type="power_in"/>
+        <pin num="2" name="TXD" type="output"/>
+        <pin num="3" name="RXD" type="input"/>
+        <pin num="4" name="V3" type="passive"/>
+        <pin num="5" name="UD+" type="BiDi"/>
+        <pin num="6" name="UD-" type="BiDi"/>
+        <pin num="7" name="XI" type="input"/>
+        <pin num="8" name="XO" type="output"/>
+        <pin num="9" name="~CTS" type="input"/>
+        <pin num="10" name="~DSR" type="input"/>
+        <pin num="11" name="~RI" type="input"/>
+        <pin num="12" name="~DCD" type="input"/>
+        <pin num="13" name="~DTR" type="output"/>
+        <pin num="14" name="~RTS" type="output"/>
+        <pin num="15" name="R232" type="input"/>
+        <pin num="16" name="VCC" type="power_in"/>
+      </pins>
+    </libpart>
+    <libpart lib="Connector" part="USB_B">
+      <description>USB Type B connector</description>
+      <docs> ~</docs>
+      <footprints>
+        <fp>USB*</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">J</field>
+        <field name="Value">USB_B</field>
+      </fields>
+      <pins>
+        <pin num="1" name="VBUS" type="power_out"/>
+        <pin num="2" name="D-" type="passive"/>
+        <pin num="3" name="D+" type="passive"/>
+        <pin num="4" name="GND" type="power_out"/>
+        <pin num="5" name="Shield" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="DM3BT-DSF-PEJS" part="DM3BT-DSF-PEJS">
+      <footprints>
+        <fp>DM3BT-DSF-PEJS_HIR</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">J</field>
+        <field name="Value">DM3BT-DSF-PEJS</field>
+        <field name="Footprint">DM3BT-DSF-PEJS_HIR</field>
+      </fields>
+      <pins>
+        <pin num="1" name="DAT2" type="BiDi"/>
+        <pin num="2" name="CD/DAT3" type="BiDi"/>
+        <pin num="3" name="CMD" type="unspc"/>
+        <pin num="4" name="VDD" type="power_in"/>
+        <pin num="5" name="CLK" type="unspc"/>
+        <pin num="6" name="VSS" type="power_in"/>
+        <pin num="7" name="DAT0" type="BiDi"/>
+        <pin num="8" name="DAT1" type="BiDi"/>
+        <pin num="9" name="CDSA" type="unspc"/>
+        <pin num="10" name="CDSB" type="unspc"/>
+      </pins>
+    </libpart>
+    <libpart lib="Device" part="C_Small">
+      <description>Unpolarized capacitor, small symbol</description>
+      <docs>~</docs>
+      <footprints>
+        <fp>C_*</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">C</field>
+        <field name="Value">C_Small</field>
+      </fields>
+      <pins>
+        <pin num="1" name="~" type="passive"/>
+        <pin num="2" name="~" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="Device" part="Crystal">
+      <description>Two pin crystal</description>
+      <docs>~</docs>
+      <footprints>
+        <fp>Crystal*</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">Y</field>
+        <field name="Value">Crystal</field>
+      </fields>
+      <pins>
+        <pin num="1" name="1" type="passive"/>
+        <pin num="2" name="2" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="Device" part="LED">
+      <description>Light emitting diode</description>
+      <docs>~</docs>
+      <footprints>
+        <fp>LED*</fp>
+        <fp>LED_SMD:*</fp>
+        <fp>LED_THT:*</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">D</field>
+        <field name="Value">LED</field>
+      </fields>
+      <pins>
+        <pin num="1" name="K" type="passive"/>
+        <pin num="2" name="A" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="Device" part="Q_NPN_BEC">
+      <description>NPN transistor, base/emitter/collector</description>
+      <docs>~</docs>
+      <fields>
+        <field name="Reference">Q</field>
+        <field name="Value">Q_NPN_BEC</field>
+      </fields>
+      <pins>
+        <pin num="1" name="B" type="input"/>
+        <pin num="2" name="E" type="passive"/>
+        <pin num="3" name="C" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="Device" part="R_Small_US">
+      <description>Resistor, small US symbol</description>
+      <docs>~</docs>
+      <footprints>
+        <fp>R_*</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">R</field>
+        <field name="Value">R_Small_US</field>
+      </fields>
+      <pins>
+        <pin num="1" name="~" type="passive"/>
+        <pin num="2" name="~" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="LTC4054ES5-4.2_TRMPBF" part="LTC4054ES5-4.2#TRMPBF">
+      <fields>
+        <field name="Reference">U</field>
+        <field name="Value">LTC4054ES5-4.2#TRMPBF</field>
+        <field name="Footprint">SOT95P280X100-5N</field>
+        <field name="STANDARD">Manufacturer Recommendations</field>
+        <field name="MP">LTC4054ES5-4.2#TRMPBF</field>
+        <field name="PRICE">None</field>
+        <field name="PACKAGE">SOT-23-5 Linear Technology</field>
+        <field name="DESCRIPTION">LTC4054-4.2 - Standalone Linear Li-Ion Battery Charger with Thermal Regulation in ThinSOT</field>
+        <field name="MANUFACTURER">Linear Technology/Analog</field>
+      </fields>
+      <pins>
+        <pin num="1" name="~CHRG" type="input"/>
+        <pin num="2" name="GND" type="power_in"/>
+        <pin num="3" name="BAT" type="BiDi"/>
+        <pin num="4" name="VCC" type="power_in"/>
+        <pin num="5" name="PROG" type="BiDi"/>
+      </pins>
+    </libpart>
+    <libpart lib="MAX485CSA&amp;plus_" part="MAX485CSA+">
+      <footprints>
+        <fp>21-0041B_8_MXM</fp>
+        <fp>21-0041B_8_MXM-M</fp>
+        <fp>21-0041B_8_MXM-L</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">U</field>
+        <field name="Value">MAX485CSA+</field>
+        <field name="Footprint">21-0041B_8_MXM</field>
+      </fields>
+      <pins>
+        <pin num="1" name="RO" type="output"/>
+        <pin num="2" name="*RE" type="input"/>
+        <pin num="3" name="DE" type="input"/>
+        <pin num="4" name="DI" type="input"/>
+        <pin num="5" name="GND" type="power_in"/>
+        <pin num="6" name="A" type="BiDi"/>
+        <pin num="7" name="B" type="BiDi"/>
+        <pin num="8" name="VCC" type="power_in"/>
+      </pins>
+    </libpart>
+    <libpart lib="MC74HC365ADG-ND" part="MC74HC365ADG">
+      <footprints>
+        <fp>SOIC-16_ONS</fp>
+        <fp>SOIC-16_ONS-M</fp>
+        <fp>SOIC-16_ONS-L</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">U</field>
+        <field name="Value">MC74HC365ADG</field>
+        <field name="Footprint">SOIC-16_ONS</field>
+      </fields>
+      <pins>
+        <pin num="1" name="OE1" type="output"/>
+        <pin num="2" name="A0" type="input"/>
+        <pin num="3" name="Y0" type="output"/>
+        <pin num="4" name="A1" type="input"/>
+        <pin num="5" name="Y1" type="output"/>
+        <pin num="6" name="A2" type="input"/>
+        <pin num="7" name="Y2" type="output"/>
+        <pin num="8" name="GND" type="power_in"/>
+        <pin num="9" name="Y3" type="output"/>
+        <pin num="10" name="A3" type="input"/>
+        <pin num="11" name="Y4" type="output"/>
+        <pin num="12" name="A4" type="input"/>
+        <pin num="13" name="Y5" type="output"/>
+        <pin num="14" name="A5" type="input"/>
+        <pin num="15" name="OE2" type="output"/>
+        <pin num="16" name="VCC" type="power_in"/>
+      </pins>
+    </libpart>
+    <libpart lib="NCV7805BD2TG" part="NCV7805BD2TG">
+      <footprints>
+        <fp>D2PAK3_ONS</fp>
+        <fp>D2PAK3_ONS-M</fp>
+        <fp>D2PAK3_ONS-L</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">U</field>
+        <field name="Value">NCV7805BD2TG</field>
+        <field name="Footprint">D2PAK3_ONS</field>
+      </fields>
+      <pins>
+        <pin num="1" name="Input" type="unspc"/>
+        <pin num="2" name="GND" type="unspc"/>
+        <pin num="3" name="Output" type="unspc"/>
+      </pins>
+    </libpart>
+    <libpart lib="SM712-TCT" part="SM712.TCT">
+      <footprints>
+        <fp>SOT23_SEM</fp>
+        <fp>SOT23_SEM-M</fp>
+        <fp>SOT23_SEM-L</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">U</field>
+        <field name="Value">SM712.TCT</field>
+        <field name="Footprint">SOT23_SEM</field>
+      </fields>
+      <pins>
+        <pin num="1" name="1" type="unspc"/>
+        <pin num="2" name="2" type="unspc"/>
+        <pin num="3" name="3" type="unspc"/>
+      </pins>
+    </libpart>
+    <libpart lib="SSW-104-02-G-S" part="SSW-104-02-G-S">
+      <footprints>
+        <fp>CON4_1X4_TU_SSQ</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">J</field>
+        <field name="Value">SSW-104-02-G-S</field>
+        <field name="Footprint">CON4_1X4_TU_SSQ</field>
+      </fields>
+      <pins>
+        <pin num="1" name="1" type="unspc"/>
+        <pin num="2" name="2" type="unspc"/>
+        <pin num="3" name="3" type="unspc"/>
+        <pin num="4" name="4" type="unspc"/>
+      </pins>
+    </libpart>
+    <libpart lib="SSW-108-02-G-S" part="SSW-108-02-G-S">
+      <footprints>
+        <fp>CON8_1X8_TU_SSQ</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">J</field>
+        <field name="Value">SSW-108-02-G-S</field>
+        <field name="Footprint">CON8_1X8_TU_SSQ</field>
+      </fields>
+      <pins>
+        <pin num="1" name="1" type="unspc"/>
+        <pin num="2" name="2" type="unspc"/>
+        <pin num="3" name="3" type="unspc"/>
+        <pin num="4" name="4" type="unspc"/>
+        <pin num="5" name="5" type="unspc"/>
+        <pin num="6" name="6" type="unspc"/>
+        <pin num="7" name="7" type="unspc"/>
+        <pin num="8" name="8" type="unspc"/>
+      </pins>
+    </libpart>
+    <libpart lib="Switch" part="SW_Push">
+      <description>Push button switch, generic, two pins</description>
+      <docs>~</docs>
+      <fields>
+        <field name="Reference">SW</field>
+        <field name="Value">SW_Push</field>
+      </fields>
+      <pins>
+        <pin num="1" name="1" type="passive"/>
+        <pin num="2" name="2" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="Switch" part="SW_SPST">
+      <description>Single Pole Single Throw (SPST) switch</description>
+      <docs>~</docs>
+      <fields>
+        <field name="Reference">SW</field>
+        <field name="Value">SW_SPST</field>
+      </fields>
+      <pins>
+        <pin num="1" name="A" type="passive"/>
+        <pin num="2" name="B" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="XC6220B331MR-G" part="XC6220B331MR-G">
+      <footprints>
+        <fp>SOT-25_TOR</fp>
+        <fp>SOT-25_TOR-M</fp>
+        <fp>SOT-25_TOR-L</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">U</field>
+        <field name="Value">XC6220B331MR-G</field>
+        <field name="Footprint">SOT-25_TOR</field>
+      </fields>
+      <pins>
+        <pin num="1" name="VIN" type="power_in"/>
+        <pin num="2" name="VSS" type="power_in"/>
+        <pin num="3" name="CE" type="unspc"/>
+        <pin num="4" name="NC" type="NotConnected"/>
+        <pin num="5" name="VOUT" type="output"/>
+      </pins>
+    </libpart>
+    <libpart lib="dk_RF-Transceiver-Modules" part="2491">
+      <description>ESP8266 SMT MODULE</description>
+      <docs>https://media.digikey.com/pdf/Data%20Sheets/Adafruit%20PDFs/2491_Web.pdf</docs>
+      <fields>
+        <field name="Reference">MOD</field>
+        <field name="Value">2491</field>
+        <field name="Footprint">digikey-footprints:WIFI_Module_ESP8266_2491</field>
+        <field name="Datasheet">https://media.digikey.com/pdf/Data%20Sheets/Adafruit%20PDFs/2491_Web.pdf</field>
+        <field name="Digi-Key_PN">1528-1438-ND</field>
+        <field name="MPN">2491</field>
+        <field name="Category">RF/IF and RFID</field>
+        <field name="Family">RF Transceiver Modules</field>
+        <field name="DK_Datasheet_Link">https://media.digikey.com/pdf/Data%20Sheets/Adafruit%20PDFs/2491_Web.pdf</field>
+        <field name="DK_Detail_Page">/product-detail/en/adafruit-industries-llc/2491/1528-1438-ND/5761206</field>
+        <field name="Description">ESP8266 SMT MODULE</field>
+        <field name="Manufacturer">Adafruit Industries LLC</field>
+        <field name="Status">Active</field>
+      </fields>
+      <pins>
+        <pin num="1" name="RST" type="input"/>
+        <pin num="2" name="ADC" type="input"/>
+        <pin num="3" name="EN" type="input"/>
+        <pin num="4" name="IO16" type="BiDi"/>
+        <pin num="5" name="IO14" type="BiDi"/>
+        <pin num="6" name="IO12" type="BiDi"/>
+        <pin num="7" name="IO13" type="BiDi"/>
+        <pin num="8" name="VCC" type="power_in"/>
+        <pin num="9" name="GND" type="power_in"/>
+        <pin num="10" name="IO15" type="BiDi"/>
+        <pin num="11" name="IO2" type="BiDi"/>
+        <pin num="12" name="IO0" type="BiDi"/>
+        <pin num="13" name="IO4" type="BiDi"/>
+        <pin num="14" name="IO5" type="BiDi"/>
+        <pin num="15" name="RXD0" type="output"/>
+        <pin num="16" name="TXD0" type="output"/>
+      </pins>
+    </libpart>
+    <libpart lib="ds1672" part="DS1672S-33+T&amp;R">
+      <footprints>
+        <fp>21-0041B_8_MXM</fp>
+        <fp>21-0041B_8_MXM-M</fp>
+        <fp>21-0041B_8_MXM-L</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">U</field>
+        <field name="Value">DS1672S-33+T&amp;R</field>
+        <field name="Footprint">21-0041B_8_MXM</field>
+      </fields>
+      <pins>
+        <pin num="1" name="X1" type="BiDi"/>
+        <pin num="2" name="X2" type="BiDi"/>
+        <pin num="3" name="VBACKUP" type="BiDi"/>
+        <pin num="4" name="GND" type="power_in"/>
+        <pin num="5" name="SDA" type="BiDi"/>
+        <pin num="6" name="SCL" type="BiDi"/>
+        <pin num="7" name="*RST" type="BiDi"/>
+        <pin num="8" name="VCC" type="power_in"/>
+      </pins>
+    </libpart>
+  </libparts>
+  <libraries>
+    <library logical="ABS25-32.768KHZ-6-1-T">
+      <uri>C:\Users\Dexter\Documents\SailCam_MK5\lib\symbols\ABS25-32.768KHZ-6-1-T.lib</uri>
+    </library>
+    <library logical="ADA4806-1ARJZ-R7">
+      <uri>C:\Users\Dexter\Documents\SailCam_MK5\lib\symbols\ADA4806-1ARJZ-R7.lib</uri>
+    </library>
+    <library logical="AOD1N60">
+      <uri>C:\Users\Dexter\Documents\SailCam_MK5\lib\symbols\AOD1N60.lib</uri>
+    </library>
+    <library logical="B2B-PH-K-SLFSN">
+      <uri>C:\Users\Dexter\Documents\SailCam_MK5\lib\symbols\B2B-PH-K-SLFSN.lib</uri>
+    </library>
+    <library logical="B4B-PH-K-SLFSN">
+      <uri>C:\Users\Dexter\Documents\SailCam_MK5\lib\symbols\B4B-PH-K-SLFSN.lib</uri>
+    </library>
+    <library logical="BU2032SM-BT-GTR">
+      <uri>C:\Users\Dexter\Documents\SailCam_MK5\lib\symbols\BU2032SM-BT-GTR.lib</uri>
+    </library>
+    <library logical="CH340G_Interface_USB">
+      <uri>C:\Users\Dexter\Documents\SailCam_MK5\lib\symbols\CH340G_Interface_USB.lib</uri>
+    </library>
+    <library logical="Connector">
+      <uri>C:\Program Files\KiCad\share\kicad\library/Connector.lib</uri>
+    </library>
+    <library logical="DM3BT-DSF-PEJS">
+      <uri>C:\Users\Dexter\Documents\SailCam_MK5\lib\symbols\DM3BT-DSF-PEJS.lib</uri>
+    </library>
+    <library logical="Device">
+      <uri>C:\Program Files\KiCad\share\kicad\library/Device.lib</uri>
+    </library>
+    <library logical="LTC4054ES5-4.2_TRMPBF">
+      <uri>C:\Users\Dexter\Documents\SailCam_MK5\lib\symbols\LTC4054ES5-4.2_TRMPBF.lib</uri>
+    </library>
+    <library logical="MAX485CSA&amp;plus_">
+      <uri>C:\Users\Dexter\Documents\SailCam_MK5\lib\symbols\MAX485CSA&amp;plus_.lib</uri>
+    </library>
+    <library logical="MC74HC365ADG-ND">
+      <uri>C:\Users\Dexter\Documents\SailCam_MK5\lib\symbols\MC74HC365ADG-ND.lib</uri>
+    </library>
+    <library logical="NCV7805BD2TG">
+      <uri>C:\Users\Dexter\Documents\SailCam_MK5\lib\symbols\NCV7805BD2TG.lib</uri>
+    </library>
+    <library logical="SM712-TCT">
+      <uri>C:\Users\Dexter\Documents\SailCam_MK5\lib\symbols\SM712-TCT.lib</uri>
+    </library>
+    <library logical="SSW-104-02-G-S">
+      <uri>C:\Users\Dexter\Documents\SailCam_MK5\lib\symbols\SSW-104-02-G-S.lib</uri>
+    </library>
+    <library logical="SSW-108-02-G-S">
+      <uri>C:\Users\Dexter\Documents\SailCam_MK5\lib\symbols\SSW-108-02-G-S.lib</uri>
+    </library>
+    <library logical="Switch">
+      <uri>C:\Program Files\KiCad\share\kicad\library/Switch.lib</uri>
+    </library>
+    <library logical="XC6220B331MR-G">
+      <uri>C:\Users\Dexter\Documents\SailCam_MK5\lib\symbols\XC6220B331MR-G.lib</uri>
+    </library>
+    <library logical="dk_RF-Transceiver-Modules">
+      <uri>C:\Users\Dexter\Documents\digikey_lib\digikey-kicad-library\digikey-symbols\dk_RF-Transceiver-Modules.lib</uri>
+    </library>
+    <library logical="ds1672">
+      <uri>C:\Users\Dexter\Documents\SailCam_MK5\lib\symbols\ds1672.lib</uri>
+    </library>
+  </libraries>
+  <nets>
+    <net code="1" name="/MISO">
+      <node ref="U9" pin="5"/>
+      <node ref="M1" pin="6"/>
+      <node ref="J5" pin="6"/>
+    </net>
+    <net code="2" name="/Cam_CS">
+      <node ref="J5" pin="8"/>
+      <node ref="M1" pin="10"/>
+      <node ref="R22" pin="1"/>
+    </net>
+    <net code="3" name="/SD_CS">
+      <node ref="U9" pin="14"/>
+      <node ref="M1" pin="4"/>
+    </net>
+    <net code="4" name="/IR_CTL">
+      <node ref="J1" pin="1"/>
+      <node ref="R26" pin="1"/>
+    </net>
+    <net code="5" name="/MOSI">
+      <node ref="U9" pin="2"/>
+      <node ref="J5" pin="7"/>
+      <node ref="M1" pin="7"/>
+    </net>
+    <net code="6" name="/SCK">
+      <node ref="J5" pin="5"/>
+      <node ref="M1" pin="5"/>
+      <node ref="U9" pin="6"/>
+    </net>
+    <net code="7" name="/Vcc_5v">
+      <node ref="R11" pin="1"/>
+      <node ref="R15" pin="1"/>
+      <node ref="J2" pin="1"/>
+      <node ref="C3" pin="2"/>
+      <node ref="U6" pin="8"/>
+      <node ref="S1" pin="2"/>
+      <node ref="U5" pin="3"/>
+      <node ref="U5" pin="1"/>
+      <node ref="R10" pin="1"/>
+      <node ref="C11" pin="1"/>
+      <node ref="J1" pin="2"/>
+    </net>
+    <net code="8" name="/NEMA_Rx">
+      <node ref="R11" pin="2"/>
+      <node ref="U6" pin="1"/>
+    </net>
+    <net code="9" name="/NEMA_Tx">
+      <node ref="U6" pin="4"/>
+      <node ref="R10" pin="2"/>
+    </net>
+    <net code="10" name="/NEMA+">
+      <node ref="J4" pin="3"/>
+      <node ref="U6" pin="7"/>
+      <node ref="R12" pin="1"/>
+    </net>
+    <net code="11" name="/NEMA-">
+      <node ref="J4" pin="4"/>
+      <node ref="U6" pin="6"/>
+      <node ref="R14" pin="1"/>
+    </net>
+    <net code="12" name="/Vcc_5v_S">
+      <node ref="U4" pin="3"/>
+      <node ref="J3" pin="2"/>
+      <node ref="S1" pin="1"/>
+      <node ref="J2" pin="2"/>
+      <node ref="R1" pin="1"/>
+    </net>
+    <net code="13" name="/CHG">
+      <node ref="J7" pin="1"/>
+      <node ref="J4" pin="1"/>
+      <node ref="C1" pin="2"/>
+      <node ref="U3" pin="1"/>
+      <node ref="C7" pin="1"/>
+      <node ref="U8" pin="16"/>
+    </net>
+    <net code="14" name="/OpAmpEN">
+      <node ref="U1" pin="7"/>
+    </net>
+    <net code="15" name="/ADC0">
+      <node ref="M1" pin="2"/>
+      <node ref="R4" pin="2"/>
+      <node ref="R3" pin="2"/>
+      <node ref="U1" pin="1"/>
+      <node ref="U1" pin="5"/>
+    </net>
+    <net code="16" name="/SDA">
+      <node ref="M1" pin="13"/>
+      <node ref="J6" pin="4"/>
+      <node ref="R7" pin="2"/>
+      <node ref="U2" pin="5"/>
+      <node ref="J5" pin="2"/>
+    </net>
+    <net code="17" name="/SCL">
+      <node ref="M1" pin="14"/>
+      <node ref="J6" pin="3"/>
+      <node ref="J5" pin="1"/>
+      <node ref="R6" pin="2"/>
+      <node ref="U2" pin="6"/>
+    </net>
+    <net code="18" name="Net-(U1-Pad2)">
+      <node ref="U1" pin="2"/>
+    </net>
+    <net code="19" name="Net-(R1-Pad2)">
+      <node ref="R2" pin="2"/>
+      <node ref="R1" pin="2"/>
+      <node ref="U1" pin="4"/>
+    </net>
+    <net code="20" name="Net-(U2-Pad2)">
+      <node ref="Y1" pin="4"/>
+      <node ref="U2" pin="2"/>
+    </net>
+    <net code="21" name="Net-(R5-Pad2)">
+      <node ref="U2" pin="7"/>
+      <node ref="R5" pin="2"/>
+    </net>
+    <net code="22" name="Net-(U2-Pad1)">
+      <node ref="U2" pin="1"/>
+      <node ref="Y1" pin="1"/>
+    </net>
+    <net code="23" name="Net-(B1-Pad+)">
+      <node ref="U2" pin="3"/>
+      <node ref="B1" pin="+"/>
+    </net>
+    <net code="24" name="Net-(R14-Pad2)">
+      <node ref="U7" pin="2"/>
+      <node ref="R14" pin="2"/>
+      <node ref="R15" pin="2"/>
+    </net>
+    <net code="25" name="Net-(R12-Pad2)">
+      <node ref="U7" pin="1"/>
+      <node ref="R12" pin="2"/>
+      <node ref="R13" pin="2"/>
+    </net>
+    <net code="26" name="Net-(R8-Pad1)">
+      <node ref="R8" pin="1"/>
+      <node ref="U4" pin="1"/>
+    </net>
+    <net code="27" name="Net-(C2-Pad1)">
+      <node ref="C2" pin="1"/>
+      <node ref="U3" pin="3"/>
+      <node ref="U4" pin="4"/>
+    </net>
+    <net code="28" name="Net-(D1-Pad1)">
+      <node ref="D1" pin="1"/>
+      <node ref="R8" pin="2"/>
+    </net>
+    <net code="29" name="Net-(R9-Pad2)">
+      <node ref="U4" pin="5"/>
+      <node ref="R9" pin="2"/>
+    </net>
+    <net code="30" name="Net-(U5-Pad4)">
+      <node ref="U5" pin="4"/>
+    </net>
+    <net code="31" name="VCC">
+      <node ref="C12" pin="1"/>
+      <node ref="C10" pin="1"/>
+      <node ref="J8" pin="4"/>
+      <node ref="M1" pin="8"/>
+      <node ref="R19" pin="1"/>
+      <node ref="R18" pin="1"/>
+      <node ref="U9" pin="16"/>
+      <node ref="C1" pin="1"/>
+      <node ref="R3" pin="1"/>
+      <node ref="R5" pin="1"/>
+      <node ref="U2" pin="8"/>
+      <node ref="R6" pin="1"/>
+      <node ref="R7" pin="1"/>
+      <node ref="U1" pin="8"/>
+      <node ref="U1" pin="6"/>
+      <node ref="J5" pin="3"/>
+      <node ref="D1" pin="2"/>
+      <node ref="J6" pin="2"/>
+      <node ref="U5" pin="5"/>
+      <node ref="R16" pin="1"/>
+      <node ref="R17" pin="1"/>
+      <node ref="C4" pin="1"/>
+    </net>
+    <net code="32" name="/MicroSD/SD_MISO">
+      <node ref="U9" pin="3"/>
+      <node ref="J8" pin="7"/>
+    </net>
+    <net code="33" name="/MicroSD/SD_MOSI">
+      <node ref="U9" pin="4"/>
+      <node ref="J8" pin="3"/>
+    </net>
+    <net code="34" name="/MicroSD/SD_SCK">
+      <node ref="J8" pin="5"/>
+      <node ref="U9" pin="7"/>
+    </net>
+    <net code="35" name="Net-(U9-Pad9)">
+      <node ref="U9" pin="9"/>
+    </net>
+    <net code="36" name="Net-(J8-Pad9)">
+      <node ref="J8" pin="9"/>
+    </net>
+    <net code="37" name="Net-(J8-Pad1)">
+      <node ref="J8" pin="1"/>
+    </net>
+    <net code="38" name="Net-(J8-Pad8)">
+      <node ref="J8" pin="8"/>
+    </net>
+    <net code="39" name="Net-(J8-Pad10)">
+      <node ref="J8" pin="10"/>
+    </net>
+    <net code="40" name="GND">
+      <node ref="C9" pin="2"/>
+      <node ref="C11" pin="2"/>
+      <node ref="U8" pin="1"/>
+      <node ref="C6" pin="2"/>
+      <node ref="C8" pin="2"/>
+      <node ref="M1" pin="9"/>
+      <node ref="C5" pin="2"/>
+      <node ref="C7" pin="2"/>
+      <node ref="R22" pin="2"/>
+      <node ref="S3" pin="2"/>
+      <node ref="S2" pin="2"/>
+      <node ref="J7" pin="4"/>
+      <node ref="J7" pin="5"/>
+      <node ref="C10" pin="2"/>
+      <node ref="R13" pin="1"/>
+      <node ref="U6" pin="3"/>
+      <node ref="U7" pin="3"/>
+      <node ref="B1" pin="-"/>
+      <node ref="U2" pin="4"/>
+      <node ref="C2" pin="2"/>
+      <node ref="C4" pin="2"/>
+      <node ref="U5" pin="2"/>
+      <node ref="U3" pin="2"/>
+      <node ref="R9" pin="1"/>
+      <node ref="U4" pin="2"/>
+      <node ref="U6" pin="2"/>
+      <node ref="U6" pin="5"/>
+      <node ref="J5" pin="4"/>
+      <node ref="J6" pin="1"/>
+      <node ref="J4" pin="2"/>
+      <node ref="J3" pin="1"/>
+      <node ref="R4" pin="1"/>
+      <node ref="R2" pin="1"/>
+      <node ref="U1" pin="3"/>
+      <node ref="Q3" pin="3"/>
+      <node ref="U9" pin="8"/>
+      <node ref="U9" pin="1"/>
+      <node ref="U9" pin="15"/>
+      <node ref="C12" pin="2"/>
+      <node ref="J8" pin="6"/>
+      <node ref="C3" pin="1"/>
+    </net>
+    <net code="41" name="Net-(U9-Pad10)">
+      <node ref="U9" pin="10"/>
+    </net>
+    <net code="42" name="Net-(U9-Pad11)">
+      <node ref="U9" pin="11"/>
+    </net>
+    <net code="43" name="Net-(U9-Pad12)">
+      <node ref="U9" pin="12"/>
+    </net>
+    <net code="44" name="/MicroSD/SD_CS">
+      <node ref="U9" pin="13"/>
+      <node ref="J8" pin="2"/>
+    </net>
+    <net code="45" name="Net-(Q3-Pad4)">
+      <node ref="R26" pin="2"/>
+      <node ref="Q3" pin="4"/>
+    </net>
+    <net code="46" name="/Micro/GPIO2">
+      <node ref="R17" pin="2"/>
+      <node ref="M1" pin="11"/>
+      <node ref="R25" pin="1"/>
+    </net>
+    <net code="47" name="Net-(Q3-Pad1)">
+      <node ref="Q3" pin="1"/>
+      <node ref="R25" pin="2"/>
+    </net>
+    <net code="48" name="/Micro/GPIO0">
+      <node ref="Q2" pin="3"/>
+      <node ref="M1" pin="12"/>
+      <node ref="S3" pin="1"/>
+      <node ref="R16" pin="2"/>
+    </net>
+    <net code="49" name="Net-(C5-Pad1)">
+      <node ref="U8" pin="7"/>
+      <node ref="Y2" pin="1"/>
+      <node ref="C5" pin="1"/>
+    </net>
+    <net code="50" name="Net-(R20-Pad1)">
+      <node ref="U8" pin="2"/>
+      <node ref="R20" pin="1"/>
+    </net>
+    <net code="51" name="Net-(U8-Pad15)">
+      <node ref="U8" pin="15"/>
+    </net>
+    <net code="52" name="/Micro/Rx0">
+      <node ref="R20" pin="2"/>
+      <node ref="M1" pin="15"/>
+    </net>
+    <net code="53" name="Net-(Q1-Pad2)">
+      <node ref="R24" pin="1"/>
+      <node ref="Q1" pin="2"/>
+      <node ref="U8" pin="14"/>
+    </net>
+    <net code="54" name="/Micro/RST">
+      <node ref="R19" pin="2"/>
+      <node ref="S2" pin="1"/>
+      <node ref="C8" pin="1"/>
+      <node ref="M1" pin="1"/>
+      <node ref="Q1" pin="3"/>
+    </net>
+    <net code="55" name="Net-(M1-Pad3)">
+      <node ref="R18" pin="2"/>
+      <node ref="M1" pin="3"/>
+    </net>
+    <net code="56" name="Net-(Q2-Pad2)">
+      <node ref="U8" pin="13"/>
+      <node ref="Q2" pin="2"/>
+      <node ref="R23" pin="1"/>
+    </net>
+    <net code="57" name="Net-(U8-Pad12)">
+      <node ref="U8" pin="12"/>
+    </net>
+    <net code="58" name="Net-(U8-Pad11)">
+      <node ref="U8" pin="11"/>
+    </net>
+    <net code="59" name="Net-(U8-Pad10)">
+      <node ref="U8" pin="10"/>
+    </net>
+    <net code="60" name="/Micro/Tx0">
+      <node ref="M1" pin="16"/>
+      <node ref="R21" pin="2"/>
+    </net>
+    <net code="61" name="Net-(C9-Pad1)">
+      <node ref="C9" pin="1"/>
+      <node ref="U8" pin="4"/>
+    </net>
+    <net code="62" name="Net-(C6-Pad1)">
+      <node ref="U8" pin="8"/>
+      <node ref="Y2" pin="2"/>
+      <node ref="C6" pin="1"/>
+    </net>
+    <net code="63" name="Net-(Q1-Pad1)">
+      <node ref="Q1" pin="1"/>
+      <node ref="R23" pin="2"/>
+    </net>
+    <net code="64" name="Net-(U8-Pad9)">
+      <node ref="U8" pin="9"/>
+    </net>
+    <net code="65" name="Net-(J7-Pad2)">
+      <node ref="U8" pin="6"/>
+      <node ref="J7" pin="2"/>
+    </net>
+    <net code="66" name="Net-(J7-Pad3)">
+      <node ref="J7" pin="3"/>
+      <node ref="U8" pin="5"/>
+    </net>
+    <net code="67" name="Net-(R21-Pad1)">
+      <node ref="R21" pin="1"/>
+      <node ref="U8" pin="3"/>
+    </net>
+    <net code="68" name="Net-(Q2-Pad1)">
+      <node ref="R24" pin="2"/>
+      <node ref="Q2" pin="1"/>
+    </net>
+  </nets>
+</export>

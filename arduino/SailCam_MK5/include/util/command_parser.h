@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include <hardware/drivers.h>
 
-#define commands_size 23
+#define commands_size 24
 
 class CommandParser
 {
@@ -42,6 +42,7 @@ private:
     void read_i2c_reg(char* arg, char* param, char** message);
     void list_directory(char* arg, char* param, char** message);
     void make_directory(char* arg, char* param, char** message);
+    void save_config_defaults(char* arg, char* param, char** message);
 
     HardwareDrivers* hardware_drivers;
     CommandStruct commands[commands_size];

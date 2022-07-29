@@ -11,7 +11,8 @@ SystemConfiguration::SystemConfiguration()
     {"tcp_port", "723"},
     {"device_name", "SailCam"},
     {"capture_mode", "0"},
-    {"capture_interval", "15"}
+    {"capture_interval", "15"},
+    {"boot_count", "0"}
 }
 {
     read_settings_defaults();
@@ -39,7 +40,7 @@ void SystemConfiguration::read_settings_defaults()
 
 SystemSetting* SystemConfiguration::get_setting(char* key)
 {
-    for (int i = 0; i < 8; i++) {
+    for (int i = 0; i < settings_length; i++) {
         if (strcmp(settings_map[i].key, key) == 0) {
             return settings_map[i].value;
         }
@@ -49,7 +50,7 @@ SystemSetting* SystemConfiguration::get_setting(char* key)
 
 SystemSetting* SystemConfiguration::get_setting(const char* key)
 {
-    for (int i = 0; i < 8; i++) {
+    for (int i = 0; i < settings_length; i++) {
         if (strcmp(settings_map[i].key, key) == 0) {
             return settings_map[i].value;
         }
@@ -70,6 +71,17 @@ void SystemConfiguration::update_setting(char* key, char* value, int value_size)
     SystemSetting *find_value = this->get_setting(key);
     if (find_value != NULL) {
         find_value->update_value(value, value_size);
+    }
+}
+
+void SystemConfiguration::update_setting(char* key, int value)
+{
+    SystemSetting *find_value = this->get_setting(key);
+    if (find_value != NULL) {
+        char * new_value = (char *) malloc(32);
+        snprintf(new_value, 32, "%d", value);
+        find_value->update_value(new_value, strlen(new_value));
+        //free(new_value);
     }
 }
 

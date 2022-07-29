@@ -25,7 +25,8 @@ CommandParser::CommandParser(HardwareDrivers* hardware_drivers)
                 {"write_i2c_reg", &CommandParser::write_i2c_reg},
                 {"read_i2c_reg", &CommandParser::read_i2c_reg},
                 {"ls", &CommandParser::list_directory},
-                {"mkdir", &CommandParser::make_directory}
+                {"mkdir", &CommandParser::make_directory},
+                {"save_config_defaults", &CommandParser::save_config_defaults}
             }
 {
     this->hardware_drivers = hardware_drivers;
@@ -206,7 +207,7 @@ void CommandParser::capture_image(char* arg, char* param, char** message)
     uint8_t save_success;
 
     *now = hardware_drivers->system_clock->get_time();
-    hardware_drivers->camera->capture_image();
+    hardware_drivers->camera->capture_image(hardware_drivers->serial_term);
     save_success = hardware_drivers->camera->save_image(hardware_drivers->storage_controller, *now, hardware_drivers->serial_term);
     sprintf(*message, "save_success=%s, error_code=%d", save_success == 0 ? "True" : "False", save_success);
 }
@@ -282,6 +283,12 @@ void CommandParser::make_directory(char* arg, char* param, char** message)
         return;
     }
     sprintf(*message, "%s\r\n", this->hardware_drivers->storage_controller->check_directory(arg) ? "Directory successfully created." : "Failed to create directory.");
+}
+
+void CommandParser::save_config_defaults(char* arg, char* param, char** message)
+{
+    this->hardware_drivers->storage_controller->write_settings_defaults();
+    sprintf(*message, "System Configuration File set to defaults.\r\n");
 }
 
 bool CommandParser::process_serial_terminal()

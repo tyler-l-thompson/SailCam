@@ -19,30 +19,15 @@ logger = logging.get_logger(__name__)
 def main():
     start_time: datetime = datetime.now()
     args = get_args()
-    threads = []
-    thread_pool = ThreadPool()
-    parser = TrackParser(file_path='/home/dexter/scripts/sailcam/PythonImageProcessor/track_data/Mac2020.csv')
+
     logger.info(f"Processing directory {args.f}")
 
     clean_directory(dir_path=args.f, backup_path=f"{args.f}_bak") if args.clean else None
 
-    # prepare the threads
-    logger.info(msg="Preparing threaded processor...")
-    day = f"{args.f[len(args.f) - 2:len(args.f)]}"
-    month = f"{args.f[len(args.f) - 5:len(args.f) - 3]}"
-    year = f"{args.f[len(args.f) - 10:len(args.f) - 6]}"
-    for picture in os.listdir(path=args.f):
-        hour = picture[0:2]
-        minute = picture[3:5]
-        second = picture[6:8]
-        timestamp = datetime.strptime(f"{year}-{month}-{day} {hour}:{minute}:{second}", "%Y-%m-%d %H:%M:%S")
-        threads.append(TextLayoverThread(file_path=f"{args.f}/{picture}",
-                                         timestamp=timestamp,
-                                         track_data=parser.get_track_from_timestamp(timestamp=timestamp)))
+    annotate_images(dir_path=args.f, track_data_path=args.track_data) if args.annotate else None
 
-    thread_pool.run_thread_pool(threads=threads)
+    generate_timelapse(dir_path=args.f, fps=config['timelapse']['fps']) if args.timelapse else None
 
-    generate_timelapse(dir_path=args.f) if args.timelapse else None
     runtime: timedelta = (datetime.now() - start_time)
     logger.info(msg=f'Done. Runtime: {math.floor(runtime.total_seconds()/60)} Minutes {runtime.seconds} Seconds')
 
@@ -72,9 +57,42 @@ def get_args():
                       '--timelapse',
                       default=False,
                       action='store_true')
+    parser.add_option('-a',
+                      '--annotate',
+                      default=False,
+                      action='store_true')
+    parser.add_option('-d',
+                      '--track_data',
+                      action="store",
+                      default="/home/dexter/scripts/sailcam/PythonImageProcessor/track_data/Mac2022.csv",
+                      help="Path to track data.")
 
     options, args = parser.parse_args()
     return options
+
+
+def annotate_images(dir_path: str, track_data_path: str):
+    threads = []
+    thread_pool = ThreadPool()
+    parser = TrackParser(file_path=track_data_path)
+
+    # prepare the threads
+    logger.info(msg="Preparing threaded processor...")
+    day = f"{dir_path[len(dir_path) - 2:len(dir_path)]}"
+    month = f"{dir_path[len(dir_path) - 5:len(dir_path) - 3]}"
+    year = f"{dir_path[len(dir_path) - 10:len(dir_path) - 6]}"
+    for picture in os.listdir(path=dir_path):
+        if ".avi" in picture:
+            continue
+        hour = picture[9:11]
+        minute = picture[11:13]
+        second = picture[13:15]
+        timestamp = datetime.strptime(f"{year}-{month}-{day} {hour}:{minute}:{second}", "%Y-%m-%d %H:%M:%S")
+        threads.append(TextLayoverThread(file_path=f"{dir_path}/{picture}",
+                                         timestamp=timestamp,
+                                         track_data=parser.get_track_from_timestamp(timestamp=timestamp)))
+
+    thread_pool.run_thread_pool(threads=threads)
 
 
 def clean_directory(dir_path, backup_path):
@@ -83,9 +101,9 @@ def clean_directory(dir_path, backup_path):
     shutil.copytree(src=backup_path, dst=dir_path)
 
 
-def generate_timelapse(dir_path: str):
+def generate_timelapse(dir_path: str, fps: str):
     logger.info(msg='Generating timelapse...')
-    subprocess.run([f'cd {dir_path}; /home/dexter/scripts/sailcam/bin/generate_timelapse.sh'], capture_output=True)
+    subprocess.Popen(['/home/dexter/scripts/sailcam/bin/generate_timelapse.sh', dir_path, fps])
 
 
 if __name__ == '__main__':

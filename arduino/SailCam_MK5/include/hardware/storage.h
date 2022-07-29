@@ -23,7 +23,7 @@ private:
     
     void set_log_paths(DateTime timestamp);
     void set_formatted_timestamp(DateTime timestamp);
-    void write_settings_defaults(sdfat::File32 settings_file, int length);
+    
     SystemConfiguration* system_configuration;
     sdfat::File32* log_file;
     sdfat::SdFat32 SD;
@@ -46,7 +46,9 @@ public:
     void read_settings_file(SerialTerminal* serial_term);
     void print_configuration(char** message_buf);
     void print_configuration(SerialTerminal* serial_term);
-    void write_settings_file(char** message_buf);
+    int write_settings_file(char** message_buf);
+    int write_settings_file();
+    void write_settings_defaults();
     uint8_t get_sd_card_type();
     int get_free_space();
     int list_directory(sdfat::File32 dir, char** buffer, int buffer_length, int start_pos, const char* prefix, const char* suffix);

@@ -43,7 +43,7 @@ void Camera::set_sensor_power(bool state)
     reg_read = this->cam->read_reg(ARDUCHIP_GPIO);
     if (state == true) {
         this->cam->write_reg(ARDUCHIP_GPIO, reg_read | 0x04);
-        delay(250);
+        delay(100);
         this->cam->set_format(JPEG);
         this->cam->InitCAM();
         
@@ -61,7 +61,7 @@ void Camera::set_sensor_power(bool state)
         this->cam->clear_fifo_flag();
         this->cam->flush_fifo();
         this->cam->write_reg(ARDUCHIP_FRAMES, 0x00);
-        delay(250);
+        delay(100);
     } else {
         this->cam->write_reg(ARDUCHIP_GPIO, reg_read ^ 0x04);
     }
@@ -100,12 +100,32 @@ bool Camera::run_self_test(char** return_message)
     return self_test_pass;
 }
 
-void Camera::capture_image()
+int Camera::capture_image(SerialTerminal* serial)
 {
-    set_sensor_power(true);
-    this->cam->CS_LOW();
-    this->cam->start_capture();
-    while(!this->cam->get_bit(ARDUCHIP_TRIG, CAP_DONE_MASK));
+    for (int i = 0; i < image_capture_retries; i++) {
+        set_sensor_power(true);
+        serial->printf("Sensor power up\r\n");
+        this->cam->CS_LOW();
+        this->cam->start_capture();
+        serial->printf("Capture started.\r\n");
+
+        int capture_runtime = 0;
+        while(!this->cam->get_bit(ARDUCHIP_TRIG, CAP_DONE_MASK) && capture_runtime < image_capture_timeout) {
+            delay(1);
+            capture_runtime++;
+            yield();
+        }
+        if (capture_runtime >= image_capture_timeout) {
+            serial->printf("Capture timed out waiting for done flag! Retrying capture....\r\n");
+            set_sensor_power(false);
+            delay(100);
+        } else {
+            serial->printf("Capture done flag set in %dms.\r\n", capture_runtime);
+            return 0;
+        }
+    }
+    serial->printf("Max capture retries exceeded.\r\n");
+    return 1;
 }
 
 /**
@@ -159,7 +179,7 @@ uint8_t Camera::save_image(Storage* storage, DateTime timestamp, SerialTerminal*
 
     // check the length
     length = this->cam->read_fifo_length();
-    serial->debug_printf("Size: %d Byes\r\n", length);
+    serial->debug_printf("Size: %d Bytes\r\n", length);
     if (length >= MAX_FIFO_SIZE) // 8M - oversized
     {
         serial->debug_println("Oversized!");
@@ -250,6 +270,7 @@ uint8_t Camera::save_image(Storage* storage, DateTime timestamp, SerialTerminal*
             buf[i++] = temp;   
             serial->debug_print("Beginning transfer...");
         }
+        yield();
     }
     this->cam->clear_fifo_flag();
     set_sensor_power(false);

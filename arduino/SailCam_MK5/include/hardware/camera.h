@@ -11,6 +11,8 @@
 #include <ArduCAM.h>
 
 #define image_buffer_size 4096
+#define image_capture_timeout 500
+#define image_capture_retries 2
 
 class Camera
 {
@@ -26,7 +28,7 @@ public:
     ArduCAM* cam;
     void set_sensor_power(bool state);
     bool run_self_test(char** return_message);
-    void capture_image();
+    int capture_image(SerialTerminal* serial);
     uint8_t save_image(Storage* storage, DateTime timestmap, SerialTerminal* serial);
     DateTime get_last_save() {return this->last_save;};
     int get_image_count() {return this->image_count;};

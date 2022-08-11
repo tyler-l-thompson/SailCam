@@ -154,24 +154,27 @@ void Storage::read_settings_file(SerialTerminal* serial_term)
       
         } else {  // config.ini not found. Using default values
             setting_file.close();
-            setting_file = this->open_file(system_configuration_path, sdfat::O_WRITE | sdfat::O_CREAT);
-            write_settings_defaults(setting_file, this->get_system_configuration()->get_settings_length());
+            this->write_settings_defaults();
             serial_term->debug_printf("%s not found. A new file was created with default system configuration values.", system_configuration_path);
         }
         setting_file.close();
+
+        // increment boot_count
+        this->get_system_configuration()->update_setting((char *) "boot_count", this->get_system_configuration()->get_setting("boot_count")->get_value_int() + 1);
+        this->write_settings_file();
+
     } else {  // No SD card connected, using defaults.
         serial_term->debug_println("SD card not connected, default system configuration values will be used.");
     }
 }
 
-/**
- * Writes default values to a file that is already open
- **/
-void Storage::write_settings_defaults(sdfat::File32 settings_file, int length)
+void Storage::write_settings_defaults()
 {
-    for (int i = 0; i < length; i++) {
-        settings_file.printf("%s=%s\r\n", this->get_system_configuration()->get_settings_defaults_key(i), this->get_system_configuration()->get_settings_defaults_value(i));
+    sdfat::File32 setting_file = this->open_file(system_configuration_path, sdfat::O_WRITE | sdfat::O_CREAT | sdfat::O_TRUNC);
+    for (int i = 0; i < settings_length; i++) {
+        setting_file.printf("%s=%s\r\n", this->get_system_configuration()->get_settings_defaults_key(i), this->get_system_configuration()->get_settings_defaults_value(i));
     }
+    setting_file.close();
 }
 
 void Storage::print_configuration(char** message_buf)
@@ -202,7 +205,7 @@ void Storage::print_configuration(SerialTerminal* serial_term)
 /**
  * Writes current system configuration values in memory to the system configuration file on the SD card
  **/
-void Storage::write_settings_file(char** message_buf)
+int Storage::write_settings_file(char** message_buf)
 {
     sdfat::File32 settings_file;
     this->check_and_reconnect_card();
@@ -212,14 +215,40 @@ void Storage::write_settings_file(char** message_buf)
             for (int i = 0; i < this->get_system_configuration()->get_settings_length(); i++) {
                 settings_file.printf("%s=%s\r\n", this->get_system_configuration()->get_settings_defaults_key(i), this->get_system_configuration()->get_setting(this->get_system_configuration()->get_settings_defaults_key(i))->get_value_str());
             }
+            settings_file.close();
             strcpy(*message_buf, "System configuration file written successfully.\r\n");
+            return 0;
         } else {
+            settings_file.close();
             strcpy(*message_buf, "Failed to open settings file.\r\n");
+            return 1;
         }
-        settings_file.close();
     } else {
         this->card_connected = false;
         strcpy(*message_buf, "SD card not connected.\r\n");
+        return 2;
+    }
+}
+
+int Storage::write_settings_file()
+{
+    sdfat::File32 settings_file;
+    this->check_and_reconnect_card();
+    if (this->is_card_connected()) {
+        settings_file.open(system_configuration_path, sdfat::O_WRITE);
+        if (settings_file) {
+            for (int i = 0; i < this->get_system_configuration()->get_settings_length(); i++) {
+                settings_file.printf("%s=%s\r\n", this->get_system_configuration()->get_settings_defaults_key(i), this->get_system_configuration()->get_setting(this->get_system_configuration()->get_settings_defaults_key(i))->get_value_str());
+            }
+            settings_file.close();
+            return 0;
+        } else {
+            settings_file.close();
+            return 1;
+        }
+    } else {
+        this->card_connected = false;
+        return 2;
     }
 }
 

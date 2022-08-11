@@ -2,7 +2,7 @@
 #ifndef SYSTEM_CONFIGURATION_H
 #define SYSTEM_CONFIGURATION_H
 
-#define settings_length 8
+#define settings_length 9
 
 #include <settings/system_setting.h>
 
@@ -27,6 +27,7 @@ public:
     SystemSetting* get_setting(const char* key);
     void set_setting(char* key, char* value, int value_size);
     void update_setting(char* key, char* value, int value_size);
+    void update_setting(char* key, int value);
     const char** get_settings_defaults() { return *this->settings_defaults; };
     const char* get_settings_defaults_key(int index);
     const char* get_settings_defaults_value(int index);

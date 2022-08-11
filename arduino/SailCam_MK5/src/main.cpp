@@ -36,7 +36,7 @@ void setup()
     hardware_drivers->serial_term->debug_printf("Firmware Version: %s\r\n", firmware_version);
 
     // initialize OLED display
-    delay(200);
+    delay(100);
     hardware_drivers->old_display = new OledDisplay();
     hardware_drivers->old_display->clear();
     hardware_drivers->old_display->writef("Firmware: %s", firmware_version);
@@ -47,7 +47,7 @@ void setup()
     char* cam_self_test = (char*) malloc(50);
     hardware_drivers->old_display->writef("CAM: %s", hardware_drivers->camera->run_self_test(&cam_self_test) ? "True" : "False");
     hardware_drivers->old_display->update();
-    hardware_drivers->serial_term->debug_printf("%s", cam_self_test);
+    hardware_drivers->serial_term->debug_printf("%s\r\n", cam_self_test);
     free(cam_self_test);
 
     // initialize RTC
@@ -104,7 +104,7 @@ void setup()
     hardware_drivers->serial_term->debug_println("Startup Complete!");
     hardware_drivers->old_display->write("Startup Complete!");
     hardware_drivers->old_display->update();
-    hardware_drivers->status_led->blink(2, 500);
+    hardware_drivers->status_led->blink(2, 250);
 
     // If in wifi client mode, wait for wifi to connect. Blink led based on successful/unsuccessful connection
     if (hardware_drivers->wifi_radio->get_mode() == WIFI_CLIENT) {
@@ -132,16 +132,33 @@ void setup()
 
     hardware_drivers->old_display->write(hardware_drivers->wifi_radio->get_ip_address().toString().c_str());
     hardware_drivers->old_display->update();
-    delay(2000);
+    //delay(100);
     //hardware_drivers->old_display->clear();
 }  // end setup()
 
 void loop() 
 {
-    
+    *timestamp = hardware_drivers->system_clock->get_time();
+
+    // run auto capture
+    if (hardware_drivers->storage_controller->get_system_configuration()->get_setting("capture_mode")->get_value_int() == 1 && is_capture_required(*timestamp)) {
+        // capture and save the image
+        hardware_drivers->serial_term->debug_printf("Beginning Image Capture...\r\n");
+        if (hardware_drivers->camera->capture_image(hardware_drivers->serial_term) == 0) { 
+            hardware_drivers->serial_term->debug_printf("Image Capture Complete.\r\n");
+            save_success = (hardware_drivers->camera->save_image(hardware_drivers->storage_controller, *timestamp, hardware_drivers->serial_term));
+            
+            // send status update
+            hardware_drivers->serial_term->debug_printf("Auto Capturing Image: %06d %02d/%02d/%04d %02d:%02d:%02d E:%d Boot Count:%s\r\n", hardware_drivers->camera->get_image_count(), timestamp->month(), timestamp->day(), timestamp->year(), timestamp->hour(), timestamp->minute(), timestamp->second(), save_success, hardware_drivers->storage_controller->get_system_configuration()->get_setting("boot_count")->get_value_str());
+            hardware_drivers->status_led->info();
+        } else {
+            hardware_drivers->serial_term->debug_printf("Error during image capture: %06d %02d/%02d/%04d %02d:%02d:%02d Boot Count:%s\r\n", hardware_drivers->camera->get_image_count(), timestamp->month(), timestamp->day(), timestamp->year(), timestamp->hour(), timestamp->minute(), timestamp->second(), hardware_drivers->storage_controller->get_system_configuration()->get_setting("boot_count")->get_value_str());
+            hardware_drivers->status_led->error();
+        }
+    }
+
     // update oled display
     if (loop_counter % 1000 == 0 || loop_counter == 0) {
-        *timestamp = hardware_drivers->system_clock->get_time();
         hardware_drivers->old_display->write_overview(
             *timestamp, 
             hardware_drivers->wifi_radio->get_ip_address(), 
@@ -153,25 +170,16 @@ void loop()
             hardware_drivers->battery_management->get_battery_volts());
         hardware_drivers->old_display->update();
     }
+    
+    if (hardware_drivers->wifi_radio->get_mode() != WIFI_DISABLED) {
+        // handle web server clients
+        web_server->handle_client();
 
-    // run auto capture
-    if (hardware_drivers->storage_controller->get_system_configuration()->get_setting("capture_mode")->get_value_int() == 1 && is_capture_required(*timestamp)) {
-        // capture and save the image
-        hardware_drivers->camera->capture_image();
-        save_success = (hardware_drivers->camera->save_image(hardware_drivers->storage_controller, *timestamp, hardware_drivers->serial_term));
-        
-        // send status update
-        hardware_drivers->serial_term->debug_printf("Auto Capturing Image: %06d %02d/%02d/%04d %02d:%02d:%02d %d\r\n", hardware_drivers->camera->get_image_count(), timestamp->month(), timestamp->day(), timestamp->year(), timestamp->hour(), timestamp->minute(), timestamp->second(), save_success);
-        hardware_drivers->status_led->info();
-    }
-
-    // handle web server clients
-    web_server->handle_client();
-
-    // process API data on the TCP port
-    hardware_drivers->wifi_radio->read_server_data();
-    if (hardware_drivers->wifi_radio->new_data_available()) {
-        command_parser->process_tcp_api();
+        // process API data on the TCP port
+        hardware_drivers->wifi_radio->read_server_data();
+        if (hardware_drivers->wifi_radio->new_data_available()) {
+            command_parser->process_tcp_api();
+        }
     }
 
     // read data from the serial terminal, process API commands if needed
@@ -190,11 +198,17 @@ void loop()
     }
 
     loop_counter = loop_counter == 0xFFFFFFFF ? 0 : loop_counter + 1;
+    yield();
 }  // end loop()
 
 bool is_capture_required(DateTime now)
 {
-    if (now.secondstime() - hardware_drivers->camera->get_last_save().secondstime() >= (uint32_t)hardware_drivers->storage_controller->get_system_configuration()->get_setting("capture_interval")->get_value_int()) {
+    // if (now.secondstime() - hardware_drivers->camera->get_last_save().secondstime() >= (uint32_t)hardware_drivers->storage_controller->get_system_configuration()->get_setting("capture_interval")->get_value_int()) {
+    //     return true;
+    // } else {
+    //     return false;
+    // }
+    if (now.secondstime() % (uint32_t)hardware_drivers->storage_controller->get_system_configuration()->get_setting("capture_interval")->get_value_int() == 0) {
         return true;
     } else {
         return false;

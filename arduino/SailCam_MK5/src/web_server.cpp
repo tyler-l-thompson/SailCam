@@ -1,179 +1,231 @@
 
 #include <web_server.h>
 
-#define html_response_overhead 100  // number of characters to allocate per data node to html code, not super efficient but gets the job done.
-
 WebServer::WebServer(HardwareDrivers* hardware_drivers, CommandParser* command_parser)
 {
     this->hardware_drivers = hardware_drivers;
     this->command_parser = command_parser;
-    server = new ESP8266WebServer(web_server_port);
+    this->server = new ESP8266WebServer(web_server_port);
 
-    html_response = (char *) malloc((serial_buffer_length + html_response_overhead) * sizeof(char));
+    this->html_response = (char *) malloc(command_message_buffer_length + html_response_overhead);
 
-    server->on("/", HTTP_GET, [this]() {
+    this->server->on("/", HTTP_GET, [this]() {
         handle_root();
     });
 
-    server->on("/api", HTTP_GET, [this]() {
+    this->server->on("/api", HTTP_GET, [this]() {
         this->api_parser();
     });
 
-    // server->on("/stream", HTTP_GET, [this]() {
-    //     this->stream_camera();
-    // });
-
-    server->on("/capture", HTTP_GET, [this]() {
+    this->server->on("/capture", HTTP_GET, [this]() {
         this->capture_camera();
     });
 
-    server->onNotFound([this]() {
-        server->send(404, "text/html", "Page not found.");
+    this->server->on("/file_browser", HTTP_GET, [this]() {
+        this->file_browser();
     });
-    server->begin();
+
+    this->server->onNotFound([this]() {
+        this->server->send(404, "text/html", "Page not found.");
+    });
+    this->server->begin();
 }
 
 WebServer::~WebServer()
 {
-    server->stop();
+    this->server->stop();
     free(html_response);
-    html_response = NULL;
 }
 
 void WebServer::handle_client()
 {
-    server->handleClient();
-}
-
-void WebServer::format_html_response() 
-{
-    //int buffer_index = sprintf(html_response, "<html><head></head><body><table>");
-    // int buffer_index = 0;
-    hardware_drivers->storage_controller->list_directory(hardware_drivers->storage_controller->open_file("/"), &html_response, serial_buffer_length, 0, "", "<br>");
-    //buffer_index += sprintf(&html_response[buffer_index], "</table></body></html>");
+    this->server->handleClient();
 }
 
 void WebServer::handle_root()
 {
-    format_html_response();
-    server->send(200, "text/html",  html_response);
+    if (!this->hardware_drivers->camera->is_capture_done())
+    {
+        this->server->send(200, "text/html",  "Camera capture in progress...");
+        return;
+    }
+
+    this->server->sendHeader("Location", String(root_html_file), true);
+    this->server->send(302, "text/plain", "");
 }
 
 void WebServer::api_parser()
 {
-    char* html = (char*) malloc(sizeof(char) * command_message_buffer_length);
-    this->command_parser->process_web_api(server->arg("command").c_str(), server->arg("arg").c_str(), server->arg("param").c_str(), &html);
-    server->send(200, "text/html", html);
-    free(html);
-}
-
-void WebServer::stream_camera()
-{
-    static const size_t bufferSize = 4096;
-    static uint8_t buffer[bufferSize] = {0xFF};
-
-    size_t len;
-    size_t will_copy;
-
-    WiFiClient client = server->client();
-  
-    String response = "HTTP/1.1 200 OK\r\n";
-    response += "Content-Type: multipart/x-mixed-replace; boundary=frame\r\n\r\n";
-    server->sendContent(response);
-  
-    while (1) {
-
-        hardware_drivers->camera->cam->clear_fifo_flag();
-        hardware_drivers->camera->cam->start_capture();
-
-        while (!hardware_drivers->camera->cam->get_bit(ARDUCHIP_TRIG, CAP_DONE_MASK));
-
-        len = hardware_drivers->camera->cam->read_fifo_length();
-        if (len >= MAX_FIFO_SIZE) {
-            continue;
-        } else if (len == 0 ){
-            continue;
-        }
-
-        hardware_drivers->camera->cam->CS_LOW();
-        hardware_drivers->camera->cam->set_fifo_burst();   
-
-        if (!client.connected()) break;
-
-        response = "--frame\r\n";
-        response += "Content-Type: image/jpeg\r\n\r\n";
-        server->sendContent(response);
-        
-        // static uint8_t buffer[bufferSize] = {0xFF};
-        
-        while (len) {
-            will_copy = (len < bufferSize) ? len : bufferSize;
-            hardware_drivers->camera->cam->transferBytes(&buffer[0], &buffer[0], will_copy);
-
-            if (!client.connected()) break;
-
-            client.write(&buffer[0], will_copy);
-            len -= will_copy;
-        }
-        hardware_drivers->camera->cam->CS_HIGH();
-
-        if (!client.connected()) break;
+    if (!this->hardware_drivers->camera->is_capture_done())
+    {
+        this->server->send(200, "text/html", "Camera capture in progress...");
+    }
+    else
+    {
+        this->command_parser->process_web_api(this->server->arg("command").c_str(), this->server->arg("arg").c_str(), this->server->arg("param").c_str(), &(this->html_response));
+        this->server->setContentLength(strlen(html_header) + strlen(this->html_response) + strlen(html_footer));
+        this->server->send(200, "text/html", "");
+        this->server->sendContent(html_header);
+        this->server->sendContent(this->html_response);
+        this->server->sendContent(html_footer);
     }
 }
 
 void WebServer::capture_camera()
 {
-    static const size_t bufferSize = 4096;
-    static uint8_t buffer[bufferSize] = {0xFF};
+    uint32_t len;
+    uint32_t to_transfer;
+    uint32_t buff_len = get_safe_buffer_size(max_buffer_size);
+    uint8_t* buffer = (uint8_t*) malloc(buff_len);
 
-    size_t len;
-    size_t will_copy;
+    this->hardware_drivers->old_display->clear();
+    this->hardware_drivers->old_display->print(oled_capture_message);
 
-    WiFiClient client = server->client();
+    this->server->sendContent("HTTP/1.1 200 OK\r\nContent-Type: multipart/x-mixed-replace; boundary=frame\r\n\r\n--frame\r\nContent-Type: image/jpeg\r\n\r\n");
   
-    String response = "HTTP/1.1 200 OK\r\n";
-    response += "Content-Type: multipart/x-mixed-replace; boundary=frame\r\n\r\n";
-    server->sendContent(response);
-  
-    hardware_drivers->camera->set_sensor_power(true);
-    while (1) {
+    this->hardware_drivers->camera->set_sensor_power(true);
+    this->hardware_drivers->camera->cam->CS_LOW();
+    this->hardware_drivers->camera->cam->clear_fifo_flag();
+    this->hardware_drivers->camera->cam->start_capture();
 
-        hardware_drivers->camera->cam->clear_fifo_flag();
-        hardware_drivers->camera->cam->start_capture();
-
-        while (!hardware_drivers->camera->cam->get_bit(ARDUCHIP_TRIG, CAP_DONE_MASK));
-
-        len = hardware_drivers->camera->cam->read_fifo_length();
-        if (len >= MAX_FIFO_SIZE) {
-            continue;
-        } else if (len == 0 ){
-            continue;
-        }
-
-        hardware_drivers->camera->cam->CS_LOW();
-        hardware_drivers->camera->cam->set_fifo_burst();   
-
-        if (!client.connected()) break;
-
-        response = "--frame\r\n";
-        response += "Content-Type: image/jpeg\r\n\r\n";
-        server->sendContent(response);
-        
-        // static uint8_t buffer[bufferSize] = {0xFF};
-        
-        while (len) {
-            will_copy = (len < bufferSize) ? len : bufferSize;
-            hardware_drivers->camera->cam->transferBytes(&buffer[0], &buffer[0], will_copy);
-
-            if (!client.connected()) break;
-
-            client.write(&buffer[0], will_copy);
-            len -= will_copy;
-        }
-        hardware_drivers->camera->cam->CS_HIGH();
-        hardware_drivers->camera->set_sensor_power(false);
-
-        break;
+    while (!this->hardware_drivers->camera->cam->get_bit(ARDUCHIP_TRIG, CAP_DONE_MASK)) {
+        delay(1);
     }
     
+    len = this->hardware_drivers->camera->cam->read_fifo_length();
+    this->hardware_drivers->camera->cam->CS_HIGH();
+
+    this->server->setContentLength(buff_len);
+    
+    if (!this->server->client().connected()) 
+    {
+        free(buffer);
+        return;
+    }
+
+    while (len > 0)
+    {
+        to_transfer = (len < buff_len) ? len : buff_len;
+        
+        this->hardware_drivers->camera->cam->CS_LOW();
+        this->hardware_drivers->camera->cam->set_fifo_burst();
+        this->hardware_drivers->camera->cam->transferBytes(buffer, buffer, to_transfer);
+        this->hardware_drivers->camera->cam->CS_HIGH();
+
+        if (!this->server->client().connected())
+        {
+            break;
+        }
+
+        this->server->client().write(buffer, to_transfer);
+        len -= to_transfer;
+    }
+    free(buffer);
+    this->hardware_drivers->camera->set_sensor_power(false);
+
+    this->hardware_drivers->old_display->clear();
+    this->hardware_drivers->old_display->wake_up();
+}
+
+void WebServer::file_browser()
+{
+    uint32_t buff_len = get_safe_buffer_size(max_buffer_size);
+    char* buff;
+    sdfat::File32 file;
+
+    const char* file_name = this->server->arg("file").c_str();
+
+    /* check if camera capture in progress */
+    if (!this->hardware_drivers->camera->is_capture_done())
+    {
+        this->server->send(200, "text/html", "Camera capture in progress...");
+        return;
+    }
+
+    /* check if sd card not connected */
+    if (!this->hardware_drivers->storage_controller->is_card_connected())
+    {
+        this->server->send(200, "text/html", "SD card not connected.");
+        return;
+    }
+
+    /* redirect root to images */
+    if (strcmp(file_name, "") == 0)
+    {
+        file_name = "/";
+    }
+
+    /* check if file exists */
+    if (!this->hardware_drivers->storage_controller->file_exists(file_name))
+    {
+        this->server->send(200, "text/html", "File not found.");
+        return;
+    }
+
+    /* open file/directory and allocate buffer memory */
+    file = this->hardware_drivers->storage_controller->open_file(file_name);
+    buff = (char *) malloc(buff_len);
+    this->hardware_drivers->serial_term->debug_printf("file_browser - buff_len %d free_mem %d\r\n", buff_len, system_get_free_heap_size());
+
+    /* handle directory */
+    if (file.isDirectory())
+    {
+        char link_root[50];
+        snprintf(link_root, 50, "/file_browser?file=%s", file_name);
+        int len = this->hardware_drivers->storage_controller->list_directory(file, &buff, buff_len, 0, "", "<br>", true, link_root);
+        this->server->setContentLength(strlen(html_header) + len + strlen(html_footer));
+        this->server->send(200, "text/html", "");
+        this->server->sendContent(html_header);
+        this->server->sendContent(buff, len);
+        this->server->sendContent(html_footer);
+    }
+    else /* handle file */
+    {
+        uint32_t file_size = file.size();
+        bool is_image = (strcmp(&(file_name[strlen(file_name)-4]), ".jpg") == 0); 
+
+        if (is_image)
+        {
+            this->server->setContentLength(file_size);
+            this->server->send(200, "image/jpg", "");
+        }
+        else
+        {
+            this->server->setContentLength(strlen(html_header) + file_size + strlen(html_footer));
+            this->server->send(200, "text/html", "");
+            this->server->sendContent(html_header);
+        }
+        
+        uint32_t to_transfer = (buff_len > file_size) ? file_size : buff_len;
+        for (uint32_t i = 0; i < file_size; i+=to_transfer)
+        {
+            file.readBytes(buff, to_transfer);
+
+            if ((i + to_transfer) >= file_size)
+            {
+                buff[to_transfer-1] = '\0';
+            }
+
+            this->server->sendContent(buff, to_transfer);
+
+            if (!this->server->client().connected()) 
+            {
+                i = file_size;
+            }
+
+            if ((i + to_transfer) > file_size)
+            {
+                to_transfer = (file_size - i);
+            }
+        }
+
+        if (!is_image)
+        {
+            this->server->sendContent(html_footer);
+        }
+    }
+    
+    /* free buffer memory and close file */
+    free(buff);
+    file.close();
 }

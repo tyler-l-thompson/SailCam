@@ -2,7 +2,7 @@
 #ifndef SYSTEM_CONFIGURATION_H
 #define SYSTEM_CONFIGURATION_H
 
-#define settings_length 9
+#define settings_length 14
 
 #include <settings/system_setting.h>
 
@@ -33,6 +33,7 @@ public:
     const char* get_settings_defaults_value(int index);
     bool verify_setting_key(char* key);
     SettingKeyValuePair* get_settings_map() { return this->settings_map; };
+    void increment_counter(char* key);
 };
 
 

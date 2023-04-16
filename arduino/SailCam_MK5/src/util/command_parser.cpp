@@ -1,7 +1,7 @@
 
 #include <util/command_parser.h>
 
-CommandParser::CommandParser(HardwareDrivers* hardware_drivers)
+CommandParser::CommandParser(HardwareDrivers* hardware_drivers, char* stack_start)
 : commands {
                 {"restart", &CommandParser::restart},
                 {"get_time", &CommandParser::get_time},
@@ -26,14 +26,42 @@ CommandParser::CommandParser(HardwareDrivers* hardware_drivers)
                 {"read_i2c_reg", &CommandParser::read_i2c_reg},
                 {"ls", &CommandParser::list_directory},
                 {"mkdir", &CommandParser::make_directory},
-                {"save_config_defaults", &CommandParser::save_config_defaults}
+                {"cat", &CommandParser::read_file},
+                {"tail", &CommandParser::tail_file},
+                {"rm", &CommandParser::remove_file},
+                {"upload_file", &CommandParser::upload_file},
+                {"clear_cache", &CommandParser::clear_cache},
+                {"save_config_defaults", &CommandParser::save_config_defaults},
+                {"wake_display", &CommandParser::wake_display},
+                {"reset_error_counters", &CommandParser::reset_error_counters},
+                {"uptime", &CommandParser::uptime}
             }
 {
     this->hardware_drivers = hardware_drivers;
+    this->stack_start = stack_start;
+
+    for (int i = 0; i < cache_data_length; i++)
+    {
+        cache_file_name_hash[i] = 0u;
+        cache_file_data[i] = NULL;
+    }
 }
 
 CommandParser::~CommandParser()
 {
+}
+
+uint32_t CommandParser::get_hash(char* value)
+{
+    uint32_t hash = 0;
+    for (uint32_t i = 0; ((i < strlen(value)) && (value[i] != '\0')); i++)
+    {
+        hash += 1;
+        hash += (uint32_t) value[i];
+        hash *= 11;
+        hash %= 1000001700;
+    }
+    return hash;
 }
 
 /**
@@ -42,7 +70,8 @@ CommandParser::~CommandParser()
 
 void CommandParser::restart(char* arg, char* param, char** message) 
 {
-    ESP.restart();
+    this->reboot_requested = true;
+    sprintf(*message, "Rebooting...");
 }
 
 void CommandParser::get_time(char* arg, char* param, char** message)
@@ -122,7 +151,7 @@ void CommandParser::save_config(char* arg, char* param, char** message)
 
 void CommandParser::get_free_memory(char* arg, char* param, char** message)
 {
-    sprintf(*message, "free_memory=%d, units=Bytes", system_get_free_heap_size());
+    sprintf(*message, "free_heap=%d\r\nfree_stack=%d\r\nunits=Bytes", system_get_free_heap_size(), (total_stack_size - this->stack_size()));
 }
 
 void CommandParser::get_cpu_speed(char* arg, char* param, char** message)
@@ -141,7 +170,7 @@ void CommandParser::get_battery_level(char* arg, char* param, char** message)
     sprintf
     (
         *message, 
-        "battery_percent=%0.2f%%, battery_volts=%0.2fv, battery_adc=%d, vcc_volts=%0.2fv", 
+        "battery_percent=%0.2f%%\r\n battery_volts=%0.2fv\r\n battery_adc=%d\r\n vcc_volts=%0.2fv", 
         battery_percent, 
         battery_volts, 
         battery_adc,
@@ -151,7 +180,7 @@ void CommandParser::get_battery_level(char* arg, char* param, char** message)
 
 void CommandParser::get_wifi_status(char* arg, char* param, char** message)
 {
-    bool client_status = hardware_drivers->wifi_radio->is_client_connected();
+    bool client_status = ((this->hardware_drivers->wifi_radio->get_tcp_mode() == TCP_SERVER_ENABLED) && hardware_drivers->wifi_radio->is_client_connected());
     sprintf
     (
         *message, 
@@ -172,7 +201,7 @@ void CommandParser::blink_led(char* arg, char* param, char** message)
 {
     int blink_count = (strlen(arg) == 0) ? 4 : atoi(arg);
     int blink_delay = (strlen(param) == 0) ? 100 : atoi(param);
-    sprintf(*message, "count=%d, delay=%dms", blink_count, blink_delay);
+    sprintf(*message, "count=%d\r\n delay=%dms", blink_count, blink_delay);
     hardware_drivers->status_led->blink(blink_count, blink_delay);
 }
 
@@ -187,7 +216,7 @@ void CommandParser::check_sd_card(char* arg, char* param, char** message)
     if (timeout < 0) {
         sd_type = hardware_drivers->storage_controller->get_sd_card_type();
     }
-    sprintf(*message, "sd_card_connected=%s, sd_card_type=%d, error=%d", hardware_drivers->storage_controller->check_and_reconnect_card() ? "true" : "false", sd_type, hardware_drivers->storage_controller->get_sd_error());
+    sprintf(*message, "sd_card_connected=%s\r\n sd_card_type=%d\r\n error=%d", hardware_drivers->storage_controller->check_and_reconnect_card() ? "true" : "false", sd_type, hardware_drivers->storage_controller->get_sd_error());
 }
 
 void CommandParser::format_sd_card(char* arg, char* param, char** message)
@@ -203,13 +232,12 @@ void CommandParser::check_camera(char* arg, char* param, char** message)
 
 void CommandParser::capture_image(char* arg, char* param, char** message)
 {
-    DateTime* now = new DateTime();
-    uint8_t save_success;
-
-    *now = hardware_drivers->system_clock->get_time();
-    hardware_drivers->camera->capture_image(hardware_drivers->serial_term);
-    save_success = hardware_drivers->camera->save_image(hardware_drivers->storage_controller, *now, hardware_drivers->serial_term);
-    sprintf(*message, "save_success=%s, error_code=%d", save_success == 0 ? "True" : "False", save_success);
+    this->hardware_drivers->old_display->clear();
+    this->hardware_drivers->old_display->print(oled_capture_message);
+    this->hardware_drivers->camera->capture_image(hardware_drivers->system_clock->get_time());
+    sprintf(*message, "Capture started.");
+    this->hardware_drivers->old_display->clear();
+    this->hardware_drivers->old_display->wake_up();
 }
 
 void CommandParser::write_spi_reg(char* arg, char* param, char** message)
@@ -220,7 +248,7 @@ void CommandParser::write_spi_reg(char* arg, char* param, char** message)
     this->hardware_drivers->camera->cam->CS_LOW();
     this->hardware_drivers->camera->cam->write_reg(addr, data);
     read_back = this->hardware_drivers->camera->cam->read_reg(addr);
-    sprintf(*message, "addr=%02x, write=%02x, read=%02x", addr, data, read_back);
+    sprintf(*message, "addr=%02x\r\n write=%02x\r\n read=%02x", addr, data, read_back);
     this->hardware_drivers->camera->cam->CS_HIGH();
 }
 
@@ -230,7 +258,7 @@ void CommandParser::read_spi_reg(char* arg, char* param, char** message)
     addr = strtol(arg, NULL, 16);
     this->hardware_drivers->camera->cam->CS_LOW();
     read_back = this->hardware_drivers->camera->cam->read_reg(addr);
-    sprintf(*message, "addr=%02x, read=%02x", addr, read_back);
+    sprintf(*message, "addr=%02x\r\n read=%02x", addr, read_back);
     this->hardware_drivers->camera->cam->CS_HIGH();
 }
 
@@ -242,7 +270,7 @@ void CommandParser::write_i2c_reg(char* arg, char* param, char** message)
     data = strtol(param, NULL, 16);
     this->hardware_drivers->camera->cam->wrSensorReg16_8(addr, data);
     this->hardware_drivers->camera->cam->rdSensorReg16_8(addr, &read_back);
-    sprintf(*message, "addr=%02x, write=%02x, read=%02x", addr, data, read_back);
+    sprintf(*message, "addr=%02x\r\n write=%02x\r\n read=%02x", addr, data, read_back);
 }
 
 void CommandParser::read_i2c_reg(char* arg, char* param, char** message)
@@ -251,7 +279,7 @@ void CommandParser::read_i2c_reg(char* arg, char* param, char** message)
     uint8_t read_back;
     addr = strtol(arg, NULL, 16);
     this->hardware_drivers->camera->cam->rdSensorReg16_8(addr, &read_back);
-    sprintf(*message, "addr=%02x, read=%02x", addr, read_back);
+    sprintf(*message, "addr=%02x\r\n read=%02x", addr, read_back);
 }
 
 void CommandParser::list_directory(char* arg, char* param, char** message)
@@ -285,10 +313,231 @@ void CommandParser::make_directory(char* arg, char* param, char** message)
     sprintf(*message, "%s\r\n", this->hardware_drivers->storage_controller->check_directory(arg) ? "Directory successfully created." : "Failed to create directory.");
 }
 
+void CommandParser::read_file(char * arg, char * param, char ** message)
+{
+    /* check that the sd card is connected */
+    if (!this->hardware_drivers->storage_controller->is_card_connected())
+    {
+        sprintf(*message, "Failed to open file. SD card not connected.");
+        return;
+    }
+
+    bool cache_hit = false;
+    int cache_index = this->cache_idx;
+
+    /* process arg checksum */
+    uint32_t arg_check_sum = get_hash(arg);
+    if (arg_check_sum == 0)
+    {
+        sprintf(*message, "Invalid argument.");
+        return;
+    }
+
+    /* search cache */
+    this->hardware_drivers->serial_term->debug_printf("searching cache for %s %d\r\n", arg, arg_check_sum);
+    for (int i = 0; i < cache_data_length; i++)
+    {
+        if (this->cache_file_name_hash[i] == arg_check_sum) // cache hit
+        {
+            cache_hit = true;
+            cache_index = i;
+            i = cache_data_length;
+            this->hardware_drivers->serial_term->debug_printf("cache hit at idx %d\r\n", cache_index);
+        }
+    }
+
+    if (!cache_hit) // not in cache
+    {
+        this->hardware_drivers->serial_term->debug_printf("cache miss new idx %d\r\n", this->cache_idx);
+        /* open the file */
+        this->read_file_cache = this->hardware_drivers->storage_controller->open_file(arg, sdfat::O_READ);
+        if (!this->read_file_cache)
+        {
+            sprintf(*message, "Failed to open file.");
+            return;
+        }
+
+        /* allocate cache memory */
+        uint32_t cache_size = get_safe_buffer_size(this->read_file_cache.size());
+        if (this->cache_file_data[this->cache_idx] != NULL)
+        {
+            this->hardware_drivers->serial_term->debug_printf("free\r\n");
+            free(this->cache_file_data[this->cache_idx]);
+        }
+        this->hardware_drivers->serial_term->debug_printf("allocating %d bytes for new cache data\r\n", cache_size);
+        this->cache_file_data[this->cache_idx] = (char*) malloc(cache_size);
+
+        /* read the file into cache */
+        this->read_file_cache.readBytes(this->cache_file_data[this->cache_idx], cache_size);
+        this->cache_file_data[this->cache_idx][cache_size-1] = '\0';
+        this->read_file_cache.close();
+        this->cache_file_size[this->cache_idx] = cache_size;
+
+        /* store the file name check sum */
+        this->hardware_drivers->serial_term->debug_printf("new cache hash %d\r\n", arg_check_sum);
+        this->cache_file_name_hash[this->cache_idx] = arg_check_sum;
+
+        /* increment cache index */
+        this->cache_idx++;
+        if (this->cache_idx >= cache_data_length)
+        {
+            this->cache_idx = 0;
+        }
+    }
+
+    /* copy from cache to response */
+    snprintf(*message, command_message_buffer_length, "%s", this->cache_file_data[cache_index]);
+}
+
+void CommandParser::tail_file(char * arg, char * param, char ** message)
+{
+    /* check that the sd card is connected */
+    if (!this->hardware_drivers->storage_controller->is_card_connected())
+    {
+        sprintf(*message, "Failed to open file. SD card not connected.");
+        return;
+    }
+
+    /* set number of characters to print */
+    uint32_t tail_len = 100;
+    if (strlen(param) > 0)
+    {
+        tail_len = atoi(param);
+    }
+
+    /* set file path */
+    char* file_path = arg;
+    if (strcmp(arg, "log") == 0)
+    {
+        file_path = this->hardware_drivers->storage_controller->get_log_path();
+    }
+
+    /* check file exists */
+    if (!this->hardware_drivers->storage_controller->file_exists(file_path))
+    {
+        sprintf(*message, "File not found. %s", file_path);
+        return;
+    }
+
+    /* open and read file */
+    sdfat::File32 tail_file = this->hardware_drivers->storage_controller->open_file(file_path, sdfat::O_READ);
+    uint32_t start_pos = ((tail_file.size() - tail_len) > 0) ? (tail_file.size() - tail_len) : 0;
+    tail_file.seek(start_pos);
+    uint32_t read_size = tail_file.readBytes(*message, tail_file.size() - start_pos);
+    tail_file.close();
+    (*message)[read_size - 1] = '\0';
+}
+
+void CommandParser::remove_file(char* arg, char* param, char** message)
+{
+    /* check that the sd card is connected */
+    if (!this->hardware_drivers->storage_controller->is_card_connected())
+    {
+        sprintf(*message, "Failed to remove file. SD card not connected.");
+        return;
+    }
+
+    /* check if file exists */
+    if (!this->hardware_drivers->storage_controller->file_exists(arg))
+    {
+        sprintf(*message, "Failed to find file. %s", arg);
+        return;
+    }
+
+    /* remove file */
+    if (this->hardware_drivers->storage_controller->is_directory(arg))
+    {
+        this->hardware_drivers->storage_controller->rm_dir(arg);
+    }
+    else
+    {
+        this->hardware_drivers->storage_controller->rm_file(arg);
+    }
+
+    /* check if file still exists */
+    if (this->hardware_drivers->storage_controller->file_exists(arg))
+    {
+        sprintf(*message, "Failed to remove file. %s", arg);
+        return;
+    }
+
+    sprintf(*message, "File removed successfully. %s", arg);
+}
+
+void CommandParser::upload_file(char* arg, char* param, char** message)
+{
+    /* check that the sd card is connected */
+    if (!this->hardware_drivers->storage_controller->is_card_connected())
+    {
+        sprintf(*message, "Failed to open file. SD card not connected.");
+        return;
+    }
+
+    /* remove file if it exists */
+    if (this->hardware_drivers->storage_controller->file_exists(arg))
+    {
+        this->hardware_drivers->storage_controller->rm_file(arg);
+    }
+
+    sdfat::File32 new_file = this->hardware_drivers->storage_controller->open_file(arg, sdfat::O_CREAT | sdfat::O_WRONLY);
+    for (uint32_t i = 0; i < (strlen(param)-1) && param[i] != '\0'; i++)
+    {
+        new_file.write(param[i]);
+    }
+    new_file.close();
+    sprintf(*message, "Upload complete.");
+}
+
+void CommandParser::clear_cache(char* arg, char* param, char** message)
+{
+    this->cache_idx = 0;
+    for (int i = 0; i < cache_data_length; i++)
+    {
+        if (this->cache_file_name_hash[i] != 0)
+        {
+            free(this->cache_file_data[i]);
+            this->cache_file_data[i] = NULL;
+            this->cache_file_name_hash[i] = 0;
+        }
+    }
+
+    sprintf(*message, "Cache cleared.");
+}
+
 void CommandParser::save_config_defaults(char* arg, char* param, char** message)
 {
     this->hardware_drivers->storage_controller->write_settings_defaults();
     sprintf(*message, "System Configuration File set to defaults.\r\n");
+}
+
+void CommandParser::wake_display(char* arg, char* param, char** message)
+{
+    this->hardware_drivers->old_display->wake_up();
+    int sleep_timer = this->hardware_drivers->storage_controller->get_system_configuration()->get_setting("display_sleep_time")->get_value_int();
+    sprintf(*message, "Display woken up.\r\ndisplay_sleep_time=%dms.", sleep_timer);
+}
+
+void CommandParser::reset_error_counters(char* arg, char* param, char** message)
+{
+    this->hardware_drivers->storage_controller->get_system_configuration()->update_setting((char*)"boot_count", 0);
+    this->hardware_drivers->storage_controller->get_system_configuration()->update_setting((char*)"error_count", 0);
+    this->hardware_drivers->storage_controller->get_system_configuration()->update_setting((char*)"capture_count", 0);
+    this->hardware_drivers->storage_controller->write_settings_file();
+    sprintf(*message, "Counters reset.");
+}
+
+void CommandParser::uptime(char* arg, char* param, char** message)
+{
+    DateTime now = this->hardware_drivers->system_clock->get_time();
+    DateTime boot_time = this->hardware_drivers->system_clock->get_boot_time();
+    uint32_t seconds = now.secondstime() - boot_time.secondstime();
+    uint32_t minutes = seconds / 60;
+    uint32_t hours = minutes / 60;
+    uint32_t days = hours / 24;
+    seconds -= (minutes * 60);
+    minutes -= (hours * 60);
+    hours -= (days * 24);
+    sprintf(*message, "uptime=%02d:%02d:%02d:%02d", days, hours, minutes, seconds);
 }
 
 bool CommandParser::process_serial_terminal()
@@ -304,15 +553,55 @@ bool CommandParser::process_serial_terminal()
     for (int i = 0; i < commands_size; i++) {
         if (strcmp(action, commands[i].name) == 0) {
             command_found = true;
+
+            /* parse and allocate memory for arg */
             arg_length = this->hardware_drivers->serial_term->parse_string(this->hardware_drivers->serial_term->get_data(), command_message_buffer_length, &arg, action_length, ' ');
-            this->hardware_drivers->serial_term->parse_string(this->hardware_drivers->serial_term->get_data(), command_message_buffer_length, &param, action_length + arg_length, ' ');
-            message = (char*) malloc(sizeof(char) * command_message_buffer_length);
+
+            /* handle file upload */
+            if (strcmp(action, "upload_file") == 0)
+            {
+                /* allocate maximum memory buffer for incoming data */
+                uint32_t upload_file_buffer_size = get_safe_buffer_size(max_buffer_size) - command_message_buffer_length;
+                this->hardware_drivers->serial_term->debug_printf("allocating %d bytes for buffer.\r\n", upload_file_buffer_size);
+                param = (char *) malloc(upload_file_buffer_size);
+
+                /* wait for data to start */
+                this->hardware_drivers->serial_term->debug_printf("ready for data.\r\n");
+                while (!this->hardware_drivers->serial_term->available())
+                {
+                    delay(1);
+                }
+                this->hardware_drivers->serial_term->debug_printf("reading...\r\n");
+                
+                /* read file data */
+                int read_size = this->hardware_drivers->serial_term->readBytesUntil('$', param, upload_file_buffer_size);
+                param[read_size - 1] = '\0';
+
+                /* print back the file data */
+                this->hardware_drivers->serial_term->debug_printf("%s\r\n", param);
+                this->hardware_drivers->serial_term->debug_printf("data read.\r\n");
+            }
+            else
+            {
+                /* parse and allocate memory for param */
+                this->hardware_drivers->serial_term->parse_string(this->hardware_drivers->serial_term->get_data(), command_message_buffer_length, &param, action_length + arg_length, '\n');
+            }
+
+            /* allocate memory for response */
+            message = (char*) malloc(get_safe_buffer_size(command_message_buffer_length));
+
+            /* execute function */
             (this->*(commands[i].function))(arg, param, &message);
+
+            /* send response */
             this->hardware_drivers->serial_term->print(message);
             this->hardware_drivers->serial_term->print("\r\n");
+
+            /* free memory */
             free(message);
             free(arg);
             free(param);
+            i = commands_size;
         }
     }
     free(action);
@@ -366,4 +655,9 @@ void CommandParser::process_tcp_api()
         this->hardware_drivers->wifi_radio->send_server_data((char *)"Command not found.", 18);
     }
     free(action);
+}
+
+uint32_t CommandParser::stack_size() {
+    char stack;
+    return (uint32_t)this->stack_start - (uint32_t)&stack;
 }

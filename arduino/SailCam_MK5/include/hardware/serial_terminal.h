@@ -20,7 +20,7 @@ public:
     void debug_println(const char* data);
     void debug_print(const char* data);
     void debug_printf(const char* data, ...);
-    void read_data();
+    void read_data(char terminator = '\n', bool flush_after_read = true);
     char* get_data();
     int get_data_size();
     bool new_data_available();

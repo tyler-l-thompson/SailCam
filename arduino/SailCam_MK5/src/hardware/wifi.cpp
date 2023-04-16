@@ -1,7 +1,7 @@
 
 #include <hardware/wifi.h>
 
-Wifi::Wifi(const char* ssid, const char* psk, int tcp_port, WIFI_MODE wifi_mode)
+Wifi::Wifi(const char* ssid, const char* psk, int tcp_port, WIFI_MODE wifi_mode, TCP_SERVER_MODE tcp_server_mode)
 : wifi_statuses
 {
     "Idle",
@@ -14,6 +14,7 @@ Wifi::Wifi(const char* ssid, const char* psk, int tcp_port, WIFI_MODE wifi_mode)
 }
 {
     this->wifi_mode = wifi_mode;
+    this->tcp_server_mode = tcp_server_mode;
     this->wifi_client = NULL;
     this->wifi_server = NULL;
     this->api_new_data = false;
@@ -25,11 +26,9 @@ Wifi::Wifi(const char* ssid, const char* psk, int tcp_port, WIFI_MODE wifi_mode)
         WiFi.disconnect();
         WiFi.softAPConfig(local_ip, gateway, subnet_mask);
         WiFi.softAP(ssid, psk);
-        this->start_server(tcp_port);
     } else if (wifi_mode == WIFI_CLIENT) {
         WiFi.softAPdisconnect(true);
         WiFi.begin(ssid, psk);
-        this->start_server(tcp_port);
     } else {
         WiFi.disconnect();
         WiFi.softAPdisconnect(true);
@@ -39,15 +38,16 @@ Wifi::Wifi(const char* ssid, const char* psk, int tcp_port, WIFI_MODE wifi_mode)
     uint8_t mac[6];
     wifi_get_macaddr(STATION_IF, mac);
     sprintf(this->mac_str, "%02X:%02X:%02X:%02X:%02X:%02X", mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
+
+    // start tcp server if it is enabled
+    if (((wifi_mode == WIFI_ACCESS_POINT) || (wifi_mode == WIFI_CLIENT)) && (tcp_server_mode == TCP_SERVER_ENABLED))
+    {
+        this->start_server(tcp_port);
+    }
 }
 
 Wifi::~Wifi()
 {
-}
-
-WIFI_MODE Wifi::get_mode()
-{
-    return this->wifi_mode;
 }
 
 IPAddress Wifi::get_ip_address()

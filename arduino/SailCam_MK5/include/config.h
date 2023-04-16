@@ -1,5 +1,5 @@
 
-#define firmware_version "1.0"
+#define firmware_version "MK 5.2"
 
 #define sd_card_chip_select 0
 #define camera_chip_select 16
@@ -14,8 +14,8 @@
 
 #define serial_buffer_length 1024 // max length of stored messages
 #define serial_min_read 1 // minimum number of characters that need to appear in a message for it to register
-#define command_message_buffer_length 1024
-#define file_buffer_size 32
+#define command_message_buffer_length 6124
+#define file_buffer_size 50
 
 #define ap_local_ip 192,168,22,2
 #define ap_gateway_address 192,168,22,1
@@ -31,12 +31,31 @@
 #define image_base_dir "images"
 
 #define system_configuration_path "config.ini"
+#define root_html_file "/api?command=cat&arg=/html/controls.html"
 
 #define hardware_serial_port UART0
 #define initial_hardware_serial_baud_rate 9600
 
 #define serial_debug_messages true
 
+#define min_heap_size 6128
+#define total_stack_size 4048
+#define max_buffer_size 10000
+
+#define boot_message "\r\n   _____       _ _  _____                 "\
+                     "\r\n  / ____|     (_) |/ ____|                "\
+                     "\r\n | (___   __ _ _| | |     __ _ _ __ ___   "\
+                     "\r\n  \\___ \\ / _` | | | |    / _` | '_ ` _ \\  "\
+                     "\r\n  ____) | (_| | | | |___| (_| | | | | | | "\
+                     "\r\n |_____/ \\__,_|_|_|\\_____\\__,_|_| |_| |_| \r\n"
+
+#define oled_boot_message "\n _ _ o|  _ _  _ _\n"\
+                          "_\\(_||| (_(_|| | |"
+                          
+#define oled_capture_message "          _\n"\
+                             "        _|#|_\n"\
+                             "       | (O) |\n"\
+                             "        -----\n"
 
 /**
  * IO Pinout

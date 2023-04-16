@@ -1,0 +1,56 @@
+upload_file /html/settings.html
+
+<div class="title">Settings</div>
+<table class="submenu">
+    <form action="/api" method="get">
+        <input type="hidden" name="command" value="set_var" />
+        <tr>
+            <td>
+                <label class="half_submenu_link" for="arg">Variable</label>
+            </td>
+            <td>
+                <select class="half_submenu_link" id="arg" name="arg">
+                    <option value="baud_rate">baud_rate</option>
+                    <option value="wifi_ssid">wifi_ssid</option>
+                    <option value="wifi_psk">wifi_psk</option>
+                    <option value="wifi_mode">wifi_mode</option>
+                    <option value="tcp_port">tcp_port</option>
+                    <option value="device_name">device_name</option>
+                    <option value="capture_mode">capture_mode</option>
+                    <option value="capture_interval">capture_interval</option>
+                    <option value="display_mode">display_mode</option>
+                    <option value="display_sleep_time">display_sleep_time</option>
+                    <option value="boot_count">boot_count</option>
+                    <option value="error_count">error_count</option>
+                    <option value="capture_count">capture_count</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label class="half_submenu_link" for="param">Value</label>
+            </td>
+            <td>
+                <input class="half_submenu_link" type="text" id="param" name="param">
+            </td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>
+                <input class="half_submenu_link" type="submit" value="Submit">
+            </td>
+        </tr>
+    </form>
+    <tr><td></td><td></td></tr>
+    <tr><td class="divider" colspan="2"></td></tr>
+    <tr><td></td><td></td></tr>
+    <tr>
+        <td class="half_submenu_link"><a class="half_submenu_a" href='/api?command=get_config'>View</a></td>
+        <td class="half_submenu_link"><a class="half_submenu_a" href='/api?command=save_config'>Save to SD</a></td>
+    </tr>
+    <tr>
+        <td colspan="2"><a class="submenu_link" href="/api?command=reset_error_counters">Reset Error Counters</a></td>
+    </tr>
+</table>
+        
+$

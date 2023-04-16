@@ -10,6 +10,8 @@
         "initializer_list": "cpp",
         "ranges": "cpp",
         "*.tcc": "cpp",
-        "system_error": "cpp"
-    }
+        "system_error": "cpp",
+        "random": "cpp"
+    },
+    "C_Cpp.errorSquiggles": "Disabled"
 }

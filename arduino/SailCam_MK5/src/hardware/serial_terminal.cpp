@@ -24,6 +24,7 @@ void SerialTerminal::reinitialize(uint32_t baud_rate)
     begin(baud_rate);
     println();
     flush();
+    this->debug_printf("%s\r\n%41s \r\n", boot_message, firmware_version);
 }
 
 void SerialTerminal::debug_println(const char* data)
@@ -53,22 +54,37 @@ void SerialTerminal::debug_printf(const char* data, ...)
     };
 }
 
-void SerialTerminal::read_data()
+void SerialTerminal::read_data(char terminator, bool flush_after_read)
 {
     int read_size;
+
     if (available() > 0) {
-        read_size = readBytesUntil('\n', this->serial_buffer, serial_buffer_length);
+
+        read_size = readBytesUntil(terminator, this->serial_buffer, serial_buffer_length);
+
         if (read_size > serial_min_read && isalnum(serial_buffer[0])) {
             this->serial_buffer[read_size >= serial_buffer_length ? serial_buffer_length : read_size] = '\0';  // null terminate string read from buffer
-            flush();
+
+            if (flush_after_read)
+            {
+                flush();
+            }
+
             this->new_data = true;
-            this->data_size = read_size;
-            if (serial_buffer[read_size-1] == '\r') { //remove trailing \r if it exists
+            if ((serial_buffer[read_size-1] == '\r') || 
+                (serial_buffer[read_size-1] == '\n') || 
+                (serial_buffer[read_size-1] == terminator)) 
+            { //remove trailing \r if it exists
                 serial_buffer[read_size-1] = '\0';
                 read_size--;
             }
+            this->data_size = read_size;
+
         } else {
-            flush();
+            if (flush_after_read)
+            {
+                flush();
+            }
         }
     }
 }

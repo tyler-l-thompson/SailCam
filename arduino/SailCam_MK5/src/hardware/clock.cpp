@@ -7,6 +7,7 @@ Clock::Clock()
     Wire.begin();
     rtc_clock->enable();
     delay(100); // delay seems to be needed here. otherwise time is read before clock is fully initialized.
+    this->boot_time = this->get_time();
 }
 
 Clock::~Clock()

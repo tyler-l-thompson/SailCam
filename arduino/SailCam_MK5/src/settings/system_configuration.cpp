@@ -9,10 +9,15 @@ SystemConfiguration::SystemConfiguration()
     {"wifi_psk", "hobbesthetiger"},
     {"wifi_mode", "2"}, // 0 - WIFI_ACCESS_POINT, 1 - WIFI_CLIENT, 2 - WIFI_DISABLED
     {"tcp_port", "723"},
+    {"tcp_mode", "0"}, // 0 - DISABLED, 1 - ENABLED
     {"device_name", "SailCam"},
     {"capture_mode", "0"},
     {"capture_interval", "15"},
-    {"boot_count", "0"}
+    {"display_mode", "0"}, // 0 - DISABLED, 1 - ENABLED, 2 - DISP_SLEEP_MODE
+    {"display_sleep_time", "10"},
+    {"boot_count", "0"},
+    {"error_count", "0"},
+    {"capture_count", "0"}
 }
 {
     read_settings_defaults();
@@ -81,7 +86,7 @@ void SystemConfiguration::update_setting(char* key, int value)
         char * new_value = (char *) malloc(32);
         snprintf(new_value, 32, "%d", value);
         find_value->update_value(new_value, strlen(new_value));
-        //free(new_value);
+        free(new_value);
     }
 }
 
@@ -106,4 +111,9 @@ bool SystemConfiguration::verify_setting_key(char* key)
         }
     }
     return false;
+}
+
+void SystemConfiguration::increment_counter(char* key)
+{
+    this->update_setting(key, this->get_setting(key)->get_value_int() + 1);
 }

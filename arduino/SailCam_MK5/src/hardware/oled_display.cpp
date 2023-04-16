@@ -1,6 +1,11 @@
 
 #include <hardware/oled_display.h>
 
+static uint32_t get_system_time_ms()
+{
+    return (system_get_time() / 1000);
+}
+
 OledDisplay::OledDisplay()
 {
     this->display = new Adafruit_SSD1306(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, -1);
@@ -11,6 +16,8 @@ OledDisplay::OledDisplay()
     this->clear();
     this->update_required = false;
     this->buf_index = 0;
+    this->display->printf("%s\n%21s", oled_boot_message, firmware_version);
+    this->display->display();
 }
 
 OledDisplay::~OledDisplay()
@@ -20,26 +27,69 @@ OledDisplay::~OledDisplay()
 
 void OledDisplay::dim(bool state)
 {
-    this->display->dim(state);
+    if (this->dim_state != state)
+    {
+        this->display->dim(state);
+        this->dim_state = state;
+    }
+}
+
+void OledDisplay::set_mode(DisplayMode mode)
+{
+    if (mode != this->mode) {
+        switch (mode)
+        {
+        case DISP_DISABLED:
+            this->display->setCursor(0, 0);
+            this->display->clearDisplay();
+            this->display->display();
+            this->update_required = false;
+            break;
+        case DISP_ENABLED:
+            this->sleep_timer = 0;
+            break;
+        case DISP_SLEEP_MODE:
+            this->sleep_timer = get_system_time_ms();
+            break;
+        default:
+            break;
+        }
+    }
+
+    this->mode = mode;
 }
 
 void OledDisplay::update()
 {
-    if (this->update_required) {
+    uint32_t sys_time = get_system_time_ms();
+    bool sleep_needed = ((this->mode == DISP_SLEEP_MODE) && ((sys_time - this->sleep_timer) > this->sleep_limit));
+
+    if ((this->mode != DISP_DISABLED) && 
+        this->update_required && 
+        !sleep_needed)
+    {
+            this->display->clearDisplay();
+            this->display->setCursor(0, 0);
+            for (int i = 0; i < SCREEN_HEIGHT; i++) {
+                this->display->println(display_buf[i]);
+            }
+            this->display->display();
+            this->update_required = false;
+            this->display_asleep = false;
+    }
+
+    if (sleep_needed & !this->display_asleep)
+    {
         this->display->clearDisplay();
         this->display->setCursor(0, 0);
-        for (int i = 0; i < SCREEN_HEIGHT; i++) {
-            this->display->println(display_buf[i]);
-        }
         this->display->display();
-        this->update_required = false;
+        this->display_asleep = true;
     }
 }
 
-void OledDisplay::disable()
+void OledDisplay::wake_up()
 {
-    this->display->setCursor(0, 0);
-    this->display->clearDisplay();
+    this->sleep_timer = get_system_time_ms();
     this->update_required = true;
 }
 
@@ -88,6 +138,15 @@ void OledDisplay::writef(const char* value, ...)
     va_end(args);
     this->buf_index < buf_height ? this->buf_index++ : this->buf_index = buf_height;
     this->update_required = true;
+}
+
+void OledDisplay::print(const char* value)
+{
+    if (this->mode != DISP_DISABLED)
+    {
+        this->display->print(value);
+        this->display->display();
+    }
 }
 
 void OledDisplay::write_overview(DateTime date, IPAddress ip_address, int wifi_mode, int capture_count, int capture_mode, int capture_interval, uint8_t last_cam_error, double battery_volts)

@@ -19,7 +19,7 @@ Camera::Camera(Storage* storage)
     Wire.begin();
     
     SPI.begin();
-    SPI.setFrequency(12000000); // 8MHz
+    SPI.setFrequency(8000000); // 8MHz - 14MHz
     
     this->cam->CS_LOW();
     this->cam->set_format(JPEG);

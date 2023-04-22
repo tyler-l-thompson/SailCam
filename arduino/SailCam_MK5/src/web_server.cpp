@@ -208,7 +208,7 @@ void WebServer::file_browser()
                 buff[to_transfer-1] = '\0';
             }
 
-            this->server->sendContent(buff, to_transfer);
+            this->server->client().write(buff, to_transfer);
 
             if (!this->server->client().connected()) 
             {

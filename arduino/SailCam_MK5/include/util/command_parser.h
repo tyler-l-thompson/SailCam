@@ -6,7 +6,7 @@
 #include <hardware/drivers.h>
 
 #define commands_size 35
-#define cache_data_length 4
+#define cache_data_length 2
 
 class CommandParser
 {

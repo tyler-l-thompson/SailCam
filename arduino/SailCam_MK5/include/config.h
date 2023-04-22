@@ -37,7 +37,7 @@
 #define hardware_serial_port UART0
 #define initial_hardware_serial_baud_rate 9600
 
-#define serial_debug_messages true
+#define serial_debug_messages false
 
 #define min_heap_size 6128
 #define total_stack_size 4048

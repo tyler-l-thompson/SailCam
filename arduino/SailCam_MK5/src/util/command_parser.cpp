@@ -611,7 +611,7 @@ bool CommandParser::process_serial_terminal()
 
                 /* print back the file data */
                 // this->hardware_drivers->serial_term->debug_printf("%s\r\n", param);
-                this->hardware_drivers->serial_term->debug_printf("%d bytes read.\r\n", read_size);
+                this->hardware_drivers->serial_term->debug_printf("%d bytes read, EOF %s\r\n", read_size, (((uint32_t)read_size) == upload_file_buffer_size) ? "not found." : "found.");
             }
             else
             {

@@ -1,0 +1,239 @@
+upload_file /html/camera_settings.html
+
+<div class="title">Camera Settings</div>
+<table class="submenu">
+    <!--Light Mode-->
+    <form action="/api" method="get">
+        <input type="hidden" name="command" value="set_cam_var" />    
+        <tr>
+            <input type="hidden" name="arg" value="light_mode" />
+            <td>
+                <label class="half_submenu_link" for="param">Light Mode</label>
+            </td>
+            <td>
+                <select id="light_mode_setting" class="half_submenu_link" onchange="this.form.submit()" id="param" name="param">
+                    <option value="13">Disabled</option>
+                    <option value="0">Advanced_AWB</option>
+                    <option value="1">Simple_AWB</option>
+                    <option value="2">Manual_day</option>
+                    <option value="3">Manual_A</option>
+                    <option value="4">Manual_cwf</option>
+                    <option value="5">Manual_cloudy</option>
+                </select>
+            </td>
+        </tr>
+    </form>
+
+    <!--Saturation-->
+    <form action="/api" method="get">
+        <input type="hidden" name="command" value="set_cam_var" />    
+        <tr>
+            <input type="hidden" name="arg" value="saturation" />
+            <td>
+                <label class="half_submenu_link" for="param">Saturation</label>
+            </td>
+            <td>
+                <select id="saturation_setting" class="half_submenu_link" onchange="this.form.submit()" id="param" name="param">
+                    <option value="13">Disabled</option>
+                    <option value="0">Saturation4</option>
+                    <option value="1">Saturation3</option>
+                    <option value="2">Saturation2</option>
+                    <option value="3">Saturation1</option>
+                    <option value="4">Saturation0</option>
+                    <option value="5">Saturation_1</option>
+                    <option value="6">Saturation_2</option>
+                    <option value="7">Saturation_3</option>
+                    <option value="8">Saturation_4</option>
+                </select>
+            </td>
+        </tr>
+    </form>
+
+    <!--Brightness-->
+    <form action="/api" method="get">
+        <input type="hidden" name="command" value="set_cam_var" />    
+        <tr>
+            <input type="hidden" name="arg" value="brightness" />
+            <td>
+                <label class="half_submenu_link" for="param">Brightness</label>
+            </td>
+            <td>
+                <select id="brightness_setting" class="half_submenu_link" onchange="this.form.submit()" id="param" name="param">
+                    <option value="13">Disabled</option>
+                    <option value="0">Brightness4</option>
+                    <option value="1">Brightness3</option>
+                    <option value="2">Brightness2</option>
+                    <option value="3">Brightness1</option>
+                    <option value="4">Brightness0</option>
+                    <option value="5">Brightness_1</option>
+                    <option value="6">Brightness_2</option>
+                    <option value="7">Brightness_3</option>
+                    <option value="8">Brightness_4</option>
+                </select>
+            </td>
+        </tr>
+    </form>
+
+    <!--Contrast-->
+    <form action="/api" method="get">
+        <input type="hidden" name="command" value="set_cam_var" />    
+        <tr>
+            <input type="hidden" name="arg" value="contrast" />
+            <td>
+                <label class="half_submenu_link" for="param">Contrast</label>
+            </td>
+            <td>
+                <select id="contrast_setting" class="half_submenu_link" onchange="this.form.submit()" id="param" name="param">
+                    <option value="13">Disabled</option>
+                    <option value="0">Contrast4</option>
+                    <option value="1">Contrast3</option>
+                    <option value="2">Contrast2</option>
+                    <option value="3">Contrast1</option>
+                    <option value="4">Contrast0</option>
+                    <option value="5">Contrast_1</option>
+                    <option value="6">Contrast_2</option>
+                    <option value="7">Contrast_3</option>
+                    <option value="8">Contrast_4</option>
+                </select>
+            </td>
+        </tr>
+    </form>
+
+    <!--Effect-->
+    <form action="/api" method="get">
+        <input type="hidden" name="command" value="set_cam_var" />    
+        <tr>
+            <input type="hidden" name="arg" value="effect" />
+            <td>
+                <label class="half_submenu_link" for="param">Effect</label>
+            </td>
+            <td>
+                <select id="effect_setting" class="half_submenu_link" onchange="this.form.submit()" id="param" name="param">
+                    <option value="13">Disabled</option>
+                    <option value="0">Antique</option>
+                    <option value="1">Bluish</option>
+                    <option value="2">Greenish</option>
+                    <option value="3">Reddish</option>
+                    <option value="4">BW</option>
+                    <option value="5">Negative</option>
+                    <option value="6">BWnegative</option>
+                    <option value="7">Normal</option>
+                    <option value="8">Sepia</option>
+                    <option value="9">Overexposure</option>
+                    <option value="10">Solarize</option>
+                    <option value="11">Blueish</option>
+                    <option value="12">Yellowish</option>
+                </select>
+            </td>
+        </tr>
+    </form>
+
+    <!--Hue-->
+    <form action="/api" method="get">
+        <input type="hidden" name="command" value="set_cam_var" />    
+        <tr>
+            <input type="hidden" name="arg" value="hue" />
+            <td>
+                <label class="half_submenu_link" for="param">Hue</label>
+            </td>
+            <td>
+                <select id="hue_setting" class="half_submenu_link" onchange="this.form.submit()" id="param" name="param">
+                    <option value="13">Disabled</option>
+                    <option value="0">degree_180</option>
+                    <option value="1">degree_150</option>
+                    <option value="2">degree_120</option>
+                    <option value="3">degree_90</option>
+                    <option value="4">degree_60</option>
+                    <option value="5">degree_30</option>
+                    <option value="6">degree_0</option>
+                    <option value="7">degree30</option>
+                    <option value="8">degree60</option>
+                    <option value="9">degree90</option>
+                    <option value="10">degree120</option>
+                    <option value="11">degree150</option>
+                </select>
+            </td>
+        </tr>
+    </form>
+
+    <!--Exposure-->
+    <form action="/api" method="get">
+        <input type="hidden" name="command" value="set_cam_var" />    
+        <tr>
+            <input type="hidden" name="arg" value="exposure" />
+            <td>
+                <label class="half_submenu_link" for="param">Exposure</label>
+            </td>
+            <td>
+                <select id="exposure_setting" class="half_submenu_link" onchange="this.form.submit()" id="param" name="param">
+                    <option value="13">Disabled</option>
+                    <option value="0">Exposure_17_EV</option>
+                    <option value="1">Exposure_13_EV</option>
+                    <option value="2">Exposure_10_EV</option>
+                    <option value="3">Exposure_07_EV</option>
+                    <option value="4">Exposure_03_EV</option>
+                    <option value="5">Exposure_default</option>
+                    <option value="6">Exposure03_EV</option>
+                    <option value="7">Exposure07_EV</option>
+                    <option value="8">Exposure10_EV</option>
+                    <option value="9">Exposure13_EV</option>
+                    <option value="10">Exposure17_EV</option>
+                </select>
+            </td>
+        </tr>
+    </form>
+
+    <!--Sharpness-->
+    <form action="/api" method="get">
+        <input type="hidden" name="command" value="set_cam_var" />    
+        <tr>
+            <input type="hidden" name="arg" value="sharpness" />
+            <td>
+                <label class="half_submenu_link" for="param">Sharpness</label>
+            </td>
+            <td>
+                <select id="sharpness_setting" class="half_submenu_link" onchange="this.form.submit()" id="param" name="param">
+                    <option value="13">Disabled</option>
+                    <option value="0">Auto_Sharpness_default</option>
+                    <option value="1">Auto_Sharpness1</option>
+                    <option value="2">Auto_Sharpness2</option>
+                    <option value="3">Manual_Sharpnessoff</option>
+                    <option value="4">Manual_Sharpness1</option>
+                    <option value="5">Manual_Sharpness2</option>
+                    <option value="6">Manual_Sharpness3</option>
+                    <option value="7">Manual_Sharpness4</option>
+                    <option value="8">Manual_Sharpness5</option>
+                </select>
+            </td>
+        </tr>
+    </form>
+
+    <!--Mirror-->
+    <form action="/api" method="get">
+        <input type="hidden" name="command" value="set_cam_var" />    
+        <tr>
+            <input type="hidden" name="arg" value="mirror" />
+            <td>
+                <label class="half_submenu_link" for="param">Mirror</label>
+            </td>
+            <td>
+                <select id="mirror_setting" class="half_submenu_link" onchange="this.form.submit()" id="param" name="param">
+                    <option value="13">Disabled</option>
+                    <option value="0">MIRROR</option>
+                    <option value="1">FLIP</option>
+                    <option value="2">MIRROR_FLIP</option>
+                    <option value="7">Normal</option>
+                </select>
+            </td>
+        </tr>
+    </form>
+    <tr><td></td><td></td></tr>
+    <tr><td class="divider" colspan="2"></td></tr>
+    <tr><td></td><td></td></tr>
+    <tr>
+        <td class="half_submenu_link"><a class="half_submenu_a" href='/api?command=get_cam_config'>View</a></td>
+        <td class="half_submenu_link"><a class="half_submenu_a" href='/api?command=save_cam_config'>Save to SD</a></td>
+    </tr>
+</table>
+        
+$

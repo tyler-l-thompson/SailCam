@@ -7,7 +7,7 @@ WebServer::WebServer(HardwareDrivers* hardware_drivers, CommandParser* command_p
     this->command_parser = command_parser;
     this->server = new ESP8266WebServer(web_server_port);
 
-    this->html_response = (char *) malloc(command_message_buffer_length + html_response_overhead);
+    // this->html_response = (char *) malloc(command_message_buffer_length + html_response_overhead);
 
     this->server->on("/", HTTP_GET, [this]() {
         handle_root();
@@ -34,7 +34,7 @@ WebServer::WebServer(HardwareDrivers* hardware_drivers, CommandParser* command_p
 WebServer::~WebServer()
 {
     this->server->stop();
-    free(html_response);
+    // free(html_response);
 }
 
 void WebServer::handle_client()
@@ -62,12 +62,14 @@ void WebServer::api_parser()
     }
     else
     {
+        this->html_response = (char *) malloc(get_safe_buffer_size(command_message_buffer_length + html_response_overhead));
         this->command_parser->process_web_api(this->server->arg("command").c_str(), this->server->arg("arg").c_str(), this->server->arg("param").c_str(), &(this->html_response));
         this->server->setContentLength(strlen(html_header) + strlen(this->html_response) + strlen(html_footer));
         this->server->send(200, "text/html", "");
         this->server->sendContent(html_header);
         this->server->sendContent(this->html_response);
         this->server->sendContent(html_footer);
+        free(this->html_response);
     }
 }
 

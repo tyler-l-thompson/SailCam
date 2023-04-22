@@ -34,7 +34,10 @@ CommandParser::CommandParser(HardwareDrivers* hardware_drivers, char* stack_star
                 {"save_config_defaults", &CommandParser::save_config_defaults},
                 {"wake_display", &CommandParser::wake_display},
                 {"reset_error_counters", &CommandParser::reset_error_counters},
-                {"uptime", &CommandParser::uptime}
+                {"uptime", &CommandParser::uptime},
+                {"set_cam_var", &CommandParser::set_camera_setting},
+                {"get_cam_config", &CommandParser::read_camera_settings},
+                {"save_cam_config", &CommandParser::save_camera_settings}
             }
 {
     this->hardware_drivers = hardware_drivers;
@@ -540,6 +543,35 @@ void CommandParser::uptime(char* arg, char* param, char** message)
     sprintf(*message, "uptime=%02d:%02d:%02d:%02d", days, hours, minutes, seconds);
 }
 
+void CommandParser::set_camera_setting(char* arg, char* param, char** message)
+{
+    bool setting_found = this->hardware_drivers->camera->set_camera_setting(arg, atoi(param));
+    if (setting_found)
+    {
+        sprintf(*message, "setting=%s\r\nvalue=%s", arg, param);
+    }
+    else
+    {
+        sprintf(*message, "Setting not found.");
+    }
+}
+
+void CommandParser::read_camera_settings(char* arg, char* param, char** message)
+{
+    int idx = 0;
+    CameraSetting_T* camera_settings = this->hardware_drivers->camera->get_camera_settings();
+    for (int i = 0; i < camera_settings_length; i++)
+    {
+        idx += sprintf(&(*message)[idx], "%s=%s\r\n", camera_settings[i].name, this->hardware_drivers->camera->get_camera_setting_value_description(i));
+    }
+}
+
+void CommandParser::save_camera_settings(char* arg, char* param, char** message)
+{
+    bool success = this->hardware_drivers->camera->write_camera_settings();
+    sprintf(*message, success ? "Write success." : "Write failed.");
+}
+
 bool CommandParser::process_serial_terminal()
 {
     char* action;
@@ -561,7 +593,7 @@ bool CommandParser::process_serial_terminal()
             if (strcmp(action, "upload_file") == 0)
             {
                 /* allocate maximum memory buffer for incoming data */
-                uint32_t upload_file_buffer_size = get_safe_buffer_size(max_buffer_size) - command_message_buffer_length;
+                uint32_t upload_file_buffer_size = get_safe_buffer_size(max_buffer_size);
                 this->hardware_drivers->serial_term->debug_printf("allocating %d bytes for buffer.\r\n", upload_file_buffer_size);
                 param = (char *) malloc(upload_file_buffer_size);
 
@@ -578,8 +610,8 @@ bool CommandParser::process_serial_terminal()
                 param[read_size - 1] = '\0';
 
                 /* print back the file data */
-                this->hardware_drivers->serial_term->debug_printf("%s\r\n", param);
-                this->hardware_drivers->serial_term->debug_printf("data read.\r\n");
+                // this->hardware_drivers->serial_term->debug_printf("%s\r\n", param);
+                this->hardware_drivers->serial_term->debug_printf("%d bytes read.\r\n", read_size);
             }
             else
             {

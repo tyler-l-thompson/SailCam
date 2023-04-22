@@ -18,6 +18,7 @@ upload_file /html/settings.html
                     <option value="device_name">device_name</option>
                     <option value="capture_mode">capture_mode</option>
                     <option value="capture_interval">capture_interval</option>
+                    <option value="cam_settings_mode">cam_settings_mode</option>
                     <option value="display_mode">display_mode</option>
                     <option value="display_sleep_time">display_sleep_time</option>
                     <option value="boot_count">boot_count</option>
@@ -50,6 +51,9 @@ upload_file /html/settings.html
     </tr>
     <tr>
         <td colspan="2"><a class="submenu_link" href="/api?command=reset_error_counters">Reset Error Counters</a></td>
+    </tr>
+    <tr>
+        <td colspan="2"><a class="submenu_link" href="/api?command=cat&arg=/html/camera_settings.html">Camera Settings</a></td>
     </tr>
 </table>
         

@@ -13,6 +13,7 @@ SystemConfiguration::SystemConfiguration()
     {"device_name", "SailCam"},
     {"capture_mode", "0"},
     {"capture_interval", "15"},
+    {"cam_settings_mode", "0"}, // 0 - DEFAULT, 1 - USER
     {"display_mode", "0"}, // 0 - DISABLED, 1 - ENABLED, 2 - DISP_SLEEP_MODE
     {"display_sleep_time", "10"},
     {"boot_count", "0"},

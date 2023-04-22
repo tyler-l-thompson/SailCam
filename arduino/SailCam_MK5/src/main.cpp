@@ -174,6 +174,7 @@ void loop()
             hardware_drivers->serial_term->debug_printf("CAMERA ERROR!!\r\n");
             hardware_drivers->storage_controller->log_data_point(*timestamp, (char *) "Camera error! ", true);
             hardware_drivers->storage_controller->log_error_code(hardware_drivers->camera->get_error_reason());
+            hardware_drivers->old_display->wake_up();
         }
         
         last_cam_state = hardware_drivers->camera->get_state();

@@ -5,8 +5,7 @@
 #include <stdlib.h>
 #include <hardware/drivers.h>
 
-#define commands_size 32
-
+#define commands_size 35
 #define cache_data_length 4
 
 class CommandParser
@@ -55,6 +54,9 @@ private:
     void wake_display(char* arg, char* param, char** message);
     void reset_error_counters(char* arg, char* param, char** message);
     void uptime(char* arg, char* param, char** message);
+    void set_camera_setting(char* arg, char* param, char** message);
+    void read_camera_settings(char* arg, char* param, char** message);
+    void save_camera_settings(char* arg, char* param, char** message);
 
     HardwareDrivers* hardware_drivers;
     CommandStruct commands[commands_size];

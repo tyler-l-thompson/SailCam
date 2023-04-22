@@ -2,7 +2,7 @@
 #ifndef SYSTEM_CONFIGURATION_H
 #define SYSTEM_CONFIGURATION_H
 
-#define settings_length 14
+#define settings_length 15
 
 #include <settings/system_setting.h>
 

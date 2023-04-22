@@ -16,6 +16,9 @@
 #define dir_name_size 35
 #define file_name_size 64
 #define image_save_timeout 1000
+#define camera_settings_length 9
+
+#define camera_setting_out_of_range 13
 
 enum CameraState {
     SENSOR_POWER_DOWN, 
@@ -34,6 +37,19 @@ enum CameraErrorReason {
     CAM_ERROR_OVERSIZED, 
     CAM_ERROR_UNDERSIZED, 
     CAM_ERROR_SAVE_TIMEOUT 
+};
+
+enum CameraSettingsMode{
+    CAM_SETTINGS_MODE_DEFAULT,
+    CAM_SETTINGS_MODE_USER
+};
+
+typedef void (ArduCAM::*camera_setting_function)(uint8_t value);
+
+struct CameraSetting_T{
+    const char* name;
+    camera_setting_function function_p;
+    uint8_t value;
 };
 
 class Camera
@@ -67,6 +83,8 @@ private:
 
     bool reboot_requested = false;
 
+    CameraSetting_T camera_settings[camera_settings_length];
+
     void process_sensor_power_down();
     void process_sensor_power_up();
     void process_capture_image();
@@ -91,6 +109,11 @@ public:
     uint32_t get_error_counter() { return this->error_counter; };
     CameraErrorReason get_error_reason() { return this->last_error_reason; };
     bool is_reboot_requested() { return this->reboot_requested; };
+    bool set_camera_setting(const char* settings, uint8_t value);
+    CameraSetting_T* get_camera_settings() { return this->camera_settings; };
+    bool write_camera_settings();
+    bool read_camera_settings();
+    const char* get_camera_setting_value_description(uint8_t camera_setting_idx);
 };
 
 #endif

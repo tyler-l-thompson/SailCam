@@ -7,7 +7,7 @@ Storage::Storage(DateTime* timestamp)
     set_formatted_timestamp(*timestamp);
     pinMode(sd_card_chip_select, OUTPUT);
     digitalWrite(sd_card_chip_select, LOW);
-    this->card_connected = SD.begin(sd_card_chip_select, SD_SCK_MHZ(8));
+    this->card_connected = SD.begin(sd_card_chip_select, SD_SCK_MHZ(12));
     sdfat::SdFile::dateTimeCallback(sd_datetime_callback);
     this->system_configuration = new SystemConfiguration();
     this->log_file = new sdfat::File32();

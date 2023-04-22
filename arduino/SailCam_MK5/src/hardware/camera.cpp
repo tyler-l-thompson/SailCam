@@ -2,13 +2,24 @@
 #include <hardware/camera.h>
 
 Camera::Camera(Storage* storage)
+:  camera_settings {
+                {"light_mode", &ArduCAM::OV5642_set_Light_Mode, 0},
+                {"saturation", &ArduCAM::OV5642_set_Color_Saturation, camera_setting_out_of_range},
+                {"brightness", &ArduCAM::OV5642_set_Brightness, camera_setting_out_of_range},
+                {"contrast", &ArduCAM::OV5642_set_Contrast, camera_setting_out_of_range},
+                {"effect", &ArduCAM::OV5642_set_Special_effects, camera_setting_out_of_range},
+                {"hue", &ArduCAM::OV5642_set_hue, camera_setting_out_of_range},
+                {"exposure", &ArduCAM::OV5642_set_Exposure_level, camera_setting_out_of_range},
+                {"sharpness", &ArduCAM::OV5642_set_Sharpness, camera_setting_out_of_range},
+                {"mirror", &ArduCAM::OV5642_set_Mirror_Flip, camera_setting_out_of_range}
+            }
 {
     pinMode(camera_chip_select, OUTPUT);
     this->cam = new ArduCAM(OV5642, camera_chip_select);
     Wire.begin();
     
     SPI.begin();
-    SPI.setFrequency(8000000); // 8MHz
+    SPI.setFrequency(12000000); // 8MHz
     
     this->cam->CS_LOW();
     this->cam->set_format(JPEG);
@@ -32,6 +43,9 @@ Camera::Camera(Storage* storage)
     set_sensor_power(false);
 
     this->storage = storage;
+
+    // read camera settings
+    this->read_camera_settings();
 }
 
 Camera::~Camera()
@@ -304,6 +318,18 @@ void Camera::set_sensor_power(bool state)
         // this->cam->OV5642_set_JPEG_size(OV5642_320x240);
         // this->cam->OV5642_set_Light_Mode(Advanced_AWB);
 
+        if (this->storage->get_system_configuration()->get_setting("cam_settings_mode")->get_value_int() == CAM_SETTINGS_MODE_USER)
+        {
+            /* apply user settings */
+            for (int i = 0; i < camera_settings_length; i++)
+            {
+                if (camera_settings[i].value < camera_setting_out_of_range)
+                {
+                    (this->cam->*(camera_settings[i].function_p))(camera_settings[i].value);
+                }
+            }
+        }
+
         // Reset the CPLD
         this->cam->write_reg(0x07, 0x80);
         delay(10);
@@ -350,4 +376,397 @@ bool Camera::run_self_test(char** return_message)
     set_sensor_power(false);
     snprintf(*return_message, 47, "CAM:%s-GPIO:15|%02x,SPI:55|%02x,I2C:56|%02x:42|%02x", self_test_pass ? "True " : "False" , gpio_val, spi_return, vid, pid);
     return self_test_pass;
+}
+
+bool Camera::set_camera_setting(const char* setting, uint8_t value)
+{
+    bool setting_found = false;
+    for (int i = 0; i < camera_settings_length; i++)
+    {
+        if (strcmp(setting, this->camera_settings[i].name) == 0)
+        {
+            setting_found = true;
+            this->camera_settings[i].value = value;
+            i = camera_settings_length;
+        }
+    }
+    return setting_found;
+}
+
+bool Camera::write_camera_settings()
+{    
+    sdfat::File32 camera_settings_file;
+    if (this->storage->is_card_connected())
+    {
+        camera_settings_file = this->storage->open_file(camera_settings_path, sdfat::O_CREAT | sdfat::O_WRONLY);
+        for (int i = 0; i < camera_settings_length; i++)
+        {
+            camera_settings_file.printf("%s=%d\n", this->camera_settings[i].name, this->camera_settings[i].value);
+        }
+        camera_settings_file.close();
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+bool Camera::read_camera_settings()
+{
+    sdfat::File32 camera_settings_file;
+    char name_buff[50];
+    char value_buff[10];
+    uint8_t new_value = 0;
+    if (this->storage->is_card_connected() && this->storage->file_exists(camera_settings_path))
+    {
+        camera_settings_file = this->storage->open_file(camera_settings_path, sdfat::O_READ);
+        for  (int i = 0; i < camera_settings_length; i++)
+        {
+            int read_size = camera_settings_file.readBytesUntil('=', name_buff, 50);
+            name_buff[read_size] = '\0';
+            read_size = camera_settings_file.readBytesUntil('\n', value_buff, 10);
+            value_buff[read_size] = '\0';
+            new_value = atoi(value_buff);
+            this->set_camera_setting(name_buff, new_value);
+        }
+        camera_settings_file.close();
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+const char* Camera::get_camera_setting_value_description(uint8_t camera_setting_idx)
+{
+    if (this->camera_settings[camera_setting_idx].value >= camera_setting_out_of_range)
+    {
+        return "Disabled";
+    }
+    switch (camera_setting_idx)
+    {
+    case 0: /* light_mode */
+        switch (this->camera_settings[camera_setting_idx].value)
+        {
+        case 0:
+            return "Advanced_AWB";
+            break;
+        case 1:
+            return "Simple_AWB";
+            break;
+        case 2:
+            return "Manual_day";
+            break;
+        case 3:
+            return "Manual_A";
+            break;
+        case 4:
+            return "Manual_cwf";
+            break;
+        case 5:
+            return "Manual_cloudy";
+            break;
+        default:
+            return "Not found";
+            break;
+        }
+        break;
+    case 1: /* saturation */
+        switch (this->camera_settings[camera_setting_idx].value)
+        {
+        case 0:
+            return "Saturation4";
+            break;
+        case 1:
+            return "Saturation3";
+            break;
+        case 2:
+            return "Saturation2";
+            break;
+        case 3:
+            return "Saturation1";
+            break;
+        case 4:
+            return "Saturation0";
+            break;
+        case 5:
+            return "Saturation_1";
+            break;
+        case 6:
+            return "Saturation_2";
+            break;
+        case 7:
+            return "Saturation_3";
+            break;
+        case 8:
+            return "Saturation_4";
+            break;
+        default:
+            return "Not found";
+            break;
+        }
+        break;
+    case 2: /* brightness */
+        switch (this->camera_settings[camera_setting_idx].value)
+        {
+        case 0:
+            return "Brightness4";
+            break;
+        case 1:
+            return "Brightness3";
+            break;
+        case 2:
+            return "Brightness2";
+            break;
+        case 3:
+            return "Brightness1";
+            break;
+        case 4:
+            return "Brightness0";
+            break;
+        case 5:
+            return "Brightness_1";
+            break;
+        case 6:
+            return "Brightness_2";
+            break;
+        case 7:
+            return "Brightness_3";
+            break;
+        case 8:
+            return "Brightness_4";
+            break;
+        default:
+            return "Not found";
+            break;
+        }
+        break;
+    case 3: /* contrast */
+        switch (this->camera_settings[camera_setting_idx].value)
+        {
+        case 0:
+            return "Contrast4";
+            break;
+        case 1:
+            return "Contrast3";
+            break;
+        case 2:
+            return "Contrast2";
+            break;
+        case 3:
+            return "Contrast1";
+            break;
+        case 4:
+            return "Contrast0";
+            break;
+        case 5:
+            return "Contrast_1";
+            break;
+        case 6:
+            return "Contrast_2";
+            break;
+        case 7:
+            return "Contrast_3";
+            break;
+        case 8:
+            return "Contrast_4";
+            break;
+        default:
+            return "Not found";
+            break;
+        }
+        break;
+    case 4: /* effect */
+        switch (this->camera_settings[camera_setting_idx].value)
+        {
+        case 0:
+            return "Antique";
+            break;
+        case 1:
+            return "Bluish";
+            break;
+        case 2:
+            return "Greenish";
+            break;
+        case 3:
+            return "Reddish";
+            break;
+        case 4:
+            return "BW";
+            break;
+        case 5:
+            return "Negative";
+            break;
+        case 6:
+            return "BWnegative";
+            break;
+        case 7:
+            return "Normal";
+            break;
+        case 8:
+            return "Sepia";
+            break;
+        case 9:
+            return "Overexposure";
+            break;
+        case 10:
+            return "Solarize";
+            break;
+        case 11:
+            return "Blueish";
+            break;
+        case 12:
+            return "Yellowish";
+            break;
+        default:
+            return "Not found";
+            break;
+        }
+        break;
+    case 5: /* hue */
+        switch (this->camera_settings[camera_setting_idx].value)
+        {
+        case 0:
+            return "degree_180";
+            break;
+        case 1:
+            return "degree_150";
+            break;
+        case 2:
+            return "degree_120";
+            break;
+        case 3:
+            return "degree_90";
+            break;
+        case 4:
+            return "degree_60";
+            break;
+        case 5:
+            return "degree_30";
+            break;
+        case 6:
+            return "degree_0";
+            break;
+        case 7:
+            return "degree30";
+            break;
+        case 8:
+            return "degree60";
+            break;
+        case 9:
+            return "degree90";
+            break;
+        case 10:
+            return "degree120";
+            break;
+        case 11:
+            return "degree150";
+            break;
+        default:
+            return "Not found";
+            break;
+        }
+        break;
+    case 6: /* exposure */
+        switch (this->camera_settings[camera_setting_idx].value)
+        {
+        case 0:
+            return "Exposure_17_EV";
+            break;
+        case 1:
+            return "Exposure_13_EV";
+            break;
+        case 2:
+            return "Exposure_10_EV";
+            break;
+        case 3:
+            return "Exposure_07_EV";
+            break;
+        case 4:
+            return "Exposure_03_EV";
+            break;
+        case 5:
+            return "Exposure_default";
+            break;
+        case 6:
+            return "Exposure03_EV";
+            break;
+        case 7:
+            return "Exposure07_EV";
+            break;
+        case 8:
+            return "Exposure10_EV";
+            break;
+        case 9:
+            return "Exposure13_EV";
+            break;
+        case 10:
+            return "Exposure17_EV";
+            break;
+        default:
+            return "Not found";
+            break;
+        }
+        break;
+    case 7: /* sharpness */
+        switch (this->camera_settings[camera_setting_idx].value)
+        {
+        case 0:
+            return "Auto_Sharpness_default";
+            break;
+        case 1:
+            return "Auto_Sharpness1";
+            break;
+        case 2:
+            return "Auto_Sharpness2";
+            break;
+        case 3:
+            return "Manual_Sharpnessoff";
+            break;
+        case 4:
+            return "Manual_Sharpness1";
+            break;
+        case 5:
+            return "Manual_Sharpness2";
+            break;
+        case 6:
+            return "Manual_Sharpness3";
+            break;
+        case 7:
+            return "Manual_Sharpness4";
+            break;
+        case 8:
+            return "Manual_Sharpness5";
+            break;
+        default:
+            return "Not found";
+            break;
+        }
+        break;
+    case 8: /* mirror */
+        switch (this->camera_settings[camera_setting_idx].value)
+        {
+        case 0:
+            return "MIRROR";
+            break;
+        case 1:
+            return "FLIP";
+            break;
+        case 2:
+            return "MIRROR_FLIP";
+            break;
+        case 7:
+            return "Normal";
+            break;
+        default:
+            return "Not found";
+            break;
+        }
+        break;
+    default:
+        return "Not found";
+        break;
+    }
 }
